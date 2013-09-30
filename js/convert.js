@@ -46,7 +46,7 @@ function convertComponents (blob) {
 		if(!res || typeof res !== "string") { // should not happen, decode functions should throw their own.
 			throw new ConvertException("Unknown convert error");
 		}
-		json.push(res);
+		json.push(jsonKeyObj(null, res));
 		fp += s + sizeInt*2;
 	}
 	if(pedanticMode && blob[fp-1]!==0x00) {
@@ -121,7 +121,7 @@ function decode_effectList (blob, offset) {
 		contOffset += effectList28plusHeader.length+sizeInt+extSize;
 		contSize = size-37-effectList28plusHeader.length-sizeInt-extSize;
 		
-		json.push(jsonKeyValBool('codeEnable',getUInt32(blob, extOffset+sizeInt)===1));
+		json.push(jsonKeyValBool('codeEnabled',getUInt32(blob, extOffset+sizeInt)===1));
 		var codeJson = [];
 		var initSize = getUInt32(blob, extOffset+sizeInt*2);
 		codeJson.push(jsonKeyVal('init', getString(blob, extOffset+sizeInt*3, initSize)));

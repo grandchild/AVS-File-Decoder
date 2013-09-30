@@ -20,7 +20,11 @@ function jsonKeyArr (key, arr) {
 }
 
 function jsonKeyObj (key, obj) {
-	return "'"+key+"': {\n"+obj+"}";
+	if(key) {
+		return "'"+key+"': {\n"+obj+"}";
+	} else {
+		return "{\n"+obj+"}";
+	}
 }
 
 function cJoin (json) {
