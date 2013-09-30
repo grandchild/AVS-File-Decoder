@@ -130,7 +130,7 @@ function decode_effectList (blob, offset) {
 		json.push(jsonKeyObj('code', cJoin(codeJson)));
 	} //else: old Effect List format, inside components just start
 	var content = convertComponents(blob.subarray(contOffset, contSize));
-	json.push(jsonKeyObj('components', content));
+	json.push(jsonKeyArr('components', content));
 	return cJoin(json);
 }
 

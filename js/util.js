@@ -8,20 +8,20 @@ function ConvertException (message) {
 }
 
 function jsonKeyVal (key, val) {
-	return "'"+key+"': '"+val+"'";
+	return "\""+key+"\": \""+val+"\"";
 }
 
 function jsonKeyValBool (key, val) {
-	return "'"+key+"': "+(val?"true":"false");
+	return "\""+key+"\": "+(val?"true":"false");
 }
 
 function jsonKeyArr (key, arr) {
-	return "'"+key+"': [\n"+arr+"]";
+	return "\""+key+"\": [\n"+arr+"]";
 }
 
 function jsonKeyObj (key, obj) {
 	if(key) {
-		return "'"+key+"': {\n"+obj+"}";
+		return "\""+key+"\": {\n"+obj+"}";
 	} else {
 		return "{\n"+obj+"}";
 	}
@@ -70,5 +70,15 @@ function getString (buf, offset, size) {
 		//log("fp: "+buf.byteOffset+size-1);
 		throw new ConvertException("Couldn't find terminating zero after string. (pedantic)")
 	}
-	return result;
+	return escapeJson(result);
+}
+
+function escapeJson (str) {
+	return str
+		//.replace(/[\\]/g, '\\\\')
+		.replace(/[\"]/g, '\\\"')
+		.replace(/[\f]/g, '\\f')
+		.replace(/[\n]/g, '\\n')
+		.replace(/[\r]/g, '\\r')
+		.replace(/[\t]/g, '\\t');
 }
