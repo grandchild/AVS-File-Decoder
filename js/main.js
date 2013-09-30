@@ -32,5 +32,5 @@ function saveAvsAsJson (preset, name) {
 		jsonKeyVal('name',name.substr(0,name.length-4)),
 		jsonKeyVal('author','-'),
 		convertPreset(preset)];
-	$('#output').val(cJoin(json));
+	$('#output').val("{\n"+cJoin(json)+"\n}");
 }
