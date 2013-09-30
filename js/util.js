@@ -56,9 +56,7 @@ function getBitField (bits) {
 // assumes 0-terminated string!
 function getString (buf, offset, size) {
 	var result = "";
-	log("size: "+size);
 	size += offset;
-	log("size+offset: "+size);
 	// we go to one less than 'size' because it counts terminating 0x00.
 	for(var i=offset; i<size-1; i++) {
 		result += String.fromCharCode(buf[i]);
