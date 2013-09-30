@@ -50,7 +50,8 @@ function convertComponents (blob) {
 		fp += s + sizeInt*2;
 	}
 	if(pedanticMode && blob[fp-1]!==0x00) {
-		throw new ConvertException("Missing terminating zero at end of preset. (pedantic)");
+		// no trailing zero in AVS > 2.? (2.8?)
+		//throw new ConvertException("Missing terminating zero at end of preset. (pedantic)");
 	}
 	return cJoin(json);
 }
@@ -81,9 +82,22 @@ function decodePresetHeader(blob) {
 	return blob[presetHeaderLength-1]; // a.k.a. "Clear Every Frame"
 }
 
+/*
+[(NOT Enabled)*2+ClearEveryFrame+128][(NOT Enabled)*2+ClearEveryFrame][InputBlend][OutputBlend]
+[36,LongInt] - Size of object, in bytes.
+[InputAdjustBlend,LongInt]
+[OutputAdjustBlend,LongInt]
+[InputBufferNumber-1,LongInt]
+[OutputBufferNumber-1,LongInt]
+[InputBufferInvert,LongInt]
+[OutputBufferInvert,LongInt]
+[EnableOnBeat,LongInt]
+[OnBeatFrames,LongInt]
+*/
+
 function decode_effectList (blob, offset) {
 	var json = [];
-	//var str = getString(blob, offset+sizeInt, getUInt32(blob));
+	
 	json.push(jsonKeyVal('type', 'EffectList'));
 	json.push(jsonKeyVal('output', "ADDITIVE"));
 	return cJoin(json);
@@ -128,4 +142,9 @@ function decodeCodePFBI (blob, offset) {
 		json[map[i]] = jsonKeyVal(fields[i], getString(blob, p+sizeInt, size));
 	};
 	return cJoin(json);
+}
+
+// Blendmodes
+function decodBlendmode (byte) {
+	// body...
 }
