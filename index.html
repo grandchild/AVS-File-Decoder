@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Convert</title>
+	<script type="text/javascript" src="lib/jquery-1.10.2.min.js"></script>
+	<script type="text/javascript" src="js/util.js"></script>
+	<script type="text/javascript" src="js/dirwalk.js"></script>
+	<script type="text/javascript" src="js/files.js"></script>
+	<script type="text/javascript" src="js/convert.js"></script>
+	<script type="text/javascript" src="js/main.js"></script>
+</head>
+<body>
+<input type="file" id="preset" directory><br>
+<textarea id="log" style="width:400px; height:200px"></textarea>
+<textarea id="output" style="width:525px; height:400px; color: #3679BD"></textarea><br>
+<input type="button" id="go" value="Convert">
+<input type="button" onclick="$('#log').empty()" value="Clear Log">
+</body>
+</html>
