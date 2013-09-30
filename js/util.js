@@ -62,7 +62,7 @@ function getString (buf, offset, size) {
 		result += String.fromCharCode(buf[i]);
 	}
 	if(pedanticMode && buf[size-1]!==0x00) {
-		log("fp: "+buf.byteOffset+size-1);
+		//log("fp: "+buf.byteOffset+size-1);
 		throw new ConvertException("Couldn't find terminating zero after string. (pedantic)")
 	}
 	return result;

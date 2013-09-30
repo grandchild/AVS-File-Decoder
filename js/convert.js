@@ -4,9 +4,11 @@ var presetHeaderLength = 25;
 var componentTable =
 		[
 			// code, name, regexp
-			{'name': "Effect List", 'code': 0xfffffffe, 'group': "",
+			{'name': "Effect List",    'code': 0xfffffffe, 'group': "",
 				'func': "effectList"},
-			{'name': "Comment",     'code': 0x15, 'group': "Misc",
+			{'name': "Color Modifier", 'code': 0x2D, 'group': "Trans",
+				'func': "colorModifier"},
+			{'name': "Comment",        'code': 0x15, 'group': "Misc",
 				'func': "comment"},
 		];
 
@@ -57,9 +59,11 @@ function getComponentIndex (blob, offset) {
 	var code = getUInt32(blob, offset);
 	for (var i = 0; i < componentTable.length; i++) {
 		if(code === componentTable[i].code) {
+			log("Found component: "+componentTable[i].name);
 			return i;
 		}
 	};
+	log("Found unknown component (code:"+code+")");
 	return -code;
 	//throw new ConvertException("Unknown component type: '"+code+"'");
 }
@@ -77,7 +81,7 @@ function decodePresetHeader(blob) {
 	return blob[presetHeaderLength-1]; // a.k.a. "Clear Every Frame"
 }
 
-function decode_effectList (blob, offset, size) {
+function decode_effectList (blob, offset) {
 	var json = [];
 	//var str = getString(blob, offset+sizeInt, getUInt32(blob));
 	json.push(jsonKeyVal('type', 'EffectList'));
@@ -85,21 +89,43 @@ function decode_effectList (blob, offset, size) {
 	return cJoin(json);
 }
 
-function decode_comment (blob, offset, size) {
+function decode_comment (blob, offset) {
 	var json = [];
 	var str = getString(blob, offset+sizeInt, getUInt32(blob, offset));
-	json.push(jsonKeyVal('type', 'comment'));
+	json.push(jsonKeyVal('type', 'Comment'));
 	json.push(jsonKeyVal('comment', str));
+	return cJoin(json);
+}
+
+function decode_colorModifier (blob, offset) {
+	var json = [];
+	json.push(jsonKeyVal('type', 'ColorModifier'));
+	json.push(jsonKeyVal('recomputeEveryFrame', blob[offset]));
+	json.push(jsonKeyObj('code', decodeCodePFBI(blob, offset+1)));
 	return cJoin(json);
 }
 
 /**
  * blank decode function
 
-function decode_ (blob, offset, size) {
-	var json[];
+function decode_ (blob, offset) {
+	var json = [];
 	json.push(jsonKeyVal('type',''));
 	return cJoin(json);
 }
 
 */
+
+//// decode helpers
+
+// Pixel, Frame, Beat, Init code fields - json will be in I,F,B,P order.
+function decodeCodePFBI (blob, offset) {
+	var json = new Array(4);
+	var map = [3, 1, 2, 0];
+	var fields = ["perPoint", "onFrame", "onBeat", "init"];
+	for (var i = 0, p = offset; i < 4; i++, p += size+sizeInt) {
+		size = getUInt32(blob, p);
+		json[map[i]] = jsonKeyVal(fields[i], getString(blob, p+sizeInt, size));
+	};
+	return cJoin(json);
+}
