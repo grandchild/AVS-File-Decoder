@@ -92,3 +92,14 @@ function decode_comment (blob, offset, size) {
 	json.push(jsonKeyVal('comment', str));
 	return cJoin(json);
 }
+
+/**
+ * blank decode function
+
+function decode_ (blob, offset, size) {
+	var json[];
+	json.push(jsonKeyVal('type',''));
+	return cJoin(json);
+}
+
+*/
