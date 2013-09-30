@@ -27,15 +27,16 @@ function cJoin (json) {
 	return json.join(',\n')+"\n";
 }
 
-function cmpBytes (arr, test) {
+function cmpBytes (arr, offset, test) {
 	for (var i = 0; i < test.length; i++) {
 		if(test[i] === null){
-			continue; // null means 'any value'/a variable
+			continue; // null means 'any value' - a variable
 		}
-		if(arr[i] !== test[i]) {
-			throw new ConvertException("Invalid preset header.");
+		if(arr[i+offset] !== test[i]) {
+			return false;
 		}
 	}
+	return true;
 }
 
 function getUInt32 (buf, offset) {

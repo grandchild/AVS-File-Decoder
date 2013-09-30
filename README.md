@@ -4,11 +4,12 @@ This little Javascript aims to read out the file format of Nullsoft's _Advanced 
 Works in Chrome/Chromium only for now!
 
 ### component checklist:
- - [ ] Effect List
+ - [x] Effect List
  - [x] Comment
  - [ ] Super Scope
  - [ ] Dynamic Movement
  - [ ] Movement
+ - [x] Color Modifier
  - [ ] Fade Out
  - [ ] Channel Shift
  - [ ] ...
