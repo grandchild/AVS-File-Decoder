@@ -31,6 +31,6 @@ function saveAvsAsJson (preset, name) {
 			'components': convertPreset(preset)
 		};
 	var output = ('#output');
-	$(output).html(JSON.stringify(json, null, '\t'));
+	$(output).html(JSON.stringify(json, null, '    '));
 	$(output).each(function(i, e) {hljs.highlightBlock(e)});
 }
