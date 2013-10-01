@@ -37,7 +37,7 @@ function convertPreset (preset) {
 	try {
 		var clearFrame = decodePresetHeader(blob8.subarray(0, presetHeaderLength));
 		json.push(jsonKeyValBool('clearFrame', clearFrame));
-		var components = convertComponents(blob8.subarray(presetHeaderLength), 0);
+		var components = convertComponents(blob8.subarray(presetHeaderLength));
 		json.push(jsonKeyArr('components', components));
 	} catch (e) {
 		if(e instanceof ConvertException) {
@@ -50,7 +50,7 @@ function convertPreset (preset) {
 	return cJoin(json);
 }
 
-function convertComponents (blob, level) {
+function convertComponents (blob) {
 	var fp = 0;
 	var json = [];
 	while(fp < blob.length) {
@@ -157,7 +157,7 @@ function decode_effectList (blob, offset) {
 		codeJson.push(jsonKeyVal('frame', getString(blob, extOffset+sizeInt*4+initSize, frameSize)));
 		json.push(jsonKeyObj('code', cJoin(codeJson)));
 	} //else: old Effect List format, inside components just start
-	var content = convertComponents(blob.subarray(contOffset, contOffset+contSize), 1);
+	var content = convertComponents(blob.subarray(contOffset, contOffset+contSize));
 	json.push(jsonKeyArr('components', content));
 	return cJoin(json);
 }

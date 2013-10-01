@@ -5,6 +5,8 @@ Works in Chrome/Chromium only for now!
 
 ### component checklist:
  - [x] Effect List
+ - [x] Set Render Mode
+ - [x] Buffer Save
  - [x] Comment
  - [ ] Super Scope
  - [ ] Dynamic Movement
@@ -12,4 +14,5 @@ Works in Chrome/Chromium only for now!
  - [x] Color Modifier
  - [ ] Fade Out
  - [ ] Channel Shift
+ - [x] AVS Trans
  - [ ] ...
