@@ -3,8 +3,6 @@ var outputDir = "";
 
 var pedanticMode = true; // check for terminating zeros (and possibly other unnecessary stuff in the future)
 
-console.log("-_____-");
-
 /// needs:
 // util.js
 // files.js
@@ -33,8 +31,6 @@ function saveAvsAsJson (preset, name) {
 			'components': convertPreset(preset)
 		};
 	var output = ('#output');
-	var jsonReal = JSON.stringify(json, null, '\t');
-	console.log(jsonReal);
-	$(output).html(jsonReal);
+	$(output).html(JSON.stringify(json, null, '\t'));
 	$(output).each(function(i, e) {hljs.highlightBlock(e)});
 }
