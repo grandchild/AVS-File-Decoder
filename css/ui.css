@@ -1,0 +1,38 @@
+body {
+  padding-top: 50px;
+}
+.starter-template {
+  padding: 40px 15px;
+  text-align: center;
+}
+
+textinput {
+	width:100%;
+}
+
+code, pre { 
+	width:100%;
+	min-height: 400px;
+	text-align: left;
+	overflow: auto;
+}
+
+textarea {
+	width: 100%;
+	margin: 20px 0;
+	border: 0;
+	background-color:#fff;
+	color:#888;
+	min-height:68px;
+	max-width: 100%;
+	font-size: 18px;
+	line-height: 125%;
+}
+
+.jumbotron {
+	text-align: center;
+}
+
+pre {
+	padding: 0;
+}
