@@ -19,11 +19,11 @@
   <body>
 
     <div class="container">
+      <h2>AVS File Decoder</h2>
+      <h5>Convert Winamp AVS files into Webvs-compatible JSON</h5>
       <div class="jumbotron">
-        <h2>AVS File Decoder</h2>
-        <p>Convert Winamp AVS files into Webvs-compatible JSON</p>
-          <input type="file" id="preset" class="filestyle" data-classButton="btn btn-success" data-input="false" data-buttonText="Load" />
-          <input type="button" class="btn btn-danger" onclick="$('#log, #output').empty()" value="Clear" /><br/>
+          <input type="file" id="preset" class="filestyle" data-classButton="btn btn-lg btn-success" data-input="false" data-buttonText="Load" />
+          <input type="button" class="btn btn-lg btn-danger" onclick="$('#log, #output').empty()" value="Clear" />
           <textarea id="log" readonly="readonly" onclick="this.focus();this.select()"></textarea>
           <pre><code id="output">{"message": "Please load file"}</code></pre>
       </div>
