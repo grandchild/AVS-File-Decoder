@@ -1,19 +1,44 @@
-<!DOCTYPE html>
-<html>
-<head>
-	<title>Convert</title>
-	<script type="text/javascript" src="lib/jquery-1.10.2.min.js"></script>
-	<script type="text/javascript" src="js/util.js"></script>
-	<script type="text/javascript" src="js/dirwalk.js"></script>
-	<script type="text/javascript" src="js/files.js"></script>
-	<script type="text/javascript" src="js/convert.js"></script>
-	<script type="text/javascript" src="js/main.js"></script>
-</head>
-<body>
-<input type="file" id="preset" directory><br>
-<textarea id="log" style="width:400px; height:200px"></textarea>
-<textarea id="output" style="width:525px; height:400px; color: #3679BD"></textarea><br>
-<input type="button" id="go" value="Convert">
-<input type="button" onclick="$('#log').empty()" value="Clear Log">
-</body>
+﻿<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="shortcut icon" href="//s.visbot.net/ico/favicon.png">
+
+    <title>AVS File Decoder</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="//netdna.bootstrapcdn.com/bootswatch/3.0.0/flatly/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom styles for this template & highlighter.js -->
+    <link href="css/_combined.css" rel="stylesheet">
+  </head>
+
+  <body>
+
+    <div class="container">
+      <div class="jumbotron">
+        <h2>AVS File Decoder</h2>
+        <p>Convert Winamp AVS files into Webvs-compatible JSON</p>
+          <input type="file" id="preset" class="filestyle" data-classButton="btn btn-success" data-input="false" data-buttonText="Load" />
+          <input type="button" class="btn btn-danger" onclick="$('#log, #output').empty()" value="Clear" /><br/>
+          <textarea id="log" readonly="readonly" onclick="this.focus();this.select()"></textarea>
+          <pre><code id="output">{"message": "Please load file"}</code></pre>
+      </div>
+
+      <!-- Site footer -->
+      <div class="footer">
+        <p class="text-right"><small>Fork me on <a href="https://github.com/grandchild/AVS-File-Decoder">GitHub</a></small></p>
+      </div>
+
+    </div><!-- /.container -->
+
+    <!-- Bootstrap core JavaScript -->
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <script type="text/javascript" src="lib/bootstrap-filestyle.min.js"></script>
+    <script src="lib/highlight.pack.js"></script>
+    <script type="text/javascript" src="js/_combined.js"></script>
+  </body>
 </html>

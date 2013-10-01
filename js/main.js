@@ -18,9 +18,6 @@ $(document).ready(function () {
 	$("#preset").change(function(){
 		files = loadDir(this, /\.avs$/);
 		log("Found "+files.length+" files in directory.");
-	});
-	
-	$('#go').click(function() {
 		for (var i = 0; i < files.length; i++) {
 			loadFile(files[i], saveAvsAsJson);
 		};
@@ -33,5 +30,7 @@ function saveAvsAsJson (preset, name) {
 			'author': '-',
 			'components': convertPreset(preset)
 		};
-	$('#output').val(JSON.stringify(json, null, '\t'));
+	var output = ('#output');
+	$(output).html(JSON.stringify(json, null, '\t'));
+	$(output).each(function(i, e) {hljs.highlightBlock(e)});
 }
