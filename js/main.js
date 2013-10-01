@@ -28,9 +28,10 @@ $(document).ready(function () {
 });
 
 function saveAvsAsJson (preset, name) {
-	var json = [
-		jsonKeyVal('name',name.substr(0,name.length-4)),
-		jsonKeyVal('author','-'),
-		convertPreset(preset)];
-	$('#output').val("{\n"+cJoin(json)+"\n}");
+	var json = {
+			'name': name.substr(0,name.length-4),
+			'author': '-',
+			'components': convertPreset(preset)
+		};
+	$('#output').val(JSON.stringify(json, null, '\t'));
 }

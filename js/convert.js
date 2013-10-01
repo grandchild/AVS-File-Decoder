@@ -30,15 +30,15 @@ var componentTable =
 				'group': "Trans", 'func': "colorMap"},
 		];
 
-function convertPreset (preset) {
-	var json = [];
+function convertPreset (presetFile) {
+	var preset = {};
 	//var blob32 = new Uint32Array(preset);
-	var blob8 = new Uint8Array(preset);
+	var blob8 = new Uint8Array(presetFile);
 	try {
 		var clearFrame = decodePresetHeader(blob8.subarray(0, presetHeaderLength));
-		json.push(jsonKeyValBool('clearFrame', clearFrame));
+		preset['clearFrame'] = clearFrame;
 		var components = convertComponents(blob8.subarray(presetHeaderLength));
-		json.push(jsonKeyArr('components', components));
+		preset['components'] = components;
 	} catch (e) {
 		if(e instanceof ConvertException) {
 			log("Error: "+e.message);
@@ -47,33 +47,33 @@ function convertPreset (preset) {
 			throw e;
 		}
 	}
-	return cJoin(json);
+	return preset;
 }
 
 function convertComponents (blob) {
 	var fp = 0;
-	var json = [];
+	var components = [];
 	while(fp < blob.length) {
 		var code = getUInt32(blob, fp);
 		var i = getComponentIndex(code, blob, fp);
 		var isDll = code>builtinMax && code!==0xfffffffe;
 		var size = getComponentSize(blob, fp+sizeInt+isDll*32);
 		if(i<0) {
-			var res = jsonKeyVal('type','Unknown: ('+(-i)+')');
+			var res = {'type': 'Unknown: ('+(-i)+')'};
 		} else {
 			var res = window["decode_"+componentTable[i].func](blob, fp+sizeInt*2+isDll*32);
 		}
-		if(!res || typeof res !== "string") { // should not happen, decode functions should throw their own.
+		if(!res || typeof res !== "object") { // should not happen, decode functions should throw their own.
 			throw new ConvertException("Unknown convert error");
 		}
-		json.push(jsonKeyObj(null, res));
+		components.push(res);
 		fp += size + sizeInt*2 + isDll*32;
 	}
 	if(pedanticMode && blob[fp-1]!==0x00) {
 		// no trailing zero in AVS > 2.? (2.8?)
 		//throw new ConvertException("Missing terminating zero at end of preset. (pedantic)");
 	}
-	return cJoin(json);
+	return components;
 }
 
 function getComponentIndex (code, blob, offset) {
@@ -83,7 +83,7 @@ function getComponentIndex (code, blob, offset) {
 				log("Found component: "+componentTable[i].name+" ("+code+")");
 				return i;
 			}
-		}
+		};
 	} else {
 		for (var i = 0; i < componentTable.length; i++) {
 			if(componentTable[i].code instanceof Array &&
@@ -91,7 +91,7 @@ function getComponentIndex (code, blob, offset) {
 				log("Found component: "+componentTable[i].name);
 				return i;
 			}
-		}
+		};
 	}
 	log("Found unknown component (code:"+code+")");
 	return -code;
@@ -116,24 +116,25 @@ function decodePresetHeader(blob) {
 
 function decode_effectList (blob, offset) {
 	var size = getUInt32(blob, offset-sizeInt);
-	var json = [];
-	json.push(jsonKeyVal('type', 'EffectList'));
-	//var bitField1 = getBitField(blob[offset]);
 	// ignore bitField1, it contains the same information as bitField2
+	//var bitField1 = getBitField(blob[offset]);
 	var bitField2 = getBitField(blob[offset+1]);
-	json.push(jsonKeyValBool('enabled', !bitField2[1]));
-	json.push(jsonKeyValBool('clearFrame', bitField2[0]));
-	json.push(jsonKeyVal('input', getBlendmodeIn(blob[offset+2])));
-	json.push(jsonKeyVal('output',getBlendmodeOut(blob[offset+3])));
-	//ignore constant el config size of 36 bytes (9 x int32)
-	json.push(jsonKeyVal('inAdjustBlend', getUInt32(blob, offset+5)));
-	json.push(jsonKeyVal('outAdjustBlend', getUInt32(blob, offset+9)));
-	json.push(jsonKeyVal('inBuffer', getUInt32(blob, offset+13)));
-	json.push(jsonKeyVal('outBuffer', getUInt32(blob, offset+17)));
-	json.push(jsonKeyValBool('inBufferInvert', getUInt32(blob, offset+21)===1));
-	json.push(jsonKeyValBool('outBufferInvert', getUInt32(blob, offset+25)===1));
-	json.push(jsonKeyValBool('enableOnBeat', getUInt32(blob, offset+29)===1));
-	json.push(jsonKeyVal('onBeatFrames', getUInt32(blob, offset+33)));
+	var comp = {
+		'type': 'EffectList',
+		'enabled': !bitField2[1],
+		'clearFrame': bitField2[0],
+		'input': getBlendmodeIn(blob[offset+2]),
+		'output': getBlendmodeOut(blob[offset+3]),
+		//ignore constant el config size of 36 bytes (9 x int32)
+		'inAdjustBlend': getUInt32(blob, offset+5),
+		'outAdjustBlend': getUInt32(blob, offset+9),
+		'inBuffer': getUInt32(blob, offset+13),
+		'outBuffer': getUInt32(blob, offset+17),
+		'inBufferInvert': getUInt32(blob, offset+21)===1,
+		'outBufferInvert': getUInt32(blob, offset+25)===1,
+		'enableOnBeat': getUInt32(blob, offset+29)===1,
+		'onBeatFrames': getUInt32(blob, offset+33),
+	};
 	var effectList28plusHeader = [ // reads: .$..AVS 2.8+ Effect List Config....
 			0x00, 0x40, 0x00, 0x00, 0x41, 0x56, 0x53, 0x20,
 			0x32, 0x2E, 0x38, 0x2B, 0x20, 0x45, 0x66, 0x66,
@@ -148,103 +149,105 @@ function decode_effectList (blob, offset) {
 		var extSize = getUInt32(blob, extOffset);
 		contOffset += effectList28plusHeader.length+sizeInt+extSize;
 		contSize = size-37-effectList28plusHeader.length-sizeInt-extSize;
-		
-		json.push(jsonKeyValBool('codeEnabled',getUInt32(blob, extOffset+sizeInt)===1));
-		var codeJson = [];
+		comp['codeEnabled'] = getUInt32(blob, extOffset+sizeInt)===1;
 		var initSize = getUInt32(blob, extOffset+sizeInt*2);
-		codeJson.push(jsonKeyVal('init', getString(blob, extOffset+sizeInt*3, initSize)));
 		var frameSize = getUInt32(blob, extOffset+sizeInt*3+initSize);
-		codeJson.push(jsonKeyVal('frame', getString(blob, extOffset+sizeInt*4+initSize, frameSize)));
-		json.push(jsonKeyObj('code', cJoin(codeJson)));
+		comp['code'] = {
+			'init': getString(blob, extOffset+sizeInt*3, initSize),
+			'frame': getString(blob, extOffset+sizeInt*4+initSize, frameSize),
+		};
 	} //else: old Effect List format, inside components just start
 	var content = convertComponents(blob.subarray(contOffset, contOffset+contSize));
-	json.push(jsonKeyArr('components', content));
-	return cJoin(json);
+	comp['components'] = content;
+	return comp;
 }
 
 function decode_bufferSave (blob, offset) {
-	var json = [];
-	json.push(jsonKeyVal('type', 'BufferSave'));
-	json.push(jsonKeyVal('mode', getBufferMode(blob[offset])));
-	json.push(jsonKeyVal('buffer', blob[offset+sizeInt]));
-	json.push(jsonKeyVal('blend', getBlendmodeBuffer(blob[offset+sizeInt*2])));
-	json.push(jsonKeyVal('adjustBlend', blob[offset+sizeInt*3]));
-	return cJoin(json);
+	return {
+		'type': 'BufferSave',
+		'mode': getBufferMode(blob[offset]),
+		'buffer': blob[offset+sizeInt],
+		'blend': getBlendmodeBuffer(blob[offset+sizeInt*2]),
+		'adjustBlend': blob[offset+sizeInt*3],
+	};
 }
 
 function decode_comment (blob, offset) {
-	var json = [];
-	var str = getString(blob, offset+sizeInt, getUInt32(blob, offset));
-	json.push(jsonKeyVal('type', 'Comment'));
-	json.push(jsonKeyVal('comment', str));
-	return cJoin(json);
+	return {
+		'type': 'Comment',
+		'comment': getString(blob, offset+sizeInt, getUInt32(blob, offset)),
+	};
 }
 
 function decode_colorModifier (blob, offset) {
-	var json = [];
-	json.push(jsonKeyVal('type', 'ColorModifier'));
-	json.push(jsonKeyVal('recomputeEveryFrame', blob[offset]));
-	json.push(jsonKeyObj('code', decodeCodePFBI(blob, offset+1)));
-	return cJoin(json);
+	return {
+		'type': 'ColorModifier',
+		'recomputeEveryFrame': blob[offset],
+		'code': decodeCodePFBI(blob, offset+1),
+	};
 }
 
 function decode_renderMode (blob, offset) {
-	var json = [];
-	json.push(jsonKeyVal('type', 'SetRenderMode'));
-	json.push(jsonKeyVal('enabled', blob[offset+3]>>7));
-	json.push(jsonKeyVal('blend', getBlendmodeRender(blob[offset])));
-	json.push(jsonKeyVal('adjustBlend', blob[offset+1]));
-	json.push(jsonKeyVal('lineSize', blob[offset+2]));
-	return cJoin(json);
+	return {
+		'type': 'SetRenderMode',
+		'enabled': blob[offset+3]>>7,
+		'blend': getBlendmodeRender(blob[offset]),
+		'adjustBlend': blob[offset+1],
+		'lineSize': blob[offset+2],
+	};
 }
 
 function decode_avsTrans (blob, offset) {
 	var size = getUInt32(blob, offset-sizeInt);
-	var json = [];
-	json.push(jsonKeyVal('type', 'AVS Trans Automation'));
-	json.push(jsonKeyValBool('enabled', getUInt32(blob, offset)===1));
-	json.push(jsonKeyValBool('logging', getUInt32(blob, offset+sizeInt)===1));
-	json.push(jsonKeyValBool('translateFirstLevel', getUInt32(blob, offset+sizeInt*2)===1));
-	json.push(jsonKeyValBool('readCommentCodes', getUInt32(blob, offset+sizeInt*3)===1));
-	json.push(jsonKeyVal('code', getString(blob, offset+sizeInt*4, size-sizeInt*4)));
-	return cJoin(json);
+	return {
+		'type': 'AVS Trans Automation',
+		'enabled': getUInt32(blob, offset)===1,
+		'logging': getUInt32(blob, offset+sizeInt)===1,
+		'translateFirstLevel': getUInt32(blob, offset+sizeInt*2)===1,
+		'readCommentCodes': getUInt32(blob, offset+sizeInt*3)===1,
+		'code': getString(blob, offset+sizeInt*4, size-sizeInt*4),
+	};
 }
 
 function decode_texer2 (blob, offset) {
-	var json = [];
-	json.push(jsonKeyVal('type', 'Texer2'));
-	return cJoin(json);
+	return {
+		'type': 'Texer2',
+	};
 }
 
 function decode_colorMap (blob, offset) {
-	var json = [];
-	json.push(jsonKeyVal('type', 'ColorMap'));
-	return cJoin(json);
+	return {
+		'type': 'ColorMap',
+	};
 }
 
 /**
  * blank decode function
 
 function decode_ (blob, offset) {
-	var json = [];
-	json.push(jsonKeyVal('type', ''));
-	return cJoin(json);
+	return {
+		'type': '',
+	};
 }
 
 */
 
 //// decode helpers
 
-// Pixel, Frame, Beat, Init code fields - json will be in I,F,B,P order.
+// Pixel, Frame, Beat, Init code fields - reorder to I,F,B,P order.
 function decodeCodePFBI (blob, offset) {
-	var json = new Array(4);
-	var map = [3, 1, 2, 0];
-	var fields = ["perPoint", "onFrame", "onBeat", "init"];
+	var strings = new Array(4);
 	for (var i = 0, p = offset; i < 4; i++, p += size+sizeInt) {
 		size = getUInt32(blob, p);
-		json[map[i]] = jsonKeyVal(fields[i], getString(blob, p+sizeInt, size));
+		strings[i] = getString(blob, p+sizeInt, size);
 	};
-	return cJoin(json);
+	var code = {};
+	var map = [3, 1, 2, 0];
+	var fields = ["init", "onFrame", "onBeat", "perPoint"]
+	for (var i = 0; i < strings.length; i++) {
+		code[fields[i]] = strings[map[i]];
+	};
+	return code;
 }
 
 // Blend modes
