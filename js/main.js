@@ -18,9 +18,6 @@ $(document).ready(function () {
 	$("#preset").change(function(){
 		files = loadDir(this, /\.avs$/);
 		log("Found "+files.length+" files in directory.");
-	});
-	
-	$('#go').click(function() {
 		for (var i = 0; i < files.length; i++) {
 			loadFile(files[i], saveAvsAsJson);
 		};
@@ -28,9 +25,11 @@ $(document).ready(function () {
 });
 
 function saveAvsAsJson (preset, name) {
+	var output = ('#output');
 	var json = [
 		jsonKeyVal('name',name.substr(0,name.length-4)),
 		jsonKeyVal('author','-'),
 		convertPreset(preset)];
-	$('#output').val("{\n"+cJoin(json)+"\n}");
+	$(output).html("{\n"+cJoin(json)+"\n}");
+	$(output).each(function(i, e) {hljs.highlightBlock(e)});
 }
