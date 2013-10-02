@@ -31,7 +31,7 @@ var builtinComponents = [
 					"init": "SizeString",
 					"audioChannel": ["Bit", [0,1], "AudioChannel"],
 					"audioRepresent": ["Bit", 2, "AudioRepresent"],
-					null: 3, // padding, bitfield before is actually 32 bit
+					null0: 3, // padding, bitfield before is actually 32 bit
 					"colors": "ColorList",
 					"lineType": ["Bool", sizeInt, "LineType"],
 				}},
@@ -82,8 +82,17 @@ var dllComponents = [
 			{"name": "Texer II",
 				"code": // Acko.net: Texer II..............
 					[0x41, 0x63, 0x6B, 0x6F, 0x2E, 0x6E, 0x65, 0x74, 0x3A, 0x20, 0x54, 0x65, 0x78, 0x65, 0x72, 0x20, 0x49, 0x49, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00],
-				"group": "Render", "func": "texer2", "fields": {
-					null: 1,
+				"group": "Render", "func": "generic", "fields": {
+					null0: sizeInt,
+					"image": ["SizeString", 260],
+					"resizing": ["Bool", sizeInt],
+					"wrap": ["Bool", sizeInt],
+					"coloring": ["Bool", sizeInt],
+					null1: sizeInt,
+					"init": "SizeString",
+					"frame": "SizeString",
+					"beat": "SizeString",
+					"point": "SizeString",
 				}},
 			{"name": "Color Map",
 				"code": // Color Map.......................
@@ -255,7 +264,7 @@ function decode_generic (blob, offset, fields, name, end) {
 		}
 		var k = keys[i];
 		var f = fields[k];
-		if(k==="null") {
+		if(k.match(/^null[_0-9]*$/)) {
 			offset += f;
 			// [null, 0] resets bitfield continuity to allow several consecutive bitfields
 			lastWasABitField = false;

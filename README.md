@@ -19,6 +19,6 @@ If you want to help out - cool! Have a look at the top of [js/convert.js](https:
  - [x] AVS Trans
  - [x] Framerate Limiter
  - [ ] Convolution Filter
- - [ ] Texer II
+ - [x] Texer II
  - [ ] Color Map
  - [ ] ...

@@ -36,7 +36,7 @@ function getBit (blob, offset, pos) {
 }
 
 function getBool (blob, offset, size) {
-	var val = size===1?blob[offset]:getUInt32(blob, offset)[0];
+	var val = size===1?blob[offset]:getUInt32(blob, offset);
 	return [val!==0, size];
 }
 
