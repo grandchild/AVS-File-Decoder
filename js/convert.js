@@ -73,28 +73,38 @@ var dllComponents = [
 				"code": // Misc: AVSTrans Automation.......
 					[0x4D, 0x69, 0x73, 0x63, 0x3A, 0x20, 0x41, 0x56, 0x53, 0x54, 0x72, 0x61, 0x6E, 0x73, 0x20, 0x41, 0x75, 0x74, 0x6F, 0x6D, 0x61, 0x74, 0x69, 0x6F, 0x6E, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00],
 				"group": "Misc", "func": "generic", "fields": {
-					'enabled': ["Bool", sizeInt],
-					'logging': ["Bool", sizeInt],
-					'translateFirstLevel': ["Bool", sizeInt],
-					'readCommentCodes': ["Bool", sizeInt],
-					'code': "NtString",
+					"enabled": ["Bool", sizeInt],
+					"logging": ["Bool", sizeInt],
+					"translateFirstLevel": ["Bool", sizeInt],
+					"readCommentCodes": ["Bool", sizeInt],
+					"code": "NtString",
 				}},
 			{"name": "Texer II",
 				"code": // Acko.net: Texer II..............
 					[0x41, 0x63, 0x6B, 0x6F, 0x2E, 0x6E, 0x65, 0x74, 0x3A, 0x20, 0x54, 0x65, 0x78, 0x65, 0x72, 0x20, 0x49, 0x49, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00],
-				"group": "Render", "func": "texer2"},
+				"group": "Render", "func": "texer2", "fields": {
+					null: 1,
+				}},
 			{"name": "Color Map",
 				"code": // Color Map.......................
 					[0x43, 0x6F, 0x6C, 0x6F, 0x72, 0x20, 0x4D, 0x61, 0x70, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00],
-				"group": "Trans", "func": "colorMap"},
+				"group": "Trans", "func": "colorMap", "fields": {
+					
+				}},
 			{"name": "Framerate Limiter",
-				"code":
+				"code": // VFX FRAMERATE LIMITER...........
 					[0x56, 0x46, 0x58, 0x20, 0x46, 0x52, 0x41, 0x4D, 0x45, 0x52, 0x41, 0x54, 0x45, 0x20, 0x4C, 0x49, 0x4D, 0x49, 0x54, 0x45, 0x52, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00],
 				"group": "Misc", "func": "generic", "fields": {
 					"enabled": ["Bool", sizeInt],
 					"limit": sizeInt
 				}},
-				/*
+			{"name": "Convolution Filter",
+				"code": // Holden03: Convolution Filter....
+					[0x48, 0x6F, 0x6C, 0x64, 0x65, 0x6E, 0x30, 0x33, 0x3A, 0x20, 0x43, 0x6F, 0x6E, 0x76, 0x6F, 0x6C, 0x75, 0x74, 0x69, 0x6F, 0x6E, 0x20, 0x46, 0x69, 0x6C, 0x74, 0x65, 0x72, 0x00, 0x00, 0x00, 0x00],
+				"group": "Misc", "func": "generic", "fields": {
+					
+				}},
+			/*
 			{"name": "",
 				"code":
 					[],
@@ -193,13 +203,10 @@ function decodePresetHeader(blob) {
 
 function decode_effectList (blob, offset) {
 	var size = getUInt32(blob, offset-sizeInt);
-	// ignore bitField1, it contains the same information as bitField2
-	//var bitField1 = getBitField(blob[offset]);
-	var bitField2 = getBitField(blob[offset+1]);
 	var comp = {
 		'type': 'EffectList',
-		'enabled': getBit(blob, offset, 1)!==1,
-		'clearFrame': getBit(blob, offset, 0)===1,
+		'enabled': getBit(blob, offset, 1)[0]!==1,
+		'clearFrame': getBit(blob, offset, 0)[0]===1,
 		'input': getBlendmodeIn(blob, offset+2, 1)[0],
 		'output': getBlendmodeOut(blob, offset+3, 1)[0],
 		//ignore constant el config size of 36 bytes (9 x int32)
@@ -228,10 +235,8 @@ function decode_effectList (blob, offset) {
 		contSize = size-37-effectList28plusHeader.length-sizeInt-extSize;
 		comp['codeEnabled'] = getUInt32(blob, extOffset+sizeInt)===1;
 		var initSize = getUInt32(blob, extOffset+sizeInt*2);
-		comp['code'] = {
-			'init': getSizeString(blob, extOffset+sizeInt*2)[0],
-			'frame': getSizeString(blob, extOffset+sizeInt*3+initSize)[0],
-		};
+		comp['init'] = getSizeString(blob, extOffset+sizeInt*2)[0];
+		comp['frame'] = getSizeString(blob, extOffset+sizeInt*3+initSize)[0];
 	} //else: old Effect List format, inside components just start
 	var content = convertComponents(blob.subarray(contOffset, contOffset+contSize));
 	comp['components'] = content;
