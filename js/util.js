@@ -1,3 +1,7 @@
+var sizeInt = 4;
+var presetHeaderLength = 25;
+var builtinMax = 16384;
+
 function log (message) {
 	$('#log').append(message+"\n");
 }
@@ -21,13 +25,13 @@ function cmpBytes (arr, offset, test) {
 
 function getUInt32 (blob, offset) {
 	if(!offset) offset = 0;
-	var array = blob.buffer.slice(blob.byteOffset+offset, blob.byteOffset+offset+4);
+	var array = blob.buffer.slice(blob.byteOffset+offset, blob.byteOffset+offset+sizeInt);
 	return new Uint32Array(array, 0, 1)[0];
 }
 
 function getInt32 (blob, offset) {
 	if(!offset) offset = 0;
-	var array = blob.buffer.slice(blob.byteOffset+offset, blob.byteOffset+offset+4);
+	var array = blob.buffer.slice(blob.byteOffset+offset, blob.byteOffset+offset+sizeInt);
 	return new Int32Array(array, 0, 1)[0];
 }
 
@@ -55,7 +59,7 @@ function getSizeString (blob, offset, size) {
 	var result = "";
 	if(!size) {
 		size = getUInt32(blob, offset);
-		add = 4; // sizeInt
+		add = sizeInt;
 	}
 	var end = offset+size+add;
 	var i = offset+add;

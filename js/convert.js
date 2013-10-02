@@ -1,133 +1,4 @@
-var sizeInt = 4;
-var presetHeaderLength = 25;
-var builtinMax = 16384;
 
-var builtinComponents = [
-		//// built-in components
-			{"name": "Effect List",
-				"code": 0xfffffffe, "group": "", "func": "effectList"},
-			{"name": "FadeOut",
-				"code": 0x03, "group": "Trans", "func": "generic", "fields": {
-					"speed": sizeInt,
-					"color": ["Color", sizeInt], 
-				}},
-			{"name": "Buffer Save",
-				"code": 0x12, "group": "Misc", "func": "generic", "fields": {
-					"mode": ["BufferMode", sizeInt],
-					"buffer": ["BufferNum", sizeInt],
-					"blend": ["BlendmodeBuffer", sizeInt],
-					"adjustBlend": sizeInt,
-				}},
-			{"name": "Comment",
-				"code": 0x15, "group": "Misc", "func": "generic", "fields": {
-					"text": "SizeString"
-				}},
-			{"name": "Super Scope",
-				"code": 0x24, "group": "Render", "func": "generic", "fields": {
-					"enabled": ["Bool", 1], // no UI for this in AVS -> always says: 0x01, setting this to zero manually will disable the SSC.
-					"point": "SizeString",
-					"frame": "SizeString",
-					"beat": "SizeString",
-					"init": "SizeString",
-					"audioChannel": ["Bit", [0,1], "AudioChannel"],
-					"audioRepresent": ["Bit", 2, "AudioRepresent"],
-					null0: 3, // padding, bitfield before is actually 32 bit
-					"colors": "ColorList",
-					"lineType": ["Bool", sizeInt, "LineType"],
-				}},
-			{"name": "Set Render Mode",
-				"code": 0x28, "group": "Misc", "func": "generic", "fields": {
-					'blend': ["BlendmodeRender", 1],
-					'adjustBlend': 1,
-					'lineSize': 1,
-					'enabled': ["Bit", 7, "Boolified"],
-				}},
-			{"name": "Dynamic Movement",
-				"code": 0x2B, "group": "Trans", "func": "generic", "fields": {
-					"enabled": ["Bool", 1], // same as in SSC, no UI
-					"point": "SizeString",
-					"frame": "SizeString",
-					"beat": "SizeString",
-					"init": "SizeString",
-					"bilinear": ["Bool", sizeInt],
-					"coordinates": ["Coordinates", sizeInt],
-					"gridWidth": sizeInt,
-					"gridHeight": sizeInt,
-					"alpha": ["Bool", sizeInt],
-					"wrap": ["Bool", sizeInt],
-					"buffer": ["BufferNum", sizeInt],
-					"alphaOnly": ["Bool", sizeInt],
-			}},
-			{"name": "Color Modifier",
-				"code": 0x2D, "group": "Trans", "func": "generic", "fields": {
-					"recomputeEveryFrame": ["Bool", 1],
-					"point": "SizeString",
-					"frame": "SizeString",
-					"beat": "SizeString",
-					"init": "SizeString",
-				}},
-		];
-//// APEs
-var dllComponents = [
-			{"name": "AVS Trans Automation",
-				"code": // Misc: AVSTrans Automation.......
-					[0x4D, 0x69, 0x73, 0x63, 0x3A, 0x20, 0x41, 0x56, 0x53, 0x54, 0x72, 0x61, 0x6E, 0x73, 0x20, 0x41, 0x75, 0x74, 0x6F, 0x6D, 0x61, 0x74, 0x69, 0x6F, 0x6E, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00],
-				"group": "Misc", "func": "generic", "fields": {
-					"enabled": ["Bool", sizeInt],
-					"logging": ["Bool", sizeInt],
-					"translateFirstLevel": ["Bool", sizeInt],
-					"readCommentCodes": ["Bool", sizeInt],
-					"code": "NtString",
-				}},
-			{"name": "Texer II",
-				"code": // Acko.net: Texer II..............
-					[0x41, 0x63, 0x6B, 0x6F, 0x2E, 0x6E, 0x65, 0x74, 0x3A, 0x20, 0x54, 0x65, 0x78, 0x65, 0x72, 0x20, 0x49, 0x49, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00],
-				"group": "Render", "func": "generic", "fields": {
-					null0: sizeInt,
-					"image": ["SizeString", 260],
-					"resizing": ["Bool", sizeInt],
-					"wrap": ["Bool", sizeInt],
-					"coloring": ["Bool", sizeInt],
-					null1: sizeInt,
-					"init": "SizeString",
-					"frame": "SizeString",
-					"beat": "SizeString",
-					"point": "SizeString",
-				}},
-			{"name": "Color Map",
-				"code": // Color Map.......................
-					[0x43, 0x6F, 0x6C, 0x6F, 0x72, 0x20, 0x4D, 0x61, 0x70, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00],
-				"group": "Trans", "func": "colorMap", "fields": {
-					
-				}},
-			{"name": "Framerate Limiter",
-				"code": // VFX FRAMERATE LIMITER...........
-					[0x56, 0x46, 0x58, 0x20, 0x46, 0x52, 0x41, 0x4D, 0x45, 0x52, 0x41, 0x54, 0x45, 0x20, 0x4C, 0x49, 0x4D, 0x49, 0x54, 0x45, 0x52, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00],
-				"group": "Misc", "func": "generic", "fields": {
-					"enabled": ["Bool", sizeInt],
-					"limit": sizeInt
-				}},
-			{"name": "Convolution Filter",
-				"code": // Holden03: Convolution Filter....
-					[0x48, 0x6F, 0x6C, 0x64, 0x65, 0x6E, 0x30, 0x33, 0x3A, 0x20, 0x43, 0x6F, 0x6E, 0x76, 0x6F, 0x6C, 0x75, 0x74, 0x69, 0x6F, 0x6E, 0x20, 0x46, 0x69, 0x6C, 0x74, 0x65, 0x72, 0x00, 0x00, 0x00, 0x00],
-				"group": "Misc", "func": "generic", "fields": {
-					"enabled": ["Bool", sizeInt],
-					"wrap": ["Bool", sizeInt], // note that wrap and absolute are mutually exclusive.
-					"absolute": ["Bool", sizeInt], // they can however both be false/zero
-					"2-pass": ["Bool", sizeInt],
-					"convolutionMatrix": ["ConvoFilter", [7,7]],
-					"bias": ["Bool", sizeInt],
-					"scaling": ["Bool", sizeInt],
-				}},
-			/*
-			{"name": "",
-				"code":
-					[],
-				"group": "", "func": "generic", "fields": {
-					
-				}},
-			*/
-		];
 var componentTable = builtinComponents.concat(dllComponents);
 
 function convertPreset (presetFile) {
@@ -324,12 +195,6 @@ function decode_generic (blob, offset, fields, name, end) {
 	return comp;
 }
 
-function decode_texer2 (blob, offset) {
-	return {
-		'type': 'Texer2',
-	};
-}
-
 function decode_colorMap (blob, offset) {
 	return {
 		'type': 'ColorMap',
@@ -404,91 +269,28 @@ function getConvoFilter (blob, offset, dimensions) {
 	return [matrix, size*sizeInt];
 }
 
-// Blend modes
 function getBlendmodeIn (blob, offset, size) {
-	var blendmodes = {
-			 '0': 'Ignore',
-			 '1': 'Replace',
-			 '2': '50/50',
-			 '3': 'Maximum',
-			 '4': 'Additive',
-			 '5': 'Dest-Src',
-			 '6': 'Src-Dest',
-			 '7': 'EveryOtherLine',
-			 '8': 'EveryOtherPixel',
-			 '9': 'XOR',
-			'10': 'Adjustable',
-			'11': 'Multiply',
-			'12': 'Buffer',
-		};
 	var code = size===1?blob[offset]:getUInt32(blob, offset);
-	return [blendmodes[code], size];
+	return [blendmodesIn[code], size];
 }
 
 function getBlendmodeOut (blob, offset, size) {
-	var blendmodes = {
-			 '0': 'Replace',
-			 '1': 'Ignore',
-			 '2': 'Maximum',
-			 '3': '50/50',
-			 '4': 'Dest-Src',
-			 '5': 'Additive',
-			 '6': 'EveryOtherLine',
-			 '7': 'Src-Dest',
-			 '8': 'XOR',
-			 '9': 'EveryOtherPixel',
-			'10': 'Multiply',
-			'11': 'Adjustable',
-			// don't ask me....
-			'13': 'Buffer',
-		};
 	var code = size===1?blob[offset]:getUInt32(blob, offset);
-	return [blendmodes[code], size];
+	return [blendmodesOut[code], size];
 }
 
 function getBlendmodeBuffer (blob, offset, size) {
-	var blendmodes = {
-			 '0': 'Replace',
-			 '1': '50/50',
-			 '2': 'Additive',
-			 '5': 'EveryOtherPixel',
-			 '4': 'Dest-Src',
-			 '5': 'EveryOtherLine',
-			 '6': 'XOR',
-			 '7': 'Maximum',
-			 '8': 'Minimum',
-			 '9': 'Src-Dest',
-			'10': 'Multiply',
-			'11': 'Adjustable',
-		};
 	var code = size===1?blob[offset]:getUInt32(blob, offset);
-	return [blendmodes[code], size];
+	return [blendmodesBuffer[code], size];
 }
 
 function getBlendmodeRender (blob, offset, size) {
-	var blendmodes = {
-			'0': 'Replace',
-			'1': 'Additive',
-			'2': 'Maximum',
-			'3': '50/50',
-			'4': 'Dest-Src',
-			'5': 'Src-Dest',
-			'6': 'Multiply',
-			'7': 'Adjustable',
-			'8': 'XOR',
-		};
 	var code = size===1?blob[offset]:getUInt32(blob, offset);
-	return [blendmodes[code], size];
+	return [blendmodesRender[code], size];
 }
 
 // Buffer modes
 function getBufferMode (blob, offset, size) {
-	var buffermodes = {
-			'0': 'Save',
-			'1': 'Restore',
-			'2': 'AlternateSaveRestore',
-			'3': 'AlternateRestoreSave',
-		};
 	var code = size===1?blob[offset]:getUInt32(blob, offset);
 	return [buffermodes[code], size];
 }
@@ -509,18 +311,9 @@ function getLineType (code) {
 }
 
 function getAudioChannel (code) {
-	var channels = {
-			'0': 'Left',
-			'1': 'Right',
-			'2': 'Center',
-	}
-	return channels[code];
+	return audioChannels[code];
 }
 
 function getAudioRepresent (code) {
-	var representations = {
-			'0': 'Waveform',
-			'1': 'Spectrum',
-	}
-	return representations[code];
+	return audioRepresentations[code];
 }
