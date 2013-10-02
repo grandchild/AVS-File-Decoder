@@ -2,33 +2,108 @@ var sizeInt = 4;
 var presetHeaderLength = 25;
 var builtinMax = 16384;
 
-var componentTable =
-		[
+var builtinComponents = [
 		//// built-in components
-			{'name': "Effect List",
-				'code': 0xfffffffe, 'group': "", 'func': "effectList"},
-			{'name': "Buffer Save",
-				'code': 0x12, 'group': "Misc", 'func': "bufferSave"},
-			{'name': "Comment",
-				'code': 0x15, 'group': "Misc", 'func': "comment"},
-			{'name': "Set Render Mode",
-				'code': 0x28, 'group': "Misc", 'func': "renderMode"},
-			{'name': "Color Modifier",
-				'code': 0x2D, 'group': "Trans", 'func': "colorModifier"},
-		//// APEs
-			{'name': "AVS Trans Automation",
-				'code': // Misc: AVSTrans Automation.......
-					[0x4D, 0x69, 0x73, 0x63, 0x3A, 0x20, 0x41, 0x56, 0x53, 0x54, 0x72, 0x61, 0x6E, 0x73, 0x20, 0x41, 0x75, 0x74, 0x6F, 0x6D, 0x61, 0x74, 0x69, 0x6F, 0x6E, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00],
-				'group': "Misc", 'func': "avsTrans"},
-			{'name': "Texer II",
-				'code': // Acko.net: Texer II..............
-					[0x41, 0x63, 0x6B, 0x6F, 0x2E, 0x6E, 0x65, 0x74, 0x3A, 0x20, 0x54, 0x65, 0x78, 0x65, 0x72, 0x20, 0x49, 0x49, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00],
-				'group': "Render", 'func': "texer2"},
-			{'name': "Color Map",
-				'code': // Color Map.......................
-					[0x43, 0x6F, 0x6C, 0x6F, 0x72, 0x20, 0x4D, 0x61, 0x70, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00],
-				'group': "Trans", 'func': "colorMap"},
+			{"name": "Effect List",
+				"code": 0xfffffffe, "group": "", "func": "effectList"},
+			{"name": "FadeOut",
+				"code": 0x03, "group": "Trans", "func": "generic", "fields": {
+					"speed": sizeInt,
+					"color": ["Color", sizeInt], 
+				}},
+			{"name": "Buffer Save",
+				"code": 0x12, "group": "Misc", "func": "generic", "fields": {
+					"mode": ["BufferMode", sizeInt],
+					"buffer": ["BufferNum", sizeInt],
+					"blend": ["BlendmodeBuffer", sizeInt],
+					"adjustBlend": sizeInt,
+				}},
+			{"name": "Comment",
+				"code": 0x15, "group": "Misc", "func": "generic", "fields": {
+					"text": "SizeString"
+				}},
+			{"name": "Super Scope",
+				"code": 0x24, "group": "Render", "func": "generic", "fields": {
+					"enabled": ["Bool", 1], // no UI for this in AVS -> always says: 0x01, setting this to zero manually will disable the SSC.
+					"point": "SizeString",
+					"frame": "SizeString",
+					"beat": "SizeString",
+					"init": "SizeString",
+					"audioChannel": ["Bit", [0,1], "AudioChannel"],
+					"audioRepresent": ["Bit", 2, "AudioRepresent"],
+					null: 3, // padding, bitfield before is actually 32 bit
+					"colors": "ColorList",
+					"lineType": ["Bool", sizeInt, "LineType"],
+				}},
+			{"name": "Set Render Mode",
+				"code": 0x28, "group": "Misc", "func": "generic", "fields": {
+					'blend': ["BlendmodeRender", 1],
+					'adjustBlend': 1,
+					'lineSize': 1,
+					'enabled': ["Bit", 7, "Boolified"],
+				}},
+			{"name": "Dynamic Movement",
+				"code": 0x2B, "group": "Trans", "func": "generic", "fields": {
+					"enabled": ["Bool", 1], // same as in SSC, no UI
+					"point": "SizeString",
+					"frame": "SizeString",
+					"beat": "SizeString",
+					"init": "SizeString",
+					"bilinear": ["Bool", sizeInt],
+					"coordinates": ["Coordinates", sizeInt],
+					"gridWidth": sizeInt,
+					"gridHeight": sizeInt,
+					"alpha": ["Bool", sizeInt],
+					"wrap": ["Bool", sizeInt],
+					"buffer": ["BufferNum", sizeInt],
+					"alphaOnly": ["Bool", sizeInt],
+			}},
+			{"name": "Color Modifier",
+				"code": 0x2D, "group": "Trans", "func": "generic", "fields": {
+					"recomputeEveryFrame": ["Bool", 1],
+					"point": "SizeString",
+					"frame": "SizeString",
+					"beat": "SizeString",
+					"init": "SizeString",
+				}},
 		];
+//// APEs
+var dllComponents = [
+			{"name": "AVS Trans Automation",
+				"code": // Misc: AVSTrans Automation.......
+					[0x4D, 0x69, 0x73, 0x63, 0x3A, 0x20, 0x41, 0x56, 0x53, 0x54, 0x72, 0x61, 0x6E, 0x73, 0x20, 0x41, 0x75, 0x74, 0x6F, 0x6D, 0x61, 0x74, 0x69, 0x6F, 0x6E, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00],
+				"group": "Misc", "func": "generic", "fields": {
+					'enabled': ["Bool", sizeInt],
+					'logging': ["Bool", sizeInt],
+					'translateFirstLevel': ["Bool", sizeInt],
+					'readCommentCodes': ["Bool", sizeInt],
+					'code': "NtString",
+				}},
+			{"name": "Texer II",
+				"code": // Acko.net: Texer II..............
+					[0x41, 0x63, 0x6B, 0x6F, 0x2E, 0x6E, 0x65, 0x74, 0x3A, 0x20, 0x54, 0x65, 0x78, 0x65, 0x72, 0x20, 0x49, 0x49, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00],
+				"group": "Render", "func": "texer2"},
+			{"name": "Color Map",
+				"code": // Color Map.......................
+					[0x43, 0x6F, 0x6C, 0x6F, 0x72, 0x20, 0x4D, 0x61, 0x70, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00],
+				"group": "Trans", "func": "colorMap"},
+			{"name": "Framerate Limiter",
+				"code":
+					[0x56, 0x46, 0x58, 0x20, 0x46, 0x52, 0x41, 0x4D, 0x45, 0x52, 0x41, 0x54, 0x45, 0x20, 0x4C, 0x49, 0x4D, 0x49, 0x54, 0x45, 0x52, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00],
+				"group": "Misc", "func": "generic", "fields": {
+					"enabled": ["Bool", sizeInt],
+					"limit": sizeInt
+				}},
+				/*
+			{"name": "",
+				"code":
+					[],
+				"group": "", "func": "generic", "fields": {
+					
+				}},
+			*/
+		];
+var componentTable = builtinComponents.concat(dllComponents);
 
 function convertPreset (presetFile) {
 	var preset = {};
@@ -61,17 +136,19 @@ function convertComponents (blob) {
 		if(i<0) {
 			var res = {'type': 'Unknown: ('+(-i)+')'};
 		} else {
-			var res = window["decode_"+componentTable[i].func](blob, fp+sizeInt*2+isDll*32);
+			var offset = fp+sizeInt*2+isDll*32;
+			var res = window["decode_"+componentTable[i].func](
+				blob,
+				offset,
+				componentTable[i].fields,
+				componentTable[i].name,
+				offset+size);
 		}
 		if(!res || typeof res !== "object") { // should not happen, decode functions should throw their own.
 			throw new ConvertException("Unknown convert error");
 		}
 		components.push(res);
 		fp += size + sizeInt*2 + isDll*32;
-	}
-	if(pedanticMode && blob[fp-1]!==0x00) {
-		// no trailing zero in AVS > 2.? (2.8?)
-		//throw new ConvertException("Missing terminating zero at end of preset. (pedantic)");
 	}
 	return components;
 }
@@ -85,7 +162,7 @@ function getComponentIndex (code, blob, offset) {
 			}
 		};
 	} else {
-		for (var i = 0; i < componentTable.length; i++) {
+		for (var i = builtinComponents.length; i < componentTable.length; i++) {
 			if(componentTable[i].code instanceof Array &&
 					cmpBytes(blob, offset+sizeInt, componentTable[i].code)) {
 				log("Found component: "+componentTable[i].name);
@@ -93,7 +170,7 @@ function getComponentIndex (code, blob, offset) {
 			}
 		};
 	}
-	log("Found unknown component (code:"+code+")");
+	log("Found unknown component (code: "+code+")");
 	return -code;
 }
 
@@ -121,10 +198,10 @@ function decode_effectList (blob, offset) {
 	var bitField2 = getBitField(blob[offset+1]);
 	var comp = {
 		'type': 'EffectList',
-		'enabled': !bitField2[1],
-		'clearFrame': bitField2[0],
-		'input': getBlendmodeIn(blob[offset+2]),
-		'output': getBlendmodeOut(blob[offset+3]),
+		'enabled': getBit(blob, offset, 1)!==1,
+		'clearFrame': getBit(blob, offset, 0)===1,
+		'input': getBlendmodeIn(blob, offset+2, 1)[0],
+		'output': getBlendmodeOut(blob, offset+3, 1)[0],
 		//ignore constant el config size of 36 bytes (9 x int32)
 		'inAdjustBlend': getUInt32(blob, offset+5),
 		'outAdjustBlend': getUInt32(blob, offset+9),
@@ -151,10 +228,9 @@ function decode_effectList (blob, offset) {
 		contSize = size-37-effectList28plusHeader.length-sizeInt-extSize;
 		comp['codeEnabled'] = getUInt32(blob, extOffset+sizeInt)===1;
 		var initSize = getUInt32(blob, extOffset+sizeInt*2);
-		var frameSize = getUInt32(blob, extOffset+sizeInt*3+initSize);
 		comp['code'] = {
-			'init': getString(blob, extOffset+sizeInt*3, initSize),
-			'frame': getString(blob, extOffset+sizeInt*4+initSize, frameSize),
+			'init': getSizeString(blob, extOffset+sizeInt*2)[0],
+			'frame': getSizeString(blob, extOffset+sizeInt*3+initSize)[0],
 		};
 	} //else: old Effect List format, inside components just start
 	var content = convertComponents(blob.subarray(contOffset, contOffset+contSize));
@@ -162,51 +238,70 @@ function decode_effectList (blob, offset) {
 	return comp;
 }
 
-function decode_bufferSave (blob, offset) {
-	return {
-		'type': 'BufferSave',
-		'mode': getBufferMode(blob[offset]),
-		'buffer': blob[offset+sizeInt],
-		'blend': getBlendmodeBuffer(blob[offset+sizeInt*2]),
-		'adjustBlend': blob[offset+sizeInt*3],
+function decode_generic (blob, offset, fields, name, end) {
+	var comp = {
+		'type': removeSpaces(name)
 	};
-}
-
-function decode_comment (blob, offset) {
-	return {
-		'type': 'Comment',
-		'comment': getString(blob, offset+sizeInt, getUInt32(blob, offset)),
+	var keys = Object.keys(fields);
+	var lastWasABitField = false;
+	for(var i=0; i<keys.length; i++) {
+		if(offset >= end) {
+			break;
+		}
+		var k = keys[i];
+		var f = fields[k];
+		if(k==="null") {
+			offset += f;
+			// [null, 0] resets bitfield continuity to allow several consecutive bitfields
+			lastWasABitField = false;
+			continue;
+		}
+		var size = 0;
+		var value, result;
+		var number = typeof f === "number";
+		var other = typeof f === "string";
+		var array = f instanceof Array;
+		if(number) {
+			switch(f) {
+				case 1:
+					size = 1;
+					value = blob[offset];
+					break;
+				case sizeInt:
+					size = sizeInt;
+					value = getUInt32(blob, offset);
+					break;
+				default:
+					throw new ConvertException("Invalid field size: "+f+".");
+			}
+			lastWasABitField = false;
+		} else if(other) {
+			result = window["get"+f](blob, offset);
+			value = result[0];
+			size = result[1];
+			lastWasABitField = false;
+		} else if(f && f.length>=2) {
+			if(f[0]==="Bit") {
+				if(lastWasABitField) {
+					offset -= 1; // compensate to stay in same bitfield
+				}
+				lastWasABitField = true;
+			} else {
+				lastWasABitField = false;
+			}
+			result = window["get"+f[0]](blob, offset, f[1]);
+			value = result[0];
+			if(f[2]) { // further processing if wanted
+				value = window["get"+f[2]](value);
+			}
+			size = result[1];
+		}
+		
+		// save value or function result of value in field
+		comp[k] = value;
+		offset += size;
 	};
-}
-
-function decode_colorModifier (blob, offset) {
-	return {
-		'type': 'ColorModifier',
-		'recomputeEveryFrame': blob[offset],
-		'code': decodeCodePFBI(blob, offset+1),
-	};
-}
-
-function decode_renderMode (blob, offset) {
-	return {
-		'type': 'SetRenderMode',
-		'enabled': blob[offset+3]>>7,
-		'blend': getBlendmodeRender(blob[offset]),
-		'adjustBlend': blob[offset+1],
-		'lineSize': blob[offset+2],
-	};
-}
-
-function decode_avsTrans (blob, offset) {
-	var size = getUInt32(blob, offset-sizeInt);
-	return {
-		'type': 'AVS Trans Automation',
-		'enabled': getUInt32(blob, offset)===1,
-		'logging': getUInt32(blob, offset+sizeInt)===1,
-		'translateFirstLevel': getUInt32(blob, offset+sizeInt*2)===1,
-		'readCommentCodes': getUInt32(blob, offset+sizeInt*3)===1,
-		'code': getString(blob, offset+sizeInt*4, size-sizeInt*4),
-	};
+	return comp;
 }
 
 function decode_texer2 (blob, offset) {
@@ -235,11 +330,13 @@ function decode_ (blob, offset) {
 //// decode helpers
 
 // Pixel, Frame, Beat, Init code fields - reorder to I,F,B,P order.
-function decodeCodePFBI (blob, offset) {
+function getCodePFBI (blob, offset) {
 	var strings = new Array(4);
+	var totalSize = 0;
 	for (var i = 0, p = offset; i < 4; i++, p += size+sizeInt) {
 		size = getUInt32(blob, p);
-		strings[i] = getString(blob, p+sizeInt, size);
+		totalSize += sizeInt+size;
+		strings[i] = getSizeString(blob, p, true, size)[0];
 	};
 	var code = {};
 	var map = [3, 1, 2, 0];
@@ -247,11 +344,35 @@ function decodeCodePFBI (blob, offset) {
 	for (var i = 0; i < strings.length; i++) {
 		code[fields[i]] = strings[map[i]];
 	};
-	return code;
+	return [code, totalSize];
+}
+
+function getColorList (blob, offset) {
+	var colors = [];
+	var num = getUInt32(blob, offset);
+	var size = sizeInt+num*sizeInt;
+	while(num>0) {
+		offset += sizeInt;
+		colors.push(getColor(blob, offset)[0]);
+		num--;
+	}
+	return [colors, size];
+}
+
+function getColor (blob, offset) {
+	// Colors in AVS are saved as (A)RGB (where A is always 0).
+	// Maybe one should use an alpha channel right away and set
+	// that to 0xff? For now, no 4th byte means full alpha.
+	var color = getUInt32(blob, offset).toString(16);
+	var padding = "";
+	for (var i = color.length; i < 6; i++) {
+		padding += "0";
+	};
+	return ["#"+padding+color, sizeInt];
 }
 
 // Blend modes
-function getBlendmodeIn (code) {
+function getBlendmodeIn (blob, offset, size) {
 	var blendmodes = {
 			 '0': 'Ignore',
 			 '1': 'Replace',
@@ -267,10 +388,11 @@ function getBlendmodeIn (code) {
 			'11': 'Multiply',
 			'12': 'Buffer',
 		};
-	return blendmodes[code];
+	var code = size===1?blob[offset]:getUInt32(blob, offset);
+	return [blendmodes[code], size];
 }
 
-function getBlendmodeOut (code) {
+function getBlendmodeOut (blob, offset, size) {
 	var blendmodes = {
 			 '0': 'Replace',
 			 '1': 'Ignore',
@@ -287,10 +409,11 @@ function getBlendmodeOut (code) {
 			// don't ask me....
 			'13': 'Buffer',
 		};
-	return blendmodes[code];
+	var code = size===1?blob[offset]:getUInt32(blob, offset);
+	return [blendmodes[code], size];
 }
 
-function getBlendmodeBuffer (code) {
+function getBlendmodeBuffer (blob, offset, size) {
 	var blendmodes = {
 			 '0': 'Replace',
 			 '1': '50/50',
@@ -305,10 +428,11 @@ function getBlendmodeBuffer (code) {
 			'10': 'Multiply',
 			'11': 'Adjustable',
 		};
-	return blendmodes[code];
+	var code = size===1?blob[offset]:getUInt32(blob, offset);
+	return [blendmodes[code], size];
 }
 
-function getBlendmodeRender (code) {
+function getBlendmodeRender (blob, offset, size) {
 	var blendmodes = {
 			'0': 'Replace',
 			'1': 'Additive',
@@ -320,16 +444,50 @@ function getBlendmodeRender (code) {
 			'7': 'Adjustable',
 			'8': 'XOR',
 		};
-	return blendmodes[code];
+	var code = size===1?blob[offset]:getUInt32(blob, offset);
+	return [blendmodes[code], size];
 }
 
 // Buffer modes
-function getBufferMode (code) {
+function getBufferMode (blob, offset, size) {
 	var buffermodes = {
 			'0': 'Save',
 			'1': 'Restore',
 			'2': 'AlternateSaveRestore',
 			'3': 'AlternateRestoreSave',
 		};
-	return buffermodes[code];
+	var code = size===1?blob[offset]:getUInt32(blob, offset);
+	return [buffermodes[code], size];
+}
+
+function getBufferNum (blob, offset, size) {
+	var code = size===1 ? blob[offset] : getUInt32(blob, offset);
+	if(code===0) return ["Current", size];
+	else return [getUInt32(blob, offset), size];
+}
+
+function getCoordinates (blob, offset, size) {
+	var code = size===1 ? blob[offset] : getUInt32(blob, offset);
+	return [code?"Cartesian":"Polar", size];
+}
+
+function getLineType (code) {
+	return code?"Lines":"Dots";
+}
+
+function getAudioChannel (code) {
+	var channels = {
+			'0': 'Left',
+			'1': 'Right',
+			'2': 'Center',
+	}
+	return channels[code];
+}
+
+function getAudioRepresent (code) {
+	var representations = {
+			'0': 'Waveform',
+			'1': 'Spectrum',
+	}
+	return representations[code];
 }

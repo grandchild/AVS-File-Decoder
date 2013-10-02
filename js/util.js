@@ -7,30 +7,6 @@ function ConvertException (message) {
 	this.name = "ConvertException";
 }
 
-function jsonKeyVal (key, val) {
-	return "\""+key+"\": \""+val+"\"";
-}
-
-function jsonKeyValBool (key, val) {
-	return "\""+key+"\": "+(val?"true":"false");
-}
-
-function jsonKeyArr (key, arr) {
-	return "\""+key+"\": [\n"+arr+"]";
-}
-
-function jsonKeyObj (key, obj) {
-	if(key) {
-		return "\""+key+"\": {\n"+obj+"}";
-	} else {
-		return "{\n"+obj+"}";
-	}
-}
-
-function cJoin (json) {
-	return json.join(',\n')+"\n";
-}
-
 function cmpBytes (arr, offset, test) {
 	for (var i = 0; i < test.length; i++) {
 		if(test[i] === null){
@@ -43,42 +19,59 @@ function cmpBytes (arr, offset, test) {
 	return true;
 }
 
-function getUInt32 (buf, offset) {
+function getUInt32 (blob, offset) {
 	if(!offset) offset = 0;
-	var array = buf.buffer.slice(buf.byteOffset+offset, buf.byteOffset+offset+4);
+	var array = blob.buffer.slice(blob.byteOffset+offset, blob.byteOffset+offset+4);
 	return new Uint32Array(array, 0, 1)[0];
 }
 
-function getBitField (bits) {
-	var length = 8;
-	var field = new Array(length);
-	for (var i = 0; i < length; i++) {
-		field[i] = ((bits>>i)&1)===1;
-	};
-	return field;
+function getBit (blob, offset, pos) {
+	if(pos instanceof Array) {
+		if(pos.length!==2) new ConvertException("Wrong Bitfield range");
+		var mask = (2<<(pos[1]-pos[0]))-1;
+		return [(blob[offset]>>pos[0])&mask, 1];
+	} else {
+		return [((blob[offset]>>pos)&1), 1];
+	}
 }
 
-// assumes 0-terminated string!
-function getString (buf, offset, size) {
+function getBool (blob, offset, size) {
+	var val = size===1?blob[offset]:getUInt32(blob, offset)[0];
+	return [val!==0, size];
+}
+
+function getBoolified (num) {
+	return num==0?false:true;
+}
+
+function getSizeString (blob, offset, size) {
+	var add = 0;
 	var result = "";
-	size += offset;
-	// we go to one less than 'size' because it counts terminating 0x00.
-	for(var i=offset; i<size-1; i++) {
-		result += String.fromCharCode(buf[i]);
+	if(!size) {
+		size = getUInt32(blob, offset);
+		add = 4; // sizeInt
 	}
-	if(pedanticMode && buf[size-1]!==0x00) {
-		//log("fp: "+buf.byteOffset+size-1);
-		throw new ConvertException("Couldn't find terminating zero after string. (pedantic)")
+	var end = offset+size+add;
+	var i = offset+add;
+	var c = blob[i];
+	while(c>0 && i<end) {
+		result += String.fromCharCode(c);
+		c = blob[++i];
 	}
-	return escapeJson(result);
+	return [result, size+add];
 }
 
-function escapeJson (str) {
-	return str
-		//.replace(/[\\]/g, '\\\\')
-		.replace(/[\"]/g, '\\\"')
-		.replace(/[\f]/g, '\\f')
-		.replace(/[\n]/g, '\\n')
-		.replace(/[\r]/g, '\\r')
-		.replace(/[\t]/g, '\\t');
+function getNtString (blob, offset) {
+	var result = "";
+	var i = offset;
+	var c = blob[i];
+	while(c>0) {
+		result += String.fromCharCode(c);
+		c = blob[++i];
+	}
+	return [result, i-offset];
+}
+
+function removeSpaces (str) {
+	return str.replace(/[ ]/g, '');
 }

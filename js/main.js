@@ -1,7 +1,7 @@
 var compat = false;
 var outputDir = "";
 
-var pedanticMode = true; // check for terminating zeros (and possibly other unnecessary stuff in the future)
+var pedanticMode = false; // check for terminating zeros (and possibly other unnecessary stuff in the future)
 
 /// needs:
 // util.js
