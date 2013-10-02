@@ -25,6 +25,12 @@ function getUInt32 (blob, offset) {
 	return new Uint32Array(array, 0, 1)[0];
 }
 
+function getInt32 (blob, offset) {
+	if(!offset) offset = 0;
+	var array = blob.buffer.slice(blob.byteOffset+offset, blob.byteOffset+offset+4);
+	return new Int32Array(array, 0, 1)[0];
+}
+
 function getBit (blob, offset, pos) {
 	if(pos instanceof Array) {
 		if(pos.length!==2) new ConvertException("Wrong Bitfield range");

@@ -34,3 +34,13 @@ function saveAvsAsJson (preset, name) {
 	$(output).html(JSON.stringify(json, null, '    '));
 	$(output).each(function(i, e) {hljs.highlightBlock(e)});
 }
+
+// not used - it's filespace wasted, but parsing easier...
+function jsonPrintSpecials (k, v) {
+	// a 7x7 matrix in full json takes up an awful lot of space
+	if(k==="convolutionMatrix") {
+		// we know the matrix is 7x7
+		return v.join(',');
+	}
+	return v;
+}

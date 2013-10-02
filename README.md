@@ -18,7 +18,7 @@ If you want to help out - cool! Have a look at the top of [js/convert.js](https:
  - [ ] Channel Shift
  - [x] AVS Trans
  - [x] Framerate Limiter
- - [ ] Convolution Filter
+ - [x] Convolution Filter
  - [x] Texer II
  - [ ] Color Map
  - [ ] ...

@@ -111,7 +111,13 @@ var dllComponents = [
 				"code": // Holden03: Convolution Filter....
 					[0x48, 0x6F, 0x6C, 0x64, 0x65, 0x6E, 0x30, 0x33, 0x3A, 0x20, 0x43, 0x6F, 0x6E, 0x76, 0x6F, 0x6C, 0x75, 0x74, 0x69, 0x6F, 0x6E, 0x20, 0x46, 0x69, 0x6C, 0x74, 0x65, 0x72, 0x00, 0x00, 0x00, 0x00],
 				"group": "Misc", "func": "generic", "fields": {
-					
+					"enabled": ["Bool", sizeInt],
+					"wrap": ["Bool", sizeInt], // note that wrap and absolute are mutually exclusive.
+					"absolute": ["Bool", sizeInt], // they can however both be false/zero
+					"2-pass": ["Bool", sizeInt],
+					"convolutionMatrix": ["ConvoFilter", [7,7]],
+					"bias": ["Bool", sizeInt],
+					"scaling": ["Bool", sizeInt],
 				}},
 			/*
 			{"name": "",
@@ -205,7 +211,7 @@ function decodePresetHeader(blob) {
 	if(!cmpBytes(blob, /*offset*/0, presetHeader)) {
 		throw new ConvertException("Invalid preset header.");
 	}
-	return blob[presetHeaderLength-1]; // "Clear Every Frame"
+	return blob[presetHeaderLength-1]===1; // "Clear Every Frame"
 }
 
 //// component decode functions
@@ -383,6 +389,19 @@ function getColor (blob, offset) {
 		padding += "0";
 	};
 	return ["#"+padding+color, sizeInt];
+}
+
+function getConvoFilter (blob, offset, dimensions) {
+	if(!(dimensions instanceof Array) && dimensions.length!==2) {
+		throw new ConvertException("ConvoFilter: Size must be array with x and y dimensions in dwords.");
+	}
+	var size = dimensions[0]*dimensions[1];
+	var data = new Array(size);
+	for (var i = 0; i < size; i++, offset+=sizeInt) {
+		data[i] = getInt32(blob, offset);
+	};
+	var matrix = {"width": dimensions[0], "height": dimensions[1], "data": data};
+	return [matrix, size*sizeInt];
 }
 
 // Blend modes
