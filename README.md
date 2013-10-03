@@ -11,10 +11,17 @@ If you want to help out - cool! Have a look at the top of [js/convert.js](https:
 
 ## Installation
 
-* Clone the repository `git clone https://github.com/grandchild/AVS-File-Decoder.git`
-* or use the '[zip download](https://github.com/grandchild/AVS-File-Decoder/archive/master.zip)' option.
+### GitHub
 
-By default, JQuery and Bootstrap are loaded from a CDN. Using [Bower](http://bower.io/), you can install the JQuery library locally - a fallback method is already implemented in the application.
+Clone the repository `git clone https://github.com/grandchild/AVS-File-Decoder.git`
+
+### Download
+
+Use the '[zip download](https://github.com/grandchild/AVS-File-Decoder/archive/master.zip)' option and extract its content
+
+### Dependencies
+
+By default, JQuery and Bootstrap are loaded from a CDN. Using [Bower](http://bower.io/), you can install the JQuery library locally - a fallback method is already implemented in the application. No Bootstrap fallback as of yet.
 
 ## Component Checklist:
 
