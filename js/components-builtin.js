@@ -23,15 +23,12 @@ var builtinComponents = [
 			{"name": "Super Scope",
 				"code": 0x24, "group": "Render", "func": "generic", "fields": {
 					"enabled": ["Bool", 1], // no UI for this in AVS -> always says: 0x01, setting this to zero manually will disable the SSC.
-					"point": "SizeString",
-					"frame": "SizeString",
-					"beat": "SizeString",
-					"init": "SizeString",
+					"code": "CodePFBI",
 					"audioChannel": ["Bit", [0,1], "AudioChannel"],
 					"audioRepresent": ["Bit", 2, "AudioRepresent"],
 					null0: 3, // padding, bitfield before is actually 32 bit
 					"colors": "ColorList",
-					"lineType": ["Bool", sizeInt, "LineType"],
+					"lineType": ["DrawMode", sizeInt],
 				}},
 			{"name": "Set Render Mode",
 				"code": 0x28, "group": "Misc", "func": "generic", "fields": {
@@ -43,14 +40,11 @@ var builtinComponents = [
 			{"name": "Dynamic Movement",
 				"code": 0x2B, "group": "Trans", "func": "generic", "fields": {
 					"enabled": ["Bool", 1], // same as in SSC, no UI
-					"point": "SizeString",
-					"frame": "SizeString",
-					"beat": "SizeString",
-					"init": "SizeString",
+					"code": "CodePFBI",
 					"bilinear": ["Bool", sizeInt],
 					"coordinates": ["Coordinates", sizeInt],
-					"gridWidth": sizeInt,
-					"gridHeight": sizeInt,
+					"gridW": sizeInt,
+					"gridH": sizeInt,
 					"alpha": ["Bool", sizeInt],
 					"wrap": ["Bool", sizeInt],
 					"buffer": ["BufferNum", sizeInt],
@@ -59,9 +53,6 @@ var builtinComponents = [
 			{"name": "Color Modifier",
 				"code": 0x2D, "group": "Trans", "func": "generic", "fields": {
 					"recomputeEveryFrame": ["Bool", 1],
-					"point": "SizeString",
-					"frame": "SizeString",
-					"beat": "SizeString",
-					"init": "SizeString",
+					"code": "CodePFBI",
 				}},
 		];

@@ -3,7 +3,7 @@ var presetHeaderLength = 25;
 var builtinMax = 16384;
 
 function log (message) {
-	$('#log').append(message+"\n");
+	$('#log').prepend(message+"\n");
 }
 
 function ConvertException (message) {

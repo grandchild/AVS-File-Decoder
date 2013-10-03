@@ -129,6 +129,7 @@ function decode_effectList (blob, offset) {
 	return comp;
 }
 
+// generic field decoding function that, until now, all components use.
 function decode_generic (blob, offset, fields, name, end) {
 	var comp = {
 		'type': removeSpaces(name)
@@ -167,7 +168,13 @@ function decode_generic (blob, offset, fields, name, end) {
 			}
 			lastWasABitField = false;
 		} else if(other) {
-			result = window["get"+f](blob, offset);
+			try {
+				result = window["get"+f](blob, offset);
+			} catch (e) {
+				if (e.message.search(/has no method '[^']*'/)) {
+					throw new ConvertException("Method '"+f+"' was not found. (correct capitalization?)");
+				}
+			}
 			value = result[0];
 			size = result[1];
 			lastWasABitField = false;
@@ -180,10 +187,16 @@ function decode_generic (blob, offset, fields, name, end) {
 			} else {
 				lastWasABitField = false;
 			}
-			result = window["get"+f[0]](blob, offset, f[1]);
-			value = result[0];
-			if(f[2]) { // further processing if wanted
-				value = window["get"+f[2]](value);
+			try {
+				result = window["get"+f[0]](blob, offset, f[1]);
+				value = result[0];
+				if(f[2]) { // further processing if wanted
+					value = window["get"+f[2]](value);
+				}
+			} catch (e) {
+				if (e.message.search(/has no method '[^']*'/)) {
+					throw new ConvertException("Method '"+f+"' was not found. (correct capitalization?)");
+				}
 			}
 			size = result[1];
 		}
@@ -214,20 +227,60 @@ function decode_ (blob, offset) {
 
 //// decode helpers
 
+// generic mapping function (in 1 and 4 byte flavor) to map a value to one of a set of strings
+function getMapByte (blob, offset, map) { return [getMapping(blob, offset, map, blob[offset]), 1]; }
+function getMapInt (blob, offset, map) { return [getMapping(blob, offset, map, getUInt32(blob, offset)), sizeInt]; }
+function getMapping (blob, offset, map, key) {
+	var value = map[key];
+	if (value === undefined) {
+		throw new ConvertException("Map: A value for key '"+key+"' does not exist.");
+	} else {
+		return value;
+	}
+}
+
 // Pixel, Frame, Beat, Init code fields - reorder to I,F,B,P order.
 function getCodePFBI (blob, offset) {
-	var strings = new Array(4);
+	var map = [ // this is the sort map, lines are 'need'-sorted with 'is'-index.
+		["init", 3],
+		["perFrame", 1],
+		["onBeat", 2],
+		["perPoint", 0],
+	];
+	return getCodeSection (blob, offset, map);
+}
+
+// Frame, Beat, Init code fields - reorder to I,F,B order.
+function getCodeFBI (blob, offset) {
+	var map = [
+		["init", 2]
+		["onBeat", 0],
+		["perFrame", 1],
+	];
+	return getCodeSection (blob, offset, map);
+}
+
+function getCodeIFBP (blob, offset) {
+	var map = [ // in this case the mapping is pretty redundant. the fields are already in order.
+		["init", 0],
+		["perFrame", 1],
+		["onBeat", 2],
+		["perPoint", 3],
+	];
+	return getCodeSection (blob, offset, map);
+}
+
+function getCodeSection (blob, offset, map) {
+	var strings = new Array(map.length);
 	var totalSize = 0;
-	for (var i = 0, p = offset; i < 4; i++, p += size+sizeInt) {
-		size = getUInt32(blob, p);
-		totalSize += sizeInt+size;
-		strings[i] = getSizeString(blob, p, true, size)[0];
+	for (var i = 0, p = offset; i < map.length; i++, p += strAndSize[1]) {
+		var strAndSize = getSizeString(blob, p);
+		totalSize += strAndSize[1];
+		strings[i] = strAndSize[0];
 	};
 	var code = {};
-	var map = [3, 1, 2, 0];
-	var fields = ["init", "onFrame", "onBeat", "perPoint"]
 	for (var i = 0; i < strings.length; i++) {
-		code[fields[i]] = strings[map[i]];
+		code[map[i][0]] = strings[map[i][1]];
 	};
 	return [code, totalSize];
 }
@@ -242,6 +295,20 @@ function getColorList (blob, offset) {
 		num--;
 	}
 	return [colors, size];
+}
+
+function getColorMap (blob, offset){
+	var num = getUInt32(blob, offset);
+	var size = num;
+	var colorMap = [];
+	offset += sizeInt;
+	for (var i = 0; i < num; i++) {
+		var pos = getUInt32(blob, offset);
+		var color = getColor(blob, offset+sizeInt);
+		offset += sizeInt*2 + sizeInt; // there's 4bytes of random foo following each entry...
+		colorMap[i] = {"color": color, "position": pos};
+	};
+	return colorMap;
 }
 
 function getColor (blob, offset) {
@@ -303,11 +370,12 @@ function getBufferNum (blob, offset, size) {
 
 function getCoordinates (blob, offset, size) {
 	var code = size===1 ? blob[offset] : getUInt32(blob, offset);
-	return [code?"Cartesian":"Polar", size];
+	return [coordinates[code], size];
 }
 
-function getLineType (code) {
-	return code?"Lines":"Dots";
+function getDrawMode (blob, offset, size) {
+	var code = size===1 ? blob[offset] : getUInt32(blob, offset);
+	return drawModes[code];
 }
 
 function getAudioChannel (code) {

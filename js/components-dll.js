@@ -22,10 +22,7 @@ var dllComponents = [
 					"wrap": ["Bool", sizeInt],
 					"coloring": ["Bool", sizeInt],
 					null1: sizeInt,
-					"init": "SizeString",
-					"frame": "SizeString",
-					"beat": "SizeString",
-					"point": "SizeString",
+					"code": "CodeIFBP",
 				}},
 			{"name": "Color Map",
 				"code": // Color Map.......................
@@ -53,9 +50,15 @@ var dllComponents = [
 					"wrap": ["Bool", sizeInt], // note that wrap and absolute are mutually exclusive.
 					"absolute": ["Bool", sizeInt], // they can however both be false/zero
 					"2-pass": ["Bool", sizeInt],
-					"convolutionMatrix": ["ConvoFilter", [7,7]],
+					"kernel": ["ConvoFilter", [7,7]],
 					"bias": ["Bool", sizeInt],
 					"scaling": ["Bool", sizeInt],
+				}},
+			{"name": "Triangle",
+				"code": // Render: Triangle................
+					[0x52, 0x65, 0x6E, 0x64, 0x65, 0x72, 0x3A, 0x20, 0x54, 0x72, 0x69, 0x61, 0x6E, 0x67, 0x6C, 0x65, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00],
+				"group": "Misc", "func": "generic", "fields": {
+					"code": "CodeIFBP",
 				}},
 			/*
 			{"name": "",
@@ -65,4 +68,14 @@ var dllComponents = [
 					
 				}},
 			*/
+			{"name": "MIDI Trace",
+				"code": // Nullsoft Pixelcorps: MIDItrace .
+					[0x4E, 0x75, 0x6C, 0x6C, 0x73, 0x6F, 0x66, 0x74, 0x20, 0x50, 0x69, 0x78, 0x65, 0x6C, 0x63, 0x6F, 0x72, 0x70, 0x73, 0x3A, 0x20, 0x4D, 0x49, 0x44, 0x49, 0x74, 0x72, 0x61, 0x63, 0x65, 0x20, 0x00],
+				"group": "Misc", "func": "generic", "fields": {
+					"enabled": ["Bool", sizeInt],
+					"channels": sizeInt,
+					"mode": ["MapInt", {1: "Current", 2: "Trigger"}],
+					"allChannels": ["Bool", sizeInt],
+					"printEvents": ["Bool", sizeInt],
+				}},
 		];
