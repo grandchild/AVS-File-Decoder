@@ -231,24 +231,30 @@ r_dotfnt.cpp
 
 
 r_dotgrid.cpp
-(colors[x]); x++;  pos+=4; }
+  int pos=0,x=0;
+  PUT_INT(num_colors); pos+=4;
+  while (x < num_colors) { PUT_INT(colors[x]); x++;  pos+=4; }
   PUT_INT(spacing); pos+=4;
   PUT_INT(x_move); pos+=4;
   PUT_INT(y_move); pos+=4;
   PUT_INT(blend); pos+=4;
-	return pos;
+	return pos; 
 ----------------------------------------
 
 
 r_dotpln.cpp
-++)
-	{
-		PUT_INT(colors[x]); pos+=4;
-	}
+  int rr;
+  int pos=0;
+  int x;
+  PUT_INT(rotvel); pos+=4;
+  for (x = 0; x < 5; x ++)
+  {
+    PUT_INT(colors[x]); pos+=4;
+  }
   PUT_INT(angle); pos+=4;
   rr=(int)(r*32.0f);
   PUT_INT(rr); pos+=4;
-	return pos;
+  return pos;
 ----------------------------------------
 
 
