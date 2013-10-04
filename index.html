@@ -40,23 +40,7 @@
 
     <script type="text/javascript" src="lib/bootstrap-filestyle.min.js"></script>
     <script src="lib/highlight.pack.js"></script>
-    <!-- when deployed use combined.js
-    <script type="text/javascript" src="js/_combined.js"></script?>
-    -->
-    <!-- Use original files until then: -->
-    <script type="text/javascript" src="js/util.js"></script>
-    <script type="text/javascript" src="js/components-builtin.js"></script>
-    <script type="text/javascript" src="js/components-dll.js"></script>
-    <script type="text/javascript" src="js/tables.js"></script>
-    <script type="text/javascript" src="js/convert.js"></script>
-    <script type="text/javascript" src="js/files.js"></script>
-    <script type="text/javascript" src="js/main.js"></script>
-    <script type="text/javascript">
-      //highlight
-      hljs.initHighlightingOnLoad();
-      //select
-      function SelectText(element){var doc=document;var text=doc.getElementById(element);if(doc.body.createTextRange){var range=doc.body.createTextRange();range.moveToElementText(text);range.select()}else{if(window.getSelection){var selection=window.getSelection();var range=doc.createRange();range.selectNodeContents(text);selection.removeAllRanges();selection.addRange(range)}}};
-      $(function(){$("#output").click(function(){SelectText("output")})});
-    </script>
+
+    <script type="text/javascript" src="js/_combined.js"></script>
   </body>
 </html>
