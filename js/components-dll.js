@@ -60,6 +60,19 @@ var dllComponents = [
 				"group": "Misc", "func": "generic", "fields": {
 					"code": "CodeIFBP",
 				}},
+			{"name": "Channel Shift", // AVS's (Unconed's) channel shift is buggy in that RGB cannot be selected. but you can turn on 'onBeatRandom' and save in a lucky moment.
+				"code": // Channel Shift...................
+					[0x43, 0x68, 0x61, 0x6E, 0x6E, 0x65, 0x6C, 0x20, 0x53, 0x68, 0x69, 0x66, 0x74, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00],
+				"group": "Misc", "func": "generic", "fields": {
+					"mode": ["Map4", {1144: "RGB", 1020: "RBG", 1019: "BRG", 1021: "BGR", 1018: "GBR", 1022: "GRB"}], // strange... would make sense as '1024-mode' but something goes awry at 'RGB'.
+					"onBeatRandom": ["Bool", sizeInt],
+				}},
+			{"name": "Normalize",
+				"code": // Trans: Normalise................
+					[0x54, 0x72, 0x61, 0x6E, 0x73, 0x3A, 0x20, 0x4E, 0x6F, 0x72, 0x6D, 0x61, 0x6C, 0x69, 0x73, 0x65, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00],
+				"group": "Trans", "func": "generic", "fields": {
+					"enabled": ["Bool", sizeInt],
+				}},
 			/*
 			{"name": "",
 				"code":
@@ -74,7 +87,7 @@ var dllComponents = [
 				"group": "Misc", "func": "generic", "fields": {
 					"enabled": ["Bool", sizeInt],
 					"channels": sizeInt,
-					"mode": ["MapInt", {1: "Current", 2: "Trigger"}],
+					"mode": ["Map32", {1: "Current", 2: "Trigger"}],
 					"allChannels": ["Bool", sizeInt],
 					"printEvents": ["Bool", sizeInt],
 				}},

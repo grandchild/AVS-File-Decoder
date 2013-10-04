@@ -171,9 +171,9 @@ function decode_generic (blob, offset, fields, name, end) {
 			try {
 				result = window["get"+f](blob, offset);
 			} catch (e) {
-				if (e.message.search(/has no method '[^']*'/)) {
+				if (e.message.search(/has no method'/)>=0) {
 					throw new ConvertException("Method '"+f+"' was not found. (correct capitalization?)");
-				}
+				} else { throw e;}
 			}
 			value = result[0];
 			size = result[1];
@@ -194,9 +194,8 @@ function decode_generic (blob, offset, fields, name, end) {
 					value = window["get"+f[2]](value);
 				}
 			} catch (e) {
-				if (e.message.search(/has no method '[^']*'/)) {
-					throw new ConvertException("Method '"+f+"' was not found. (correct capitalization?)");
-				}
+				if (e.message.search(/has no method/)>=0) { throw new ConvertException("Method '"+f+"' was not found. (correct capitalization?)"); }
+				else { throw e;}
 			}
 			size = result[1];
 		}
@@ -227,9 +226,10 @@ function decode_ (blob, offset) {
 
 //// decode helpers
 
-// generic mapping function (in 1 and 4 byte flavor) to map a value to one of a set of strings
-function getMapByte (blob, offset, map) { return [getMapping(blob, offset, map, blob[offset]), 1]; }
-function getMapInt (blob, offset, map) { return [getMapping(blob, offset, map, getUInt32(blob, offset)), sizeInt]; }
+// generic mapping function (in 1, 4 and 8 byte flavor) to map a value to one of a set of strings
+function getMap1 (blob, offset, map) { return [getMapping(blob, offset, map, blob[offset]), 1]; }
+function getMap4 (blob, offset, map) { return [getMapping(blob, offset, map, getUInt32(blob, offset)), sizeInt]; }
+function getMap8 (blob, offset, map) { return [getMapping(blob, offset, map, getUInt64(blob, offset)), sizeInt*2]; }
 function getMapping (blob, offset, map, key) {
 	var value = map[key];
 	if (value === undefined) {
@@ -253,7 +253,7 @@ function getCodePFBI (blob, offset) {
 // Frame, Beat, Init code fields - reorder to I,F,B order.
 function getCodeFBI (blob, offset) {
 	var map = [
-		["init", 2]
+		["init", 2],
 		["onBeat", 0],
 		["perFrame", 1],
 	];

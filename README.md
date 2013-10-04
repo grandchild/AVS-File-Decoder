@@ -34,12 +34,20 @@ By default, JQuery and Bootstrap are loaded from a CDN. Using [Bower](http://bow
  - [ ] Movement
  - [x] Color Modifier
  - [x] Fade Out
- - [ ] Channel Shift
+ - [x] Channel Shift
+ - [x] Blitter Feedback
+ - [x] Blur
+ - [x] Water
+ - [x] Grain
+ - [x] Fast Brightness
+ - [x] Invert
+ - [x] Bump
  - [x] AVS Trans
  - [x] Triangle
  - [x] Framerate Limiter
  - [x] Convolution Filter
  - [x] Texer II
+ - [x] Normalize
  - [ ] Color Map
  - [x] MIDI Trace
  - [ ] ...
