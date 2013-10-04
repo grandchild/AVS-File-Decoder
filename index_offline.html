@@ -1,0 +1,57 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="shortcut icon" href="//s.visbot.net/ico/favicon.png">
+
+    <title>AVS File Decoder</title>
+
+    <!-- Bootstrap core CSS -->
+    <!--link href="//netdna.bootstrapcdn.com/bootswatch/3.0.0/flatly/bootstrap.min.css" rel="stylesheet"-->
+    <link href='/bower_components/bootstrap/dist/css/bootstrap.min.css' rel='stylesheet'>
+
+    <!-- Custom styles for this template & highlighter.js -->
+    <link href="css/_combined.css" rel="stylesheet">
+  </head>
+
+  <body>
+
+    <div class="container">
+      <h2>AVS File Decoder</h2>
+      <h5>Convert Winamp AVS files into Webvs-compatible JSON</h5>
+      <div class="jumbotron">
+          <input type="file" id="preset" class="filestyle" data-classButton="btn btn-lg btn-success" data-input="false" data-buttonText="Load" />
+          <input type="button" class="btn btn-lg btn-danger" onclick="$('#log, #output').empty()" value="Clear" />
+          <textarea id="log" readonly="readonly" onclick="this.focus();this.select()"></textarea>
+          <pre><code id="output">{"message": "Please load file"}</code></pre>
+      </div>
+
+      <!-- Site footer -->
+      <div class="footer">
+        <p class="text-right"><small>Fork me on <a href="https://github.com/grandchild/AVS-File-Decoder">GitHub</a></small></p>
+      </div>
+
+    </div><!-- /.container -->
+
+    <!-- Core JavaScript -->
+    <!--script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script-->
+    <script src='/bower_components/jquery/jquery.min.js'></script>
+
+    <script type="text/javascript" src="lib/bootstrap-filestyle.min.js"></script>
+    <script src="lib/highlight.pack.js"></script>
+    <!-- when deployed use combined.js
+    <script type="text/javascript" src="js/_combined.js"></script?>
+    -->
+    <!-- Use original files until then: -->
+    <script type="text/javascript" src="js/util.js"></script>
+    <script type="text/javascript" src="js/components-builtin.js"></script>
+    <script type="text/javascript" src="js/components-dll.js"></script>
+    <script type="text/javascript" src="js/tables.js"></script>
+    <script type="text/javascript" src="js/convert.js"></script>
+    <script type="text/javascript" src="js/files.js"></script>
+    <script type="text/javascript" src="js/main.js"></script>
+  </body>
+</html>
