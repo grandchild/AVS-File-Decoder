@@ -29,7 +29,7 @@ Unfortunately, there's no Bootstrap fallback as of yet.
 
 ## Building
 
-In order to compile minified javascript, download the [YUI Compressor](https://github.com/yui/yuicompressor/releases) and move the binary to `bin/yuicompressor.jar` in your repository. Minify the javascript using the build command `/.build` (`build.bat` on Windows).
+In order to compile minified javascript, download the [YUI Compressor](https://github.com/yui/yuicompressor/releases) and move the binary to `bin/yuicompressor.jar` in your repository. Minify the javascript using the build command `./build` (`build.bat` on Windows).
 
 ## Component Checklist:
 
