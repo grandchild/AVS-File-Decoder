@@ -21,7 +21,11 @@ Use the '[zip download](https://github.com/grandchild/AVS-File-Decoder/archive/m
 
 ### Dependencies
 
-By default, JQuery and Bootstrap are loaded from a CDN. Using [Bower](http://bower.io/), you can install the JQuery library locally - a fallback method is already implemented in the application. No Bootstrap fallback as of yet.
+By default, JQuery and Bootstrap are loaded from a CDN. Using [Bower](http://bower.io/), you can install the JQuery library locally - a fallback method is already implemented into the application.
+
+`bower install`
+
+Unfortunately, there's no Bootstrap fallback as of yet.
 
 ## Component Checklist:
 
