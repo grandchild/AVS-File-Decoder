@@ -77,6 +77,16 @@ var buffermodes = {
 		'3': 'AlternateRestoreSave',
 	};
 
+var coordinates = {
+		'0': 'Polar',
+		'1': 'Cartesian',
+}
+
+var drawModes = {
+		'0': 'Dots',
+		'1': 'Lines',
+}
+
 var audioChannels = {
 		'0': 'Left',
 		'1': 'Right',
