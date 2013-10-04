@@ -1,0 +1,710 @@
+r_avi.cpp
+  int pos=0;
+  PUT_INT(enabled); pos+=4;
+  PUT_INT(blend); pos+=4;
+  PUT_INT(blendavg); pos+=4;
+  strcpy((char *)data+pos, ascName);
+  pos+=strlen(ascName)+1;
+  PUT_INT(adapt); pos+=4;
+  PUT_INT(persist); pos+=4;
+  PUT_INT(speed); pos+=4;
+  return pos;
+----------------------------------------
+
+
+r_blit.cpp
+	int pos=0;
+	PUT_INT(scale); pos+=4;
+	PUT_INT(scale2); pos+=4;
+	PUT_INT(blend); pos+=4;
+	PUT_INT(beatch); pos+=4;
+  PUT_INT(subpixel); pos+=4;
+	return pos;
+----------------------------------------
+
+
+r_blur.cpp
+	int pos=0;
+	PUT_INT(enabled); pos+=4;
+	PUT_INT(roundmode); pos+=4;
+	return pos;
+----------------------------------------
+
+
+r_bpm.cpp
+  int pos=0;
+  PUT_INT(enabled); pos+=4;
+  PUT_INT(arbitrary); pos+=4;
+  PUT_INT(skip); pos+=4;
+  PUT_INT(invert); pos+=4;
+  PUT_INT(arbVal); pos+=4;
+  PUT_INT(skipVal); pos+=4;
+  PUT_INT(skipfirst); pos+=4;
+  return pos;
+----------------------------------------
+
+
+r_bright.cpp
+  int pos=0;
+  PUT_INT(enabled); pos+=4;
+  PUT_INT(blend); pos+=4;
+  PUT_INT(blendavg); pos+=4;
+  PUT_INT(redp); pos+=4;
+  PUT_INT(greenp); pos+=4;
+  PUT_INT(bluep); pos+=4;
+  PUT_INT(dissoc); pos+=4;
+  PUT_INT(color); pos+=4;
+  PUT_INT(exclude); pos+=4;
+  PUT_INT(distance); pos+=4;
+  return pos;
+----------------------------------------
+
+
+r_bspin.cpp
+	int pos=0;
+	PUT_INT(enabled); pos+=4;
+	PUT_INT(colors[0]); pos+=4;
+	PUT_INT(colors[1]); pos+=4;
+	PUT_INT(mode); pos+=4;
+	return pos;
+----------------------------------------
+
+
+r_bump.cpp
+  int pos=0;
+  PUT_INT(enabled); pos+=4;
+  PUT_INT(onbeat); pos+=4;
+  PUT_INT(durFrames); pos+=4;
+  PUT_INT(depth); pos+=4;
+  PUT_INT(depth2); pos+=4;
+  PUT_INT(blend); pos+=4;
+  PUT_INT(blendavg); pos+=4;
+  save_string(data, pos, code1);
+  save_string(data, pos, code2);
+  save_string(data, pos, code3);
+  PUT_INT(showlight); pos+=4;
+  PUT_INT(invert); pos+=4;
+  PUT_INT(oldstyle); pos+=4;
+  PUT_INT(buffern); pos+=4;
+  return pos;
+----------------------------------------
+
+
+r_chanshift.cpp
+#define IDC_GBR                         1018
+#define IDC_BRG                         1019
+#define IDC_RBG                         1020
+#define IDC_BGR                         1021
+#define IDC_GRB                         1022
+#define IDC_RGB                         1183 (actually, 1144 gets saved, go figure)
+
+typedef struct {
+	int	mode;
+	int onbeat;
+} apeconfig;
+
+----------------------------------------
+
+
+r_clear.cpp
+rite configuration to data, return length. config data should not exceed 64k.
+{
+  int pos=0;
+  PUT_INT(enabled); pos+=4;
+  PUT_INT(color); pos+=4;
+  PUT_INT(blend); pos+=4;
+  PUT_INT(blendavg); pos+=4;
+  PUT_INT(onlyfirst); pos+=4;
+  return pos;
+----------------------------------------
+
+
+r_colorfade.cpp
+	int pos=0;
+	PUT_INT(enabled); pos+=4;
+  PUT_INT(faders[0]); pos+=4;
+  PUT_INT(faders[1]); pos+=4;
+  PUT_INT(faders[2]); pos+=4;
+  PUT_INT(beatfaders[0]); pos+=4;
+  PUT_INT(beatfaders[1]); pos+=4;
+  PUT_INT(beatfaders[2]); pos+=4;
+	return pos;
+----------------------------------------
+
+
+r_colorreduction.cpp
+
+	memcpy(data, &this->config, sizeof(apeconfig));
+	return sizeof(apeconfig);
+----------------------------------------
+
+
+r_colorreplace.cpp
+	int pos=0;
+	PUT_INT(enabled); pos+=4;
+  PUT_INT(color_clip); pos+=4;
+	return pos;
+----------------------------------------
+
+
+r_comment.cpp
+	int pos=0;
+  save_string(data,pos,msgdata);
+  return pos;
+----------------------------------------
+
+
+r_contrast.cpp
+	int pos=0;
+	PUT_INT(enabled); pos+=4;
+  PUT_INT(color_clip); pos+=4;
+  PUT_INT(color_clip_out); pos+=4;
+  PUT_INT(color_dist); pos+=4;
+	return pos;
+----------------------------------------
+
+
+r_dcolormod.cpp
+	int pos=0;
+  data[pos++]=1;
+  save_string(data,pos,effect_exp[0]);
+  save_string(data,pos,effect_exp[1]);
+  save_string(data,pos,effect_exp[2]);
+  save_string(data,pos,effect_exp[3]);
+	PUT_INT(m_recompute); pos+=4;
+	return pos;
+----------------------------------------
+
+
+r_ddm.cpp
+	int pos=0;
+  data[pos++]=1;
+  save_string(data,pos,effect_exp[0]);
+  save_string(data,pos,effect_exp[1]);
+  save_string(data,pos,effect_exp[2]);
+  save_string(data,pos,effect_exp[3]);
+	PUT_INT(blend); pos+=4;
+	PUT_INT(subpixel); pos+=4;
+	return pos;
+----------------------------------------
+
+
+r_defs.cpp
+(??? not an effect)
+
+----------------------------------------
+
+
+r_dmove.cpp
+	int pos=0;
+  data[pos++]=1;
+  save_string(data,pos,effect_exp[0]);
+  save_string(data,pos,effect_exp[1]);
+  save_string(data,pos,effect_exp[2]);
+  save_string(data,pos,effect_exp[3]);
+	PUT_INT(subpixel); pos+=4;
+	PUT_INT(rectcoords); pos+=4;
+	PUT_INT(m_xres); pos+=4;
+	PUT_INT(m_yres); pos+=4;
+	PUT_INT(blend); pos+=4;
+	PUT_INT(wrap); pos+=4;
+	PUT_INT(buffern); pos+=4;
+	PUT_INT(nomove); pos+=4;
+	return pos;
+----------------------------------------
+
+
+r_dotfnt.cpp
+  int rr;
+	int pos=0;
+	int x;
+	PUT_INT(rotvel); pos+=4;
+	for (x = 0; x < 5; x ++)
+	{
+		PUT_INT(colors[x]); pos+=4;
+	}
+  PUT_INT(angle); pos+=4;
+  rr=(int)(r*32.0f);
+  PUT_INT(rr); pos+=4;
+	return pos;
+----------------------------------------
+
+
+r_dotgrid.cpp
+  int pos=0,x=0;
+  PUT_INT(num_colors); pos+=4;
+  while (x < num_colors) { PUT_INT(colors[x]); x++;  pos+=4; }
+  PUT_INT(spacing); pos+=4;
+  PUT_INT(x_move); pos+=4;
+  PUT_INT(y_move); pos+=4;
+  PUT_INT(blend); pos+=4;
+	return pos; 
+----------------------------------------
+
+
+r_dotpln.cpp
+  int rr;
+  int pos=0;
+  int x;
+  PUT_INT(rotvel); pos+=4;
+  for (x = 0; x < 5; x ++)
+  {
+    PUT_INT(colors[x]); pos+=4;
+  }
+  PUT_INT(angle); pos+=4;
+  rr=(int)(r*32.0f);
+  PUT_INT(rr); pos+=4;
+  return pos;
+----------------------------------------
+
+
+r_fadeout.cpp
+	int pos=0;
+	PUT_INT(fadelen); pos+=4;
+	PUT_INT(color); pos+=4;
+	return pos;
+----------------------------------------
+
+
+r_fastbright.cpp
+  int pos=0;
+  PUT_INT(dir); pos+=4;
+  return pos;
+----------------------------------------
+
+
+r_grain.cpp
+  int pos=0;
+  PUT_INT(enabled); pos+=4;
+  PUT_INT(blend); pos+=4;
+  PUT_INT(blendavg); pos+=4;
+  PUT_INT(smax); pos+=4;
+  PUT_INT(staticgrain); pos+=4;
+  return pos;
+----------------------------------------
+
+
+r_interf.cpp
+rite configuration to data, return length. config data should not exceed 64k.
+{
+  int pos=0;
+  
+	PUT_INT(enabled); pos+=4;
+  PUT_INT(nPoints); pos+=4;
+  PUT_INT(rotation); pos+=4;
+  PUT_INT(distance); pos+=4;
+  PUT_INT(alpha); pos+=4;
+  PUT_INT(rotationinc); pos+=4;
+  PUT_INT(blend); pos+=4;
+  PUT_INT(blendavg); pos+=4;
+  PUT_INT(distance2); pos+=4;
+  PUT_INT(alpha2); pos+=4;
+  PUT_INT(rotationinc2); pos+=4;
+  PUT_INT(rgb); pos+=4;
+  PUT_INT(onbeat); pos+=4;
+  PUT_FLOAT(speed, data, pos); pos+=4;
+
+	return pos;
+----------------------------------------
+
+
+r_interleave.cpp
+ C_THISCLASS::save_config(unsigned char *data) // write configuration to data, return length. config data should not exceed 64k.
+{
+  int pos=0;
+  PUT_INT(enabled); pos+=4;
+  PUT_INT(x); pos+=4;
+  PUT_INT(y); pos+=4;
+  PUT_INT(color); pos+=4;
+  PUT_INT(blend); pos+=4;
+  PUT_INT(blendavg); pos+=4;
+  PUT_INT(onbeat); pos+=4;
+  PUT_INT(x2); pos+=4;
+  PUT_INT(y2); pos+=4;
+  PUT_INT(beatdur); pos+=4;
+  return pos;
+----------------------------------------
+
+
+r_invert.cpp
+  int pos=0;
+  PUT_INT(enabled); pos+=4;
+  return pos;
+----------------------------------------
+
+
+r_linemode.cpp
+	int pos=0;
+	PUT_INT(newmode); pos+=4;
+	return pos;
+
+----------------------------------------
+
+
+r_list.cpp (Effect List /additional/ config)
+  int pos=0;
+  PUT_INT(use_code); pos+=4;
+  save_string(data,pos,effect_exp[0]);
+  save_string(data,pos,effect_exp[1]);
+  return pos;
+
+----------------------------------------
+
+
+r_mirror.cpp
+rite configuration to data, return length. config data should not exceed 64k.
+{
+	int pos=0;
+	PUT_INT(enabled); pos+=4;
+	PUT_INT(mode); pos+=4;
+	PUT_INT(onbeat); pos+=4;
+	PUT_INT(smooth); pos+=4;
+	PUT_INT(slower); pos+=4;
+	return pos;
+----------------------------------------
+
+
+r_mosaic.cpp
+  int pos=0;
+  PUT_INT(enabled); pos+=4;
+  PUT_INT(quality); pos+=4;
+  PUT_INT(quality2); pos+=4;
+  PUT_INT(blend); pos+=4;
+  PUT_INT(blendavg); pos+=4;
+  PUT_INT(onbeat); pos+=4;
+  PUT_INT(durFrames); pos+=4;
+  return pos;
+----------------------------------------
+
+
+r_multidelay.cpp
+	int pos=0;
+	PUT_INT(mode);
+	pos+=4;
+	PUT_INT(activebuffer);
+	pos+=4;
+	if (creationid == 1)
+	{
+		for (int i=0;i<6;i++)
+		{
+			PUT_INT((int)usebeats[i]);
+			pos+=4;
+			PUT_INT(delay[i]);
+			pos+=4;
+		}
+	}
+	return pos;
+----------------------------------------
+
+
+r_multiplier.cpp
+
+	memcpy(data, &this->config, sizeof(apeconfig));
+	return sizeof(apeconfig);
+----------------------------------------
+
+
+r_nfclr.cpp
+	int pos=0;
+	PUT_INT(color); pos+=4;
+	PUT_INT(blend); pos+=4;
+	PUT_INT(nf); pos+=4;
+	return pos;
+----------------------------------------
+
+
+r_onetone.cpp
+  int pos=0;
+  PUT_INT(enabled); pos+=4;
+  PUT_INT(color); pos+=4;
+  PUT_INT(blend); pos+=4;
+  PUT_INT(blendavg); pos+=4;
+  PUT_INT(invert); pos+=4;
+  return pos;
+----------------------------------------
+
+
+r_oscring.cpp
+	int pos=0,x=0;
+	PUT_INT(effect); pos+=4;
+	PUT_INT(num_colors); pos+=4;
+  while (x < num_colors) { PUT_INT(colors[x]); x++;  pos+=4; }
+	PUT_INT(size); pos+=4;
+	PUT_INT(source); pos+=4;
+	return pos;
+----------------------------------------
+
+
+r_oscstar.cpp
+	int pos=0,x=0;
+	PUT_INT(effect); pos+=4;
+	PUT_INT(num_colors); pos+=4;
+  while (x < num_colors) { PUT_INT(colors[x]); x++;  pos+=4; }
+	PUT_INT(size); pos+=4;
+	PUT_INT(rot); pos+=4;
+	return pos;
+----------------------------------------
+
+
+r_parts.cpp
+	int pos=0;
+	PUT_INT(enabled); pos+=4;
+	PUT_INT(colors); pos+=4;
+	PUT_INT(maxdist); pos+=4;
+	PUT_INT(size); pos+=4;
+	PUT_INT(size2); pos+=4;
+	PUT_INT(blend); pos+=4;
+	return pos;
+----------------------------------------
+
+
+r_picture.cpp
+rite configuration to data, return length. config data should not exceed 64k.
+{
+	int pos=0;
+	PUT_INT(enabled); pos+=4;
+  PUT_INT(blend); pos+=4;
+  PUT_INT(blendavg); pos+=4;
+  PUT_INT(adapt); pos+=4;
+  PUT_INT(persist); pos+=4;
+  strcpy((char *)data+pos, ascName);
+  pos+=strlen(ascName)+1;
+  PUT_INT(ratio); pos+=4;
+  PUT_INT(axis_ratio); pos+=4;
+	return pos;
+----------------------------------------
+
+
+r_rotblit.cpp
+	int pos=0;
+	PUT_INT(zoom_scale); pos+=4;
+	PUT_INT(rot_dir); pos+=4;
+	PUT_INT(blend); pos+=4;
+	PUT_INT(beatch); pos+=4;
+	PUT_INT(beatch_speed); pos+=4;
+	PUT_INT(zoom_scale2); pos+=4;
+	PUT_INT(beatch_scale); pos+=4;
+	PUT_INT(subpixel); pos+=4;
+	return pos;
+----------------------------------------
+
+
+r_rotstar.cpp
+	int pos=0,x=0;
+	PUT_INT(num_colors); pos+=4;
+  while (x < num_colors) { PUT_INT(colors[x]); x++;  pos+=4; }
+	return pos;
+----------------------------------------
+
+
+r_scat.cpp
+	int pos=0;
+	PUT_INT(enabled); pos+=4;
+	return pos;
+----------------------------------------
+
+
+r_shift.cpp
+ng(data,pos,effect_exp[1]);
+  save_string(data,pos,effect_exp[2]);
+	PUT_INT(blend); pos+=4;
+	PUT_INT(subpixel); pos+=4;
+	return pos;
+----------------------------------------
+
+
+r_simple.cpp
+	int pos=0,x=0;
+	PUT_INT(effect); pos+=4;
+	PUT_INT(num_colors); pos+=4;
+  while (x < num_colors) { PUT_INT(colors[x]); x++;  pos+=4; }
+	return pos;
+----------------------------------------
+
+
+r_sscope.cpp
+
+  save_string(data,pos,effect_exp[1]);
+  save_string(data,pos,effect_exp[2]);
+  save_string(data,pos,effect_exp[3]);
+	PUT_INT(which_ch); pos+=4;
+	PUT_INT(num_colors); pos+=4;
+  while (x < num_colors) { PUT_INT(colors[x]); x++;  pos+=4; }
+  PUT_INT(mode); pos+=4;
+	return pos;
+----------------------------------------
+
+
+r_stack.cpp
+ pos+=4;
+  PUT_INT(adjblend_val); pos+=4;
+	return pos;
+----------------------------------------
+
+
+r_stars.cpp
+
+  int pos=0;
+  PUT_INT(enabled); pos+=4;
+  PUT_INT(color); pos+=4;
+  PUT_INT(blend); pos+=4;
+  PUT_INT(blendavg); pos+=4;
+  PUT_FLOAT(WarpSpeed, data, pos); pos+=4;
+  PUT_INT(MaxStars_set); pos+=4;
+  PUT_INT(onbeat); pos+=4;
+  PUT_FLOAT(spdBeat, data, pos); pos+=4;
+  PUT_INT(durFrames); pos+=4;
+  return pos;
+----------------------------------------
+
+
+r_svp.cpp
+
+	int pos=0;
+  memcpy(data+pos,m_library,MAX_PATH);
+  pos+=MAX_PATH;
+	return pos;
+----------------------------------------
+
+
+r_text.cpp
+
+  int pos=0;	   
+  PUT_INT(enabled); pos+=4;
+  PUT_INT(color); pos+=4;
+  PUT_INT(blend); pos+=4;
+  PUT_INT(blendavg); pos+=4;
+  PUT_INT(onbeat); pos+=4;
+  PUT_INT(insertBlank); pos+=4;
+  PUT_INT(randomPos); pos+=4;
+  PUT_INT(valign); pos+=4;
+  PUT_INT(halign); pos+=4;
+  PUT_INT(onbeatSpeed); pos+=4;
+  PUT_INT(normSpeed); pos+=4;
+  memcpy(data+pos, &cf, sizeof(cf));
+  pos+=sizeof(cf);
+  memcpy(data+pos, &lf, sizeof(lf));
+  pos+=sizeof(lf);
+  if (text)
+	{
+  int l=strlen(text)+1;
+	PUT_INT(l); pos+=4;
+	memcpy(data+pos, text, strlen(text)+1);
+	pos+=strlen(text)+1;
+	}
+  else
+    { PUT_INT(0); pos+=4;}
+  PUT_INT(outline); pos+=4;
+  PUT_INT(outlinecolor); pos+=4;
+  PUT_INT(xshift); pos+=4;
+  PUT_INT(yshift); pos+=4;
+  PUT_INT(outlinesize); pos+=4;
+  PUT_INT(randomword); pos+=4;
+  PUT_INT(shadow); pos+=4;
+	
+  return pos;
+----------------------------------------
+
+
+r_timescope.cpp
+
+  int pos=0;
+  PUT_INT(enabled); pos+=4;
+  PUT_INT(color); pos+=4;
+  PUT_INT(blend); pos+=4;
+  PUT_INT(blendavg); pos+=4;
+	PUT_INT(which_ch); pos+=4;
+	PUT_INT(nbands); pos+=4;
+  return pos;
+----------------------------------------
+
+
+r_trans.cpp
+	int pos=0;
+
+  // the reason this is 15, and not REFFECT_MAX, is because old versions of AVS barf
+  // if effect is > 15, so we put 0, and at the end put the new value
+  if (effect > 15 && effect != 32767)
+  {
+    PUT_INT(0); 
+    pos += 4;
+  }
+	else
+  {
+    PUT_INT(effect); 
+    pos+=4;
+  }
+  if (effect == 32767)
+  {
+    int l=strlen(effect_exp.get())+1;
+    data[pos++]=1;
+    PUT_INT(l);
+    pos+=4;
+    memcpy(data+pos,effect_exp.get(),strlen(effect_exp.get())+1);
+    pos+=strlen(effect_exp.get())+1;
+  }
+	PUT_INT(blend); pos+=4;
+	PUT_INT(sourcemapped); pos+=4;
+  PUT_INT(rectangular); pos+=4;
+  PUT_INT(subpixel); pos+=4;
+  PUT_INT(wrap); pos+=4;
+
+  // see note on '15' above =)
+  if (effect > 15 && effect != 32767)
+  {
+    PUT_INT(effect);
+    pos+=4;
+  }
+	return pos;
+----------------------------------------
+
+
+r_transition.cpp
+ (not really an effect, no save section)
+----------------------------------------
+
+
+r_unkn.cpp (not really applicable, since we have no "unknown", only "not yet implemented")
+	int pos=0;
+//  char s[1024]="";
+//  for (int x = 0 ;x  < configdata_len; x ++)
+//    wsprintf(s+strlen(s),"%X,",configdata[x]);
+//  MessageBox(NULL,s,"saving config",0);
+  memcpy(data+pos,configdata,configdata_len);
+  pos+=configdata_len;
+	return pos;
+----------------------------------------
+
+
+r_videodelay.cpp
+	int pos=0;
+	PUT_INT((int)enabled);
+	pos+=4;
+	PUT_INT((int)usebeats);
+	pos+=4;
+	PUT_INT((unsigned int)delay);
+	pos+=4;
+	return pos;
+----------------------------------------
+
+
+r_water.cpp
+	int pos=0;
+	PUT_INT(enabled); pos+=4;
+	return pos;
+----------------------------------------
+
+
+r_waterbump.cpp
+	int pos=0;
+	PUT_INT(enabled); pos+=4;
+	PUT_INT(density); pos+=4;
+	PUT_INT(depth); pos+=4;
+	PUT_INT(random_drop); pos+=4;
+	PUT_INT(drop_position_x); pos+=4;
+	PUT_INT(drop_position_y); pos+=4;
+	PUT_INT(drop_radius); pos+=4;
+	PUT_INT(method); pos+=4;
+	return pos;
+----------------------------------------
+
