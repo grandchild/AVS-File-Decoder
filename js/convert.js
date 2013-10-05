@@ -75,11 +75,16 @@ function getComponentSize (blob, offset) {
 }
 
 function decodePresetHeader(blob) {
-	var presetHeader = [ // reads: "Nullsoft AVS Preset 0.2 \x1A"
+	var presetHeader0_1 = [ // reads: "Nullsoft AVS Preset 0.1 \x1A"
+			0X4E, 0X75, 0X6C, 0X6C, 0X73, 0X6F, 0X66, 0X74,
+			0X20, 0X41, 0X56, 0X53, 0X20, 0X50, 0X72, 0X65,
+			0X73, 0X65, 0X74, 0X20, 0X30, 0X2E, 0X31, 0X1A];
+	var presetHeader0_2 = [ // reads: "Nullsoft AVS Preset 0.2 \x1A"
 			0x4E, 0x75, 0x6C, 0x6C, 0x73, 0x6F, 0x66, 0x74,
 			0x20, 0x41, 0x56, 0x53, 0x20, 0x50, 0x72, 0x65,
 			0x73, 0x65, 0x74, 0x20, 0x30, 0x2E, 0x32, 0x1A,];
-	if(!cmpBytes(blob, /*offset*/0, presetHeader)) {
+	if(!cmpBytes(blob, /*offset*/0, presetHeader0_2) &&
+		!cmpBytes(blob, /*offset*/0, presetHeader0_1)) { // 0.1 only if 0.2 failed because it's far rarer.
 		throw new ConvertException("Invalid preset header.");
 	}
 	return blob[presetHeaderLength-1]===1; // "Clear Every Frame"

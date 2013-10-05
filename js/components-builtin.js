@@ -101,4 +101,74 @@ var builtinComponents = [
 					"recomputeEveryFrame": ["Bool", 1],
 					"code": "CodePFBI",
 				}},
+		///////////////////////////
+		//// check these in hex:
+			{"name": "Clear Screen",
+				"code": 0x00, "group": "Render", "func": "generic", "fields": {
+					"enabled": ["Bool", sizeInt],
+					"color": ["Color", sizeInt],
+					"output": ["Map8", {0: "Replace", 1: "Additive", 0x100000000: "50/50"}],
+					"onlyFirst": ["Bool", sizeInt],
+				}},
+			{"name": "Mosaic",
+				"code": 0x00, "group": "Trans", "func": "generic", "fields": {
+					"enabled": ["Bool", sizeInt],
+					"size": sizeInt,
+					"sizeOnBeat": sizeInt,
+					"output": ["Map8", {0: "Replace", 1: "Additive", 0x100000000: "50/50"}],
+					"onbeat": ["Bool", sizeInt],
+					"durFrames": sizeInt,
+				}},
+			{"name": "Starfield",
+				"code": 0x00, "group": "Render", "func": "generic", "fields": {
+					"enabled": sizeInt,
+					"color": sizeInt,
+					"blend": sizeInt,
+					"blendavg": sizeInt,
+					"WarpSpeed": ["Float32", sizeInt],
+					"MaxStars_set": sizeInt,
+					"onbeat": sizeInt,
+					"spdBeat": ["Float32", sizeInt],
+					"durFrames": sizeInt,
+				}},
+			{"name": "Text",
+				"code": 0x00, "group": "Render", "func": "generic", "fields": {
+					"enabled": ["Bool", sizeInt],
+					"color": ["Color", sizeInt],
+					"output": ["Map8", {0: "Replace", 1: "Additive", 0x100000000: "50/50"}],
+					"onbeat": ["Bool", sizeInt],
+					"insertBlank": ["Bool", sizeInt],
+					"randomPos": ["Bool", sizeInt],
+					"valign": sizeInt,
+					"halign": sizeInt,
+					"onbeatSpeed": sizeInt,
+					"normSpeed": sizeInt,
+					"chooseFont": ["SizeString", 256], // no idea, RESEARCH!
+					"logFont": ["SizeString", 256],
+					"string": "SizeString",
+					"outline": ["Bool", sizeInt],
+					"outlinecolor": sizeInt
+					"xshift": sizeInt
+					"yshift": sizeInt
+					"outlinesize": sizeInt
+					"randomword": ["Bool", sizeInt],
+					"shadow": ["Bool", sizeInt],
+				}},
+			{"name": "Video Delay",
+				"code": 0x00, "group": "Trans", "func": "generic", "fields": {
+					"enabled": ["Bool", sizeInt],
+					"useBeats": ["Bool", sizeInt],
+					"delay": sizeInt,
+				}},
+			{"name": "Water Bump",
+				"code": 0x00, "group": "Trans", "func": "generic", "fields": {
+					"enabled": ["Bool", sizeInt],
+					"density": sizeInt,
+					"depth": sizeInt,
+					"random": ["Bool", sizeInt],
+					"dropPositionX": sizeInt,
+					"dropPositionY": sizeInt,
+					"dropRadius": sizeInt,
+					"method": sizeInt,
+				}},
 		];

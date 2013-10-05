@@ -52,6 +52,12 @@ function getUInt64 (blob, offset) {
 	return two32[0]+two32[1]*0x100000000;
 }
 
+function getFloat32 (blob, offset) {
+	if(!offset) offset = 0;
+	var array = blob.buffer.slice(blob.byteOffset+offset, blob.byteOffset+offset+sizeInt);
+	return new Float32Array(array, 0, 1)[0];
+}
+
 function getBool (blob, offset, size) {
 	var val = size===1?blob[offset]:getUInt32(blob, offset);
 	return [val!==0, size];
