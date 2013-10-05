@@ -212,11 +212,49 @@ function decode_generic (blob, offset, fields, name, end) {
 	return comp;
 }
 
+function decode_movement (blob, offset) {
+	var comp = {
+		'type': 'Movement',
+	};
+	// the special value 0 is because "old versions of AVS barf" if the id is > 15, so
+	// AVS writes out 0 in that case, and sets the actual id at the end of the save block.
+	var effectIdOld = getUInt32(blob, offset);
+	var effect = [];
+	var code;
+	if(effectIdOld!==0) {
+		if(effectIdOld===32767) {
+			var strAndSize = getSizeString(blob, offset+sizeInt+1) // for some reason there is a single byte reading '0x01' before custom code.
+			offset += strAndSize[1];
+			code = strAndSize[0];
+		} else {
+			effect = movementEffects[effectIdOld];
+		}
+	} else {
+		var effectIdNew = getUInt32(blob, offset+sizeInt*6); // 1*sizeInt, because of oldId=0, and 5*sizeint because of the other settings.
+		effect = movementEffects[effectIdNew];
+	}
+	if(effect.length) {
+		comp["builtinEffect"] = effect[0];
+	}
+	comp["output"] = getUInt32(blob, offset+sizeInt) ? "50/50" : "Replace";
+	comp["sourceMapped"] = getBool(blob, offset+sizeInt*2, sizeInt)[0];
+	comp["coordinates"] = getCoordinates(blob, offset+sizeInt*3, sizeInt);
+	comp["bilinear"] = getBool(blob, offset+sizeInt*4, sizeInt)[0];
+	comp["wrap"] = getBool(blob, offset+sizeInt*5, sizeInt)[0];
+	if(effect.length && effectIdOld!==1 && effectIdOld!==7) { // 'slight fuzzify' and 'blocky partial out' have no script representation.
+		code = effect[1];
+		comp["coordinates"] = effect[2] // overwrite
+	}
+	comp["code"] = code;
+	return comp;
+}
+
 function decode_colorMap (blob, offset) {
 	return {
 		'type': 'ColorMap',
 	};
 }
+
 
 /**
  * blank decode function
