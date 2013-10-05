@@ -75,11 +75,16 @@ function getComponentSize (blob, offset) {
 }
 
 function decodePresetHeader(blob) {
-	var presetHeader = [ // reads: "Nullsoft AVS Preset 0.2 \x1A"
+	var presetHeader0_1 = [ // reads: "Nullsoft AVS Preset 0.1 \x1A"
+			0X4E, 0X75, 0X6C, 0X6C, 0X73, 0X6F, 0X66, 0X74,
+			0X20, 0X41, 0X56, 0X53, 0X20, 0X50, 0X72, 0X65,
+			0X73, 0X65, 0X74, 0X20, 0X30, 0X2E, 0X31, 0X1A];
+	var presetHeader0_2 = [ // reads: "Nullsoft AVS Preset 0.2 \x1A"
 			0x4E, 0x75, 0x6C, 0x6C, 0x73, 0x6F, 0x66, 0x74,
 			0x20, 0x41, 0x56, 0x53, 0x20, 0x50, 0x72, 0x65,
 			0x73, 0x65, 0x74, 0x20, 0x30, 0x2E, 0x32, 0x1A,];
-	if(!cmpBytes(blob, /*offset*/0, presetHeader)) {
+	if(!cmpBytes(blob, /*offset*/0, presetHeader0_2) &&
+		!cmpBytes(blob, /*offset*/0, presetHeader0_1)) { // 0.1 only if 0.2 failed because it's far rarer.
 		throw new ConvertException("Invalid preset header.");
 	}
 	return blob[presetHeaderLength-1]===1; // "Clear Every Frame"
@@ -207,11 +212,49 @@ function decode_generic (blob, offset, fields, name, end) {
 	return comp;
 }
 
+function decode_movement (blob, offset) {
+	var comp = {
+		'type': 'Movement',
+	};
+	// the special value 0 is because "old versions of AVS barf" if the id is > 15, so
+	// AVS writes out 0 in that case, and sets the actual id at the end of the save block.
+	var effectIdOld = getUInt32(blob, offset);
+	var effect = [];
+	var code;
+	if(effectIdOld!==0) {
+		if(effectIdOld===32767) {
+			var strAndSize = getSizeString(blob, offset+sizeInt+1) // for some reason there is a single byte reading '0x01' before custom code.
+			offset += strAndSize[1];
+			code = strAndSize[0];
+		} else {
+			effect = movementEffects[effectIdOld];
+		}
+	} else {
+		var effectIdNew = getUInt32(blob, offset+sizeInt*6); // 1*sizeInt, because of oldId=0, and 5*sizeint because of the other settings.
+		effect = movementEffects[effectIdNew];
+	}
+	if(effect.length) {
+		comp["builtinEffect"] = effect[0];
+	}
+	comp["output"] = getUInt32(blob, offset+sizeInt) ? "50/50" : "Replace";
+	comp["sourceMapped"] = getBool(blob, offset+sizeInt*2, sizeInt)[0];
+	comp["coordinates"] = getCoordinates(blob, offset+sizeInt*3, sizeInt);
+	comp["bilinear"] = getBool(blob, offset+sizeInt*4, sizeInt)[0];
+	comp["wrap"] = getBool(blob, offset+sizeInt*5, sizeInt)[0];
+	if(effect.length && effectIdOld!==1 && effectIdOld!==7) { // 'slight fuzzify' and 'blocky partial out' have no script representation.
+		code = effect[1];
+		comp["coordinates"] = effect[2] // overwrite
+	}
+	comp["code"] = code;
+	return comp;
+}
+
 function decode_colorMap (blob, offset) {
 	return {
 		'type': 'ColorMap',
 	};
 }
+
 
 /**
  * blank decode function

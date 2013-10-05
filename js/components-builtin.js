@@ -22,6 +22,8 @@ var builtinComponents = [
 					"blur": ["Map4", {0: "None", 1: "Medium", 2: "Light", 3: "Heavy"}],
 					"round": ["Map4", {0: "Down", 1: "Up"}],
 				}},
+			{"name": "Movement",
+				"code": 0x0F, "group": "Trans", "func": "movement"}, // this save format is too complicated for the generic decoder.
 			{"name": "Buffer Save",
 				"code": 0x12, "group": "Misc", "func": "generic", "fields": {
 					"mode": ["BufferMode", sizeInt],
@@ -44,6 +46,24 @@ var builtinComponents = [
 					"amount": sizeInt, // 0-100
 					"static": ["Bool", sizeInt],
 				}},
+			{"name": "Clear Screen",
+				"code": 0x19, "group": "Render", "func": "generic", "fields": {
+					"enabled": ["Bool", sizeInt],
+					"color": ["Color", sizeInt],
+					"output": ["Map8", {0: "Replace", 1: "Additive", 0x100000000: "50/50"}],
+					"onlyFirst": ["Bool", sizeInt],
+				}},
+			{"name": "Starfield",
+				"code": 0x1B, "group": "Render", "func": "generic", "fields": {
+					"enabled": sizeInt,
+					"color": "Color",
+					"output": ["Map8", {0: "Replace", 1: "Additive", 0x100000000: "50/50"}],
+					"WarpSpeed": ["Float32", sizeInt],
+					"MaxStars_set": sizeInt,
+					"onbeat": sizeInt,
+					"spdBeat": ["Float32", sizeInt],
+					"durFrames": sizeInt,
+				}},
 			{"name": "Bump",
 				"code": 0x1D, "group": "Trans", "func": "generic", "fields": {
 					"enabled": ["Bool", sizeInt],
@@ -57,6 +77,26 @@ var builtinComponents = [
 					"invertDepth": ["Bool", sizeInt],
 					null0: sizeInt,
 					"depthBuffer": ["BufferNum", sizeInt]
+				}},
+			{"name": "Mosaic",
+				"code": 0x1E, "group": "Trans", "func": "generic", "fields": {
+					"enabled": ["Bool", sizeInt],
+					"size": sizeInt,
+					"sizeOnBeat": sizeInt,
+					"output": ["Map8", {0: "Replace", 1: "Additive", 0x100000000: "50/50"}],
+					"onbeat": ["Bool", sizeInt],
+					"durFrames": sizeInt,
+				}},
+			{"name": "Water Bump",
+				"code": 0x1F, "group": "Trans", "func": "generic", "fields": {
+					"enabled": ["Bool", sizeInt],
+					"density": sizeInt,
+					"depth": sizeInt,
+					"random": ["Bool", sizeInt],
+					"dropPositionX": sizeInt,
+					"dropPositionY": sizeInt,
+					"dropRadius": sizeInt,
+					"method": sizeInt,
 				}},
 			{"name": "Invert",
 				"code": 0x25, "group": "Trans", "func": "generic", "fields": {
@@ -101,4 +141,29 @@ var builtinComponents = [
 					"recomputeEveryFrame": ["Bool", 1],
 					"code": "CodePFBI",
 				}},
+		///////////////////////////
+		//// check these in hex:
+			// {"name": "Text",
+			// 	"code": 0x1C, "group": "Render", "func": "generic", "fields": {
+			// 		"enabled": ["Bool", sizeInt],
+			// 		"color": ["Color", sizeInt],
+			// 		"output": ["Map8", {0: "Replace", 1: "Additive", 0x100000000: "50/50"}],
+			// 		"onbeat": ["Bool", sizeInt],
+			// 		"insertBlank": ["Bool", sizeInt],
+			// 		"randomPos": ["Bool", sizeInt],
+			// 		"valign": sizeInt,
+			// 		"halign": sizeInt,
+			// 		"onbeatSpeed": sizeInt,
+			// 		"normSpeed": sizeInt,
+			// 		"chooseFont": ["SizeString", 256], // no idea, RESEARCH!
+			// 		"logFont": ["SizeString", 256],
+			// 		"string": "SizeString",
+			// 		"outline": ["Bool", sizeInt],
+			// 		"outlinecolor": sizeInt,
+			// 		"xshift": sizeInt,
+			// 		"yshift": sizeInt,
+			// 		"outlinesize": sizeInt,
+			// 		"randomword": ["Bool", sizeInt],
+			// 		"shadow": ["Bool", sizeInt],
+			// 	}},
 		];

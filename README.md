@@ -17,48 +17,54 @@ Clone the repository `git clone https://github.com/grandchild/AVS-File-Decoder.g
 
 ### Download
 
-Use the `[.zip](https://github.com/grandchild/AVS-File-Decoder/archive/master.zip) download option and extract its content
+Use the '[zip download](https://github.com/grandchild/AVS-File-Decoder/archive/master.zip)' option and extract its content
 
 ### Dependencies
 
-By default, JQuery and Bootstrap are loaded from a CDN. Using [Bower](http://bower.io/), you can install the JQuery library locally - a fallback method is already implemented into the application.
-
-`bower install`
-
-Unfortunately, there's no Bootstrap fallback as of yet.
-
-## Building
-
-In order to compile minified javascript, download the [YUI Compressor](https://github.com/yui/yuicompressor/releases) and move the binary to `bin/yuicompressor.jar` in your repository. Minify the javascript using the build command `./build` (`build.bat` on Windows).
+By default, JQuery and Bootstrap are loaded from a CDN. Using [Bower](http://bower.io/), you can install the JQuery library locally - a fallback method is already implemented in the application. No Bootstrap fallback as of yet.
 
 ## Component Checklist:
 
  - [x] Effect List
- - [x] Set Render Mode
+
+### Misc
+ - [x] AVS Trans
  - [x] Buffer Save
  - [x] Comment
- - [x] Super Scope
- - [x] Dynamic Movement
- - [ ] Movement
- - [x] Color Modifier
- - [x] Fade Out
- - [x] Channel Shift
- - [x] Blitter Feedback
- - [x] Blur
- - [x] Water
- - [x] Grain
- - [x] Fast Brightness
- - [x] Invert
- - [x] Bump
- - [x] AVS Trans
- - [x] Triangle
  - [x] Framerate Limiter
- - [x] Convolution Filter
- - [x] Texer II
- - [x] Normalize
- - [ ] Color Map
  - [x] MIDI Trace
+ - [x] Set Render Mode
  - [ ] ...
+
+### Render
+ - [x] Clear Screen
+ - [x] Starfield
+ - [x] Super Scope
+ - [x] Texer II
+ - [x] Triangle
+ - [ ] ...
+
+### Trans
+ - [x] Blur
+ - [x] Blitter Feedback
+ - [x] Bump
+ - [x] Channel Shift
+ - [ ] Color Map
+ - [x] Color Modifier
+ - [x] Convolution Filter
+ - [x] Dynamic Movement
+ - [x] Fade Out
+ - [x] Fast Brightness
+ - [x] Grain
+ - [x] Invert
+ - [x] Mosaic
+ - [x] Movement
+ - [x] Normalize
+ - [x] Video Delay
+ - [x] Water
+ - [x] Water Bump
+ - [ ] ...
+
 
 ## Authors
 
