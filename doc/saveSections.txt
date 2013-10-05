@@ -107,8 +107,7 @@ typedef struct {
 
 
 r_clear.cpp
-rite configuration to data, return length. config data should not exceed 64k.
-{
+
   int pos=0;
   PUT_INT(enabled); pos+=4;
   PUT_INT(color); pos+=4;
@@ -523,7 +522,10 @@ r_simple.cpp
 
 
 r_sscope.cpp
-
+  int x=0;
+  int pos=0;
+  data[pos++]=1;
+  save_string(data,pos,effect_exp[0]);
   save_string(data,pos,effect_exp[1]);
   save_string(data,pos,effect_exp[2]);
   save_string(data,pos,effect_exp[3]);
