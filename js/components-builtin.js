@@ -1,7 +1,6 @@
 // sizeInt = 4;
 
 var builtinComponents = [
-		//// built-in components
 			{"name": "Effect List",
 				"code": 0xfffffffe, "group": "", "func": "effectList"},
 			{"name": "FadeOut",
@@ -63,6 +62,44 @@ var builtinComponents = [
 					"onbeat": sizeInt,
 					"spdBeat": ["Float32", sizeInt],
 					"durFrames": sizeInt,
+				}},
+			{"name": "Text",
+				"code": 0x1C, "group": "Render", "func": "generic", "fields": {
+					"enabled": ["Bool", sizeInt],
+					"color": ["Color", sizeInt],
+					"output": ["Map8", {0: "Replace", 1: "Additive", 0x100000000: "50/50"}],
+					"onBeat": ["Bool", sizeInt],
+					"insertBlanks": ["Bool", sizeInt],
+					"randomPosition": ["Bool", sizeInt],
+					"verticalAlign": ["Map4", {"0": "Top", "4": "Center", "8": "Bottom",}],
+					"horizontalAlign": ["Map4", {"0": "Left", "1": "Center", "2": "Right",}],
+					"onBeatSpeed": sizeInt,
+					"normSpeed": sizeInt,
+					null0: 60, // Win CHOOSEFONT structure, little relevance afaics
+					// Win LOGFONT structure, 60bytes, this is more interesting:
+						null1: sizeInt*4, // LONG  lfHeight;
+											// LONG  lfWidth;
+											// LONG  lfEscapement;
+											// LONG  lfOrientation;
+						// LONG  lfWeight;
+							"weight": ["Map4", {"0": "Dontcare", "100": "Thin", "200": "Extralight", "200": "Ultralight", "300": "Light", "400": "Normal", "400": "Regular", "500": "Medium", "600": "Semibold", "600": "Demibold", "700": "Bold", "800": "Extrabold", "800": "Ultrabold", "900": "Heavy", "900": "Black"}],
+						"italic": ["Bool", 1], // BYTE  lfItalic;
+						"underline": ["Bool", 1], // BYTE  lfUnderline;
+						"strikeOut": ["Bool", 1], // BYTE  lfStrikeOut;
+						null2: 1, //too lazy: "charSet": ["Map4", {"0": "Western", /*...*/}], // BYTE  lfCharSet;
+						null3: 4, // BYTE  lfOutPrecision;
+											// BYTE  lfClipPrecision;
+											// BYTE  lfQuality;
+											// BYTE  lfPitchAndFamily;
+						"fontName": ["SizeString", 32], // TCHAR lfFaceName[LF_FACESIZE];
+					"text": ["SizeString", 0/*==var length*/, "SemiColSplit"],
+					"outline": ["Bool", sizeInt],
+					"outlineColor": "Color",
+					"shiftX": sizeInt,
+					"shiftY": sizeInt,
+					"outlineShadowSize": sizeInt,
+					"randomWord": ["Bool", sizeInt],
+					"shadow": ["Bool", sizeInt],
 				}},
 			{"name": "Bump",
 				"code": 0x1D, "group": "Trans", "func": "generic", "fields": {
@@ -141,29 +178,4 @@ var builtinComponents = [
 					"recomputeEveryFrame": ["Bool", 1],
 					"code": "CodePFBI",
 				}},
-		///////////////////////////
-		//// check these in hex:
-			// {"name": "Text",
-			// 	"code": 0x1C, "group": "Render", "func": "generic", "fields": {
-			// 		"enabled": ["Bool", sizeInt],
-			// 		"color": ["Color", sizeInt],
-			// 		"output": ["Map8", {0: "Replace", 1: "Additive", 0x100000000: "50/50"}],
-			// 		"onbeat": ["Bool", sizeInt],
-			// 		"insertBlank": ["Bool", sizeInt],
-			// 		"randomPos": ["Bool", sizeInt],
-			// 		"valign": sizeInt,
-			// 		"halign": sizeInt,
-			// 		"onbeatSpeed": sizeInt,
-			// 		"normSpeed": sizeInt,
-			// 		"chooseFont": ["SizeString", 256], // no idea, RESEARCH!
-			// 		"logFont": ["SizeString", 256],
-			// 		"string": "SizeString",
-			// 		"outline": ["Bool", sizeInt],
-			// 		"outlinecolor": sizeInt,
-			// 		"xshift": sizeInt,
-			// 		"yshift": sizeInt,
-			// 		"outlinesize": sizeInt,
-			// 		"randomword": ["Bool", sizeInt],
-			// 		"shadow": ["Bool", sizeInt],
-			// 	}},
 		];

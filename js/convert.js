@@ -351,7 +351,7 @@ function getColorMap (blob, offset){
 		offset += sizeInt*2 + sizeInt; // there's 4bytes of random foo following each entry...
 		colorMap[i] = {"color": color, "position": pos};
 	};
-	return colorMap;
+	return [colorMap, size*sizeInt*2];
 }
 
 function getColor (blob, offset) {
@@ -377,6 +377,15 @@ function getConvoFilter (blob, offset, dimensions) {
 	};
 	var matrix = {"width": dimensions[0], "height": dimensions[1], "data": data};
 	return [matrix, size*sizeInt];
+}
+
+function getSemiColSplit (str) {
+	var strings = str.split(';');
+	if(strings.length === 1) {
+		return strings[0];
+	} else {
+		return strings;
+	}
 }
 
 function getBlendmodeIn (blob, offset, size) {

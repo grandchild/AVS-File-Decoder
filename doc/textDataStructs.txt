@@ -1,0 +1,61 @@
+
+CHOOSEFONT struct:
+-------------------------------------
+4  DWORD        lStructSize;
+4  HWND         hwndOwner;
+4  HDC          hDC;
+4  LPLOGFONT    lpLogFont;
+4  INT          iPointSize;
+4  DWORD        Flags;
+4  COLORREF     rgbColors;
+4  LPARAM       lCustData;
+4  LPCFHOOKPROC lpfnHook;
+4  LPCTSTR      lpTemplateName;
+4  HINSTANCE    hInstance;
+4  LPTSTR       lpszStyle;
+2  WORD         nFontType;
+4  INT          nSizeMin;
+4  INT          nSizeMax;
+  
+ 60 bytes (i count 58, but it's 60...)
+
+
+LOGFONT struct:
+-------------------------------------
+  LONG  lfHeight;
+  LONG  lfWidth;
+  LONG  lfEscapement;
+  LONG  lfOrientation;
+  LONG  lfWeight; // see below
+  BYTE  lfItalic;
+  BYTE  lfUnderline;
+  BYTE  lfStrikeOut;
+  BYTE  lfCharSet;
+  BYTE  lfOutPrecision;
+  BYTE  lfClipPrecision;
+  BYTE  lfQuality;
+  BYTE  lfPitchAndFamily;
+  TCHAR lfFaceName[LF_FACESIZE];
+
+  28+LF_FACESIZE (=32)
+  =>60 bytes
+  
+
+lfWeight:
+---------
+"0": "Dontcare",
+"100": "Thin",
+"200": "Extralight",
+"200": "Ultralight",
+"300": "Light",
+"400": "Normal",
+"400": "Regular",
+"500": "Medium",
+"600": "Semibold",
+"600": "Demibold",
+"700": "Bold",
+"800": "Extrabold",
+"800": "Ultrabold",
+"900": "Heavy",
+"900": "Black",
+
