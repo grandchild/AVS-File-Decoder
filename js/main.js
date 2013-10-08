@@ -1,12 +1,15 @@
 var compat = false;
 var outputDir = "";
 
-var pedanticMode = false; // check for terminating zeros (and possibly other unnecessary stuff in the future)
+var pedanticMode = false; // unused
+var verbose = false; // log individual key:value fields
 
 /// needs:
 // util.js
 // files.js
-// //dirwalk.js //--not really yet
+// tables.js
+// components-builtin.js
+// components-dll.js
 // convert.js
 
 $(document).ready(function () {

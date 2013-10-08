@@ -81,14 +81,38 @@ var dllComponents = [
 					"useBeats": ["Bool", sizeInt],
 					"delay": sizeInt,
 				}},
-			/*
-			{"name": "",
-				"code":
-					[],
-				"group": "", "func": "generic", "fields": {
-					
+			{"name": "Multiplier", // r_multiplier.cpp
+				"code": // Multiplier......................
+					[0x4D, 0x75, 0x6C, 0x74, 0x69, 0x70, 0x6C, 0x69, 0x65, 0x72, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00],
+				"group": "Trans", "func": "generic", "fields": {
+					"multiply": ["Map4", {0: "Infinite Root", 1: 8, 2: 4, 3: 2, 4: 0.5, 5: 0.25, 6: 0.125, 7: "Infinite Square"}],
 				}},
-			*/
+			{"name": "Color Reduction", // r_colorreduction.cpp
+				"code": // Color Reduction.................
+					[0x43, 0x6F, 0x6C, 0x6F, 0x72, 0x20, 0x52, 0x65, 0x64, 0x75, 0x63, 0x74, 0x69, 0x6F, 0x6E, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00],
+				"group": "Trans", "func": "generic", "fields": {
+					null0: 260, // MAX_PATH - space for a file path, unused
+					"colors": ["Map4", {1: 2, 2: 4, 3: 8, 4: 16, 5: 32, 6: 64, 7: 128, 8: 256}],
+				}},
+			{"name": "Multi Delay", // r_multidelay.cpp
+				"code": // Holden05: Multi Delay...........
+					[0x48, 0x6F, 0x6C, 0x64, 0x65, 0x6E, 0x30, 0x35, 0x3A, 0x20, 0x4D, 0x75, 0x6C, 0x74, 0x69, 0x20, 0x44, 0x65, 0x6C, 0x61, 0x79, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00],
+				"group": "Trans", "func": "generic", "fields": {
+					"mode": ["Map4", {0: "Disabled", 1: "Input", 2: "Output"}],
+					"activeBuffer": sizeInt,
+					"useBeats0": ["Bool", sizeInt],
+					"delay0": sizeInt,
+					"useBeats1": ["Bool", sizeInt],
+					"delay1": sizeInt,
+					"useBeats2": ["Bool", sizeInt],
+					"delay2": sizeInt,
+					"useBeats3": ["Bool", sizeInt],
+					"delay3": sizeInt,
+					"useBeats4": ["Bool", sizeInt],
+					"delay4": sizeInt,
+					"useBeats5": ["Bool", sizeInt],
+					"delay5": sizeInt,
+				}},
 			{"name": "MIDI Trace",
 				"code": // Nullsoft Pixelcorps: MIDItrace .
 					[0x4E, 0x75, 0x6C, 0x6C, 0x73, 0x6F, 0x66, 0x74, 0x20, 0x50, 0x69, 0x78, 0x65, 0x6C, 0x63, 0x6F, 0x72, 0x70, 0x73, 0x3A, 0x20, 0x4D, 0x49, 0x44, 0x49, 0x74, 0x72, 0x61, 0x63, 0x65, 0x20, 0x00],
@@ -99,4 +123,12 @@ var dllComponents = [
 					"allChannels": ["Bool", sizeInt],
 					"printEvents": ["Bool", sizeInt],
 				}},
+			/*
+			{"name": "",
+				"code":
+					[],
+				"group": "", "func": "generic", "fields": {
+					
+				}},
+			*/
 		];

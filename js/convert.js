@@ -27,9 +27,9 @@ function convertComponents (blob) {
 	while(fp < blob.length) {
 		var code = getUInt32(blob, fp);
 		var i = getComponentIndex(code, blob, fp);
-		var isDll = code>builtinMax && code!==0xfffffffe;
+		var isDll = code!==0xfffffffe && code>builtinMax;
 		var size = getComponentSize(blob, fp+sizeInt+isDll*32);
-		if(i<0) {
+		if(i<=0) {
 			var res = {'type': 'Unknown: ('+(-i)+')'};
 		} else {
 			var offset = fp+sizeInt*2+isDll*32;
@@ -134,7 +134,7 @@ function decode_effectList (blob, offset) {
 	return comp;
 }
 
-// generic field decoding function that, until now, all components use.
+// generic field decoding function that most components use.
 function decode_generic (blob, offset, fields, name, end) {
 	var comp = {
 		'type': removeSpaces(name)
@@ -149,7 +149,7 @@ function decode_generic (blob, offset, fields, name, end) {
 		var f = fields[k];
 		if(k.match(/^null[_0-9]*$/)) {
 			offset += f;
-			// [null, 0] resets bitfield continuity to allow several consecutive bitfields
+			// 'null_: 0' resets bitfield continuity to allow several consecutive bitfields
 			lastWasABitField = false;
 			continue;
 		}
@@ -207,6 +207,7 @@ function decode_generic (blob, offset, fields, name, end) {
 		
 		// save value or function result of value in field
 		comp[k] = value;
+		if(verbose)	log("k: "+k+", val: "+value+", offset: "+offset);
 		offset += size;
 	};
 	return comp;
@@ -249,6 +250,59 @@ function decode_movement (blob, offset) {
 	return comp;
 }
 
+function decode_avi (blob, offset) {
+	var comp = {
+		"type": "AVI",
+		"enabled": getBool(blob, offset, sizeInt)[0],
+	};
+	var strAndSize = getNtString(blob, offset+sizeInt*3);
+	comp["file"] = strAndSize[0];
+	comp["speed"] = getUInt32(blob, offset+sizeInt*5+strAndSize[1]); // 0: fastest, 1000: slowest
+	var beatAdd = getUInt32(blob, offset+sizeInt*3+strAndSize[1]);
+	if(beatAdd) {
+		comp["output"] = "50/50";
+	} else {
+		comp["output"] = getMap8(blob, offset+sizeInt, {0: "Replace", 1: "Additive", 0x100000000: "50/50"});
+	}
+	comp["onBeatAdd"] = beatAdd;
+	comp["persist"] = getUInt32(blob, offset+sizeInt*4+strAndSize[1]); // 0-32
+	return comp;
+}
+
+function decode_simple (blob, offset) {
+	var comp = {
+		'type': 'Simple',
+	};
+	var effect = getUInt32(blob, offset);
+	if (effect&(1<<6)) {
+		comp["audioSource"] = (effect&2) ? "Waveform" : "Spectrum";
+		comp["renderType"] = "Dots";
+	} else {
+		switch (effect&3) {
+			case 0: // solid analyzer
+			comp["audioSource"] = "Spectrum";
+			comp["renderType"] = "Solid";
+			break;
+			case 1: // line analyzer
+			comp["audioSource"] = "Spectrum";
+			comp["renderType"] = "Lines";
+			break;
+			case 2: // line scope
+			comp["audioSource"] = "Waveform";
+			comp["renderType"] = "Lines";
+			break;
+			case 3: // solid scope
+			comp["audioSource"] = "Waveform";
+			comp["renderType"] = "Solid";
+			break;
+		}
+	}
+	comp["audioChannel"] = getAudioChannel((effect>>2)&3);
+	comp["positionY"] = getPositionY((effect>>4)&3);
+	comp["colors"] = getColorList(blob, offset+sizeInt)[0];
+	return comp;
+}
+
 function decode_colorMap (blob, offset) {
 	return {
 		'type': 'ColorMap',
@@ -260,20 +314,31 @@ function decode_colorMap (blob, offset) {
  * blank decode function
 
 function decode_ (blob, offset) {
-	return {
+	var comp = {
 		'type': '',
 	};
+	return comp;
 }
 
 */
 
 //// decode helpers
 
-// generic mapping function (in 1, 4 and 8 byte flavor) to map a value to one of a set of strings
-function getMap1 (blob, offset, map) { return [getMapping(blob, offset, map, blob[offset]), 1]; }
-function getMap4 (blob, offset, map) { return [getMapping(blob, offset, map, getUInt32(blob, offset)), sizeInt]; }
-function getMap8 (blob, offset, map) { return [getMapping(blob, offset, map, getUInt64(blob, offset)), sizeInt*2]; }
-function getMapping (blob, offset, map, key) {
+// generic mapping functions (in 1, 4, 8 byte flavor and radio button mode (multiple int32)) to map values to one of a set of strings
+function getMap1 (blob, offset, map) { return [getMapping(map, blob[offset]), 1]; }
+function getMap4 (blob, offset, map) { return [getMapping(map, getUInt32(blob, offset)), sizeInt]; }
+function getMap8 (blob, offset, map) { return [getMapping(map, getUInt64(blob, offset)), sizeInt*2]; }
+function getRadioButton (blob, offset, map) {
+	var key = 0;
+	for (var i = 0; i < map.length; i++) {
+		var on = getUInt32(blob, offset+sizeInt*i)!==0;
+		if(on) { // in case of (erroneous) multiple selections, the last one selected wins
+			key = on*(i+1);
+		}
+	};
+	return [getMapping(map, key), sizeInt*map.length];
+}
+function getMapping (map, key) {
 	var value = map[key];
 	if (value === undefined) {
 		throw new ConvertException("Map: A value for key '"+key+"' does not exist.");
@@ -282,7 +347,7 @@ function getMapping (blob, offset, map, key) {
 	}
 }
 
-// Pixel, Frame, Beat, Init code fields - reorder to I,F,B,P order.
+// Point, Frame, Beat, Init code fields - reorder to I,F,B,P order.
 function getCodePFBI (blob, offset) {
 	var map = [ // this is the sort map, lines are 'need'-sorted with 'is'-index.
 		["init", 3],
@@ -295,10 +360,10 @@ function getCodePFBI (blob, offset) {
 
 // Frame, Beat, Init code fields - reorder to I,F,B order.
 function getCodeFBI (blob, offset) {
-	var map = [
+	var map = [ // see PFBI
 		["init", 2],
-		["onBeat", 0],
 		["perFrame", 1],
+		["onBeat", 0],
 	];
 	return getCodeSection (blob, offset, map);
 }
@@ -309,6 +374,15 @@ function getCodeIFBP (blob, offset) {
 		["perFrame", 1],
 		["onBeat", 2],
 		["perPoint", 3],
+	];
+	return getCodeSection (blob, offset, map);
+}
+
+function getCodeIFB (blob, offset) {
+	var map = [ // see IFBP
+		["init", 0],
+		["perFrame", 1],
+		["onBeat", 2],
 	];
 	return getCodeSection (blob, offset, map);
 }
@@ -434,6 +508,14 @@ function getAudioChannel (code) {
 	return audioChannels[code];
 }
 
-function getAudioRepresent (code) {
-	return audioRepresentations[code];
+function getAudioSource (code) {
+	return audioSources[code];
+}
+
+function getPositionX (code) {
+	return positionsX[code];
+}
+
+function getPositionY (code) {
+	return positionsY[code];
 }
