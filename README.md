@@ -25,45 +25,71 @@ By default, JQuery and Bootstrap are loaded from a CDN. Using [Bower](http://bow
 
 ## Component Checklist:
 
- - [x] Effect List
+- `Effect List`
 
 ### Misc
- - [x] AVS Trans
- - [x] Buffer Save
- - [x] Comment
- - [x] Framerate Limiter
- - [x] MIDI Trace
- - [x] Set Render Mode
- - [ ] ...
-
-### Render
- - [x] Clear Screen
- - [x] Starfield
- - [x] Super Scope
- - [x] Texer II
- - [x] Triangle
- - [ ] ...
+- `AVS Trans Automation`
+- `Buffer Save`
+- `Comment`
+- `Custom BPM`
+- `Framerate Limiter`
+- `MIDI Trace`
+- `Set Render Mode`
 
 ### Trans
- - [x] Blur
- - [x] Blitter Feedback
- - [x] Bump
- - [x] Channel Shift
- - [ ] Color Map
- - [x] Color Modifier
- - [x] Convolution Filter
- - [x] Dynamic Movement
- - [x] Fade Out
- - [x] Fast Brightness
- - [x] Grain
- - [x] Invert
- - [x] Mosaic
- - [x] Movement
- - [x] Normalize
- - [x] Video Delay
- - [x] Water
- - [x] Water Bump
- - [ ] ...
+- `Blitter Feedback`
+- `Blur`
+- `Brightness`
+- `Bump`
+- `Channel Shift`
+- `Color Clip`
+- ~~`Color Map`~~ soon!
+- `Color Modifier`
+- `Color Reduction`
+- `Colorfade`
+- `Convolution Filter`
+- `Dynamic Distance Modifier`
+- `Dynamic Movement`
+- `Dynamic Shift`
+- `FadeOut`
+- `Fast Brightness`
+- `Grain`
+- `Interference`
+- `Interleave`
+- `Invert`
+- `Mirror`
+- `Mosaic`
+- `Movement`
+- `Multi Delay`
+- `Multiplier`
+- `Normalize`
+- `Scatter`
+- `Unique Tone`
+- `Video Delay`
+- `Water Bump`
+- `Water`
+
+### Render
+- `AVI`
+- `Bass Spin`
+- `Clear Screen`
+- `Dot Fountain`
+- `Dot Grid`
+- `Dot Plane`
+- `Moving Particle`
+- `OnBeat Clear`
+- `Oscilliscope Star`
+- `Picture`
+- `Ring`
+- `Rotating Stars`
+- `Simple`
+- `Starfield`
+- `Super Scope`
+- `SVP`
+- `Texer II`
+- `Text`
+- `Timescope`
+- `Triangle`
 
 
 ## Authors

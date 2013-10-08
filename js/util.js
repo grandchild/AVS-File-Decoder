@@ -42,7 +42,7 @@ function getUInt32 (blob, offset) {
 function getInt32 (blob, offset) {
 	if(!offset) offset = 0;
 	var array = blob.buffer.slice(blob.byteOffset+offset, blob.byteOffset+offset+sizeInt);
-	return new Int32Array(array, 0, 1)[0];
+	return [new Int32Array(array, 0, 1)[0], 4];
 }
 
 function getUInt64 (blob, offset) {
@@ -55,7 +55,7 @@ function getUInt64 (blob, offset) {
 function getFloat32 (blob, offset) {
 	if(!offset) offset = 0;
 	var array = blob.buffer.slice(blob.byteOffset+offset, blob.byteOffset+offset+sizeInt);
-	return new Float32Array(array, 0, 1)[0];
+	return [new Float32Array(array, 0, 1)[0], 4];
 }
 
 function getBool (blob, offset, size) {
@@ -92,7 +92,7 @@ function getNtString (blob, offset) {
 		result += String.fromCharCode(c);
 		c = blob[++i];
 	}
-	return [result, i-offset];
+	return [result, i-offset+1];
 }
 
 function removeSpaces (str) {
