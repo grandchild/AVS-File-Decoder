@@ -3,6 +3,8 @@
 var builtinComponents = [
 			{"name": "Effect List", // builtin and r_list.cpp for extended Effect Lists
 				"code": 0xfffffffe, "group": "", "func": "effectList"},
+			{"name": "Simple", // r_simple.cpp
+				"code": 0x00, "group": "Render", "func": "simple"}, // ironically, this save format is too complicated for the generic decoder.
 			{"name": "Dot Plane", // r_dotpln.cpp
 				"code": 0x01, "group": "Render", "func": "generic", "fields": {
 					"rotationSpeed": "Int32", // -50 to 50
@@ -13,6 +15,15 @@ var builtinComponents = [
 					"colorBottom": "Color",
 					"angle": "Int32",
 					null0: sizeInt, // [see comment on dot fountan]
+				}},
+			{"name": "Oscilliscope Star", // r_oscstar.cpp
+				"code": 0x02, "group": "Render", "func": "generic", "fields": {
+					"audioChannel": ["Bit", [2,3], "AudioChannel"],
+					"positionX": ["Bit", [4,5], "PositionX"],
+					null0: sizeInt-1,
+					"colors": "ColorList",
+					"size": sizeInt,
+					"rotation": sizeInt,
 				}},
 			{"name": "FadeOut", // r_fadeout.cpp
 				"code": 0x03, "group": "Trans", "func": "generic", "fields": {
@@ -27,6 +38,12 @@ var builtinComponents = [
 					"onBeat": ["Bool", sizeInt],
 					"bilinear": ["Bool", sizeInt],
 				}},
+			{"name": "OnBeat Clear", // r_nfclr.cpp
+				"code": 0x05, "group": "Render", "func": "generic", "fields": {
+					"color": "Color",
+					"output": ["Map4", {0: "Replace", 1: "50/50"}],
+					"clearBeats": sizeInt,
+				}},
 			{"name": "Blur", // r_blur.cpp
 				"code": 0x06, "group": "Trans", "func": "generic", "fields": {
 					"blur": ["Map4", {0: "None", 1: "Medium", 2: "Light", 3: "Heavy"}],
@@ -40,6 +57,22 @@ var builtinComponents = [
 					"colorLeft": "Color",
 					"colorRight": "Color",
 					"mode": ["Map4", {0: "Lines", 1: "Triangles"}],
+				}},
+			{"name": "Moving Particle", // r_parts.cpp
+				"code": 0x08, "group": "Render", "func": "generic", "fields": {
+					"enabled": ["Bit", 0, "Boolified"],
+					"onBeatSizeChange": ["Bit", 1, "Boolified"],
+					null0: sizeInt-1, // fill up bitfield
+					"color": "Color",
+					"range": sizeInt, // 1-20: min(h/2,w*(3/8))*range/32.0
+					"size": sizeInt,
+					"onBeatSize": sizeInt,
+					"output": ["Map4", {0: "Replace", 1: "Additive", 2: "50/50", 3: "Default"}],
+				}},
+			//// 0x09 ?
+			{"name": "SVP", // r_svp.cpp
+				"code": 0x0A, "group": "Render", "func": "generic", "fields": {
+					"library": ["SizeString", 260],
 				}},
 			{"name": "Colorfade", // r_colorfade.cpp
 				"code": 0x0B, "group": "Trans", "func": "generic", "fields": {
@@ -65,8 +98,17 @@ var builtinComponents = [
 				"code": 0x0D, "group": "Render", "func": "generic", "fields": {
 					"colors": "ColorList",
 				}},
+			{"name": "Ring", // r_oscring.cpp
+				"code": 0x0E, "group": "Render", "func": "generic", "fields": {
+					"audioChannel": ["Bit", [2,3], "AudioChannel"],
+					"positionX": ["Bit", [4,5], "PositionX"],
+					null0: sizeInt-1,
+					"colors": "ColorList",
+					"size": sizeInt,
+					"audioSource": ["UInt32", sizeInt, "AudioSource"],
+				}},
 			{"name": "Movement", // r_trans.cpp
-				"code": 0x0F, "group": "Trans", "func": "movement"}, // this save format is too complicated for the generic decoder.
+				"code": 0x0F, "group": "Trans", "func": "movement"},
 			{"name": "Scatter", // r_scat.cpp
 				"code": 0x10, "group": "Trans", "func": "generic", "fields": {
 					"enabled": ["Bool", sizeInt],
@@ -117,6 +159,18 @@ var builtinComponents = [
 					"exclude": ["Bool", sizeInt],
 					"distance": sizeInt, // 0 to 255
 				}},
+			{"name": "Interleave", // r_interleave.cpp
+				"code": 0x17, "group": "Trans", "func": "generic", "fields": {
+					"enabled": ["Bool", sizeInt],
+					"x": sizeInt,
+					"y": sizeInt,
+					"color": "Color",
+					"output": ["Map8", {0: "Replace", 1: "Additive", 0x100000000: "50/50"}],
+					"onbeat": ["Bool", sizeInt],
+					"x2": sizeInt,
+					"y2": sizeInt,
+					"beatDuration": sizeInt,
+				}},
 			{"name": "Grain", // r_grain.cpp
 				"code": 0x18, "group": "Trans", "func": "generic", "fields": {
 					"enabled": ["Bool", sizeInt],
@@ -130,6 +184,18 @@ var builtinComponents = [
 					"color": ["Color", sizeInt],
 					"output": ["Map8", {0: "Replace", 1: "Additive", 0x100000000: "50/50"}],
 					"onlyFirst": ["Bool", sizeInt],
+				}},
+			{"name": "Mirror", // r_mirror.cpp
+				"code": 0x1A, "group": "Trans", "func": "generic", "fields": {
+					"enabled": ["Bool", sizeInt],
+					"topToBottom": ["Bit", 0, "Boolified"],
+					"bottomToTop": ["Bit", 1, "Boolified"],
+					"leftToRight": ["Bit", 2, "Boolified"],
+					"rightToLeft": ["Bit", 3, "Boolified"],
+					null0: sizeInt-1, // fill up bitfield space
+					"onBeat": ["Bool", sizeInt],
+					"smooth": ["Bool", sizeInt],
+					"speed": sizeInt,
 				}},
 			{"name": "Starfield", // r_stars.cpp
 				"code": 0x1B, "group": "Render", "func": "generic", "fields": {
@@ -224,16 +290,22 @@ var builtinComponents = [
 					"skipValue": sizeInt,
 					"skipFirstBeats": sizeInt, // setting this to n>0 also prevents arbitrary mode from running on load of preset until n beats have passed.
 				}},
+			{"name": "Picture", // r_picture.cpp
+				"code": 0x22, "group": "Render", "func": "generic", "fields": {
+					"enabled": ["Bool", sizeInt],
+					"output": ["Map8", {0: "Replace", 1: "Additive", 0x100000000: "50/50"}],
+					"adapt": sizeInt,
+					"onBeatPersist": sizeInt, // 0 to 32
+					"file": "NtString",
+					"ratio": sizeInt,
+					"aspectRatioAxis": ["Map4", {0: "X", 1: "Y"}],
+				}},
 			{"name": "Dynamic Distance Modifier", // r_ddm.cpp
 				"code": 0x23, "group": "Trans", "func": "generic", "fields": {
 					null0: 1,
 					"code": "CodePFBI",
 					"output": ["Map4", {0: "Replace", 1: "50/50"}],
 					"bilinear": ["Bool", sizeInt],
-				}},
-			{"name": "Invert", // r_invert.cpp
-				"code": 0x25, "group": "Trans", "func": "generic", "fields": {
-					"enabled": ["Bool", sizeInt],
 				}},
 			{"name": "Super Scope", // r_ssc.cpp
 				"code": 0x24, "group": "Render", "func": "generic", "fields": {
@@ -244,6 +316,25 @@ var builtinComponents = [
 					null0: 3, // padding, bitfield before is actually 32 bit
 					"colors": "ColorList",
 					"lineType": ["DrawMode", sizeInt],
+				}},
+			{"name": "Invert", // r_invert.cpp
+				"code": 0x25, "group": "Trans", "func": "generic", "fields": {
+					"enabled": ["Bool", sizeInt],
+				}},
+			{"name": "Unique Tone", // r_onetone.cpp
+				"code": 0x26, "group": "Trans", "func": "generic", "fields": {
+					"enabled": ["Bool", sizeInt],
+					"color": "Color",
+					"output": ["Map8", {0: "Replace", 1: "Additive", 0x100000000: "50/50"}],
+					"invert": ["Bool", sizeInt],
+				}},
+			{"name": "Timescope", // r_timescope.cpp
+				"code": 0x27, "group": "Render", "func": "generic", "fields": {
+					"enabled": ["Bool", sizeInt],
+					"color": "Color",
+					"output": ["Map8", {0: "Replace", 1: "Additive", 0x100000000: "50/50", 2: "Default"}],
+					"audioChannel": ["UInt32", sizeInt, "AudioChannel"],
+					"bands": sizeInt,
 				}},
 			{"name": "Set Render Mode", // r_linemode.cpp
 				"code": 0x28, "group": "Misc", "func": "generic", "fields": {
@@ -268,6 +359,13 @@ var builtinComponents = [
 					"onBeat": ["Bool", sizeInt],
 					"speed": "Float32", // 0.01 to 1.28
 				}},
+			{"name": "Dynamic Shift", // r_sPhift.cpp
+				"code": 0x2A, "group": "Trans", "func": "generic", "fields": {
+					"version": ["Bool", 1], // 0: v0.1, v1: 0.2
+					"code": "CodeIFB",
+					"output": ["Map4", {0: "Replace", 1: "50/50"}],
+					"bilinear": ["Bool", sizeInt],
+				}},
 			{"name": "Dynamic Movement", // r_dmove.cpp
 				"code": 0x2B, "group": "Trans", "func": "generic", "fields": {
 					"version": ["Bool", 1], // 0: v0.1, v1: 0.2
@@ -280,7 +378,7 @@ var builtinComponents = [
 					"wrap": ["Bool", sizeInt],
 					"buffer": ["BufferNum", sizeInt],
 					"alphaOnly": ["Bool", sizeInt],
-			}},
+				}},
 			{"name": "Fast Brightness", // r_fastbright.cpp
 				"code": 0x2C, "group": "Trans", "func": "generic", "fields": {
 					"factor": ["Map4", {0: 2, 1: 0.5, 2: 1}],
@@ -289,102 +387,5 @@ var builtinComponents = [
 				"code": 0x2D, "group": "Trans", "func": "generic", "fields": {
 					"recomputeEveryFrame": ["Bool", 1],
 					"code": "CodePFBI",
-				}},
-			{"name": "Interleave", // r_interleave.cpp
-				"code": 0x17, "group": "Trans", "func": "generic", "fields": {
-					"enabled": ["Bool", sizeInt],
-					"x": sizeInt,
-					"y": sizeInt,
-					"color": "Color",
-					"output": ["Map8", {0: "Replace", 1: "Additive", 0x100000000: "50/50"}],
-					"onbeat": ["Bool", sizeInt],
-					"x2": sizeInt,
-					"y2": sizeInt,
-					"beatDuration": sizeInt,
-				}},
-			{"name": "Mirror", // r_mirror.cpp
-				"code": 0x1A, "group": "Trans", "func": "generic", "fields": {
-					"enabled": ["Bool", sizeInt],
-					"topToBottom": ["Bit", 0, "Boolified"],
-					"bottomToTop": ["Bit", 1, "Boolified"],
-					"leftToRight": ["Bit", 2, "Boolified"],
-					"rightToLeft": ["Bit", 3, "Boolified"],
-					null0: sizeInt-1, // fill up bitfield space
-					"onBeat": ["Bool", sizeInt],
-					"smooth": ["Bool", sizeInt],
-					"speed": sizeInt,
-				}},
-			{"name": "OnBeat Clear", // r_nfclr.cpp
-				"code": 0x05, "group": "Render", "func": "generic", "fields": {
-					"color": "Color",
-					"output": ["Map4", {0: "Replace", 1: "50/50"}],
-					"clearBeats": sizeInt,
-				}},
-			{"name": "Unique Tone", // r_onetone.cpp
-				"code": 0x26, "group": "Trans", "func": "generic", "fields": {
-					"enabled": ["Bool", sizeInt],
-					"color": "Color",
-					"output": ["Map8", {0: "Replace", 1: "Additive", 0x100000000: "50/50"}],
-					"invert": ["Bool", sizeInt],
-				}},
-			{"name": "Ring", // r_oscring.cpp
-				"code": 0x0E, "group": "Render", "func": "generic", "fields": {
-					"audioChannel": ["Bit", [2,3], "AudioChannel"],
-					"positionX": ["Bit", [4,5], "PositionX"],
-					null0: sizeInt-1,
-					"colors": "ColorList",
-					"size": sizeInt,
-					"audioSource": ["UInt32", sizeInt, "AudioSource"],
-				}},
-			{"name": "Oscilliscope Star", // r_oscstar.cpp
-				"code": 0x02, "group": "Render", "func": "generic", "fields": {
-					"audioChannel": ["Bit", [2,3], "AudioChannel"],
-					"positionX": ["Bit", [4,5], "PositionX"],
-					null0: sizeInt-1,
-					"colors": "ColorList",
-					"size": sizeInt,
-					"rotation": sizeInt,
-				}},
-			{"name": "Moving Particle", // r_parts.cpp
-				"code": 0x08, "group": "Render", "func": "generic", "fields": {
-					"enabled": ["Bit", 0, "Boolified"],
-					"onBeatSizeChange": ["Bit", 1, "Boolified"],
-					null0: sizeInt-1, // fill up bitfield
-					"color": "Color",
-					"range": sizeInt, // 1-20: min(h/2,w*(3/8))*range/32.0
-					"size": sizeInt,
-					"onBeatSize": sizeInt,
-					"output": ["Map4", {0: "Replace", 1: "Additive", 2: "50/50", 3: "Default"}],
-				}},
-			{"name": "Picture", // r_picture.cpp
-				"code": 0x22, "group": "Render", "func": "generic", "fields": {
-					"enabled": ["Bool", sizeInt],
-					"output": ["Map8", {0: "Replace", 1: "Additive", 0x100000000: "50/50"}],
-					"adapt": sizeInt,
-					"onBeatPersist": sizeInt, // 0 to 32
-					"file": "NtString",
-					"ratio": sizeInt,
-					"aspectRatioAxis": ["Map4", {0: "X", 1: "Y"}],
-				}},
-			{"name": "Dynamic Shift", // r_sPhift.cpp
-				"code": 0x2A, "group": "Trans", "func": "generic", "fields": {
-					"version": ["Bool", 1], // 0: v0.1, v1: 0.2
-					"code": "CodeIFB",
-					"output": ["Map4", {0: "Replace", 1: "50/50"}],
-					"bilinear": ["Bool", sizeInt],
-				}},
-			{"name": "Simple", // r_simple.cpp
-				"code": 0x00, "group": "Render", "func": "simple"},
-			{"name": "SVP", // r_svp.cpp
-				"code": 0x0A, "group": "Render", "func": "generic", "fields": {
-					"library": ["SizeString", 260],
-				}},
-			{"name": "Timescope", // r_timescope.cpp
-				"code": 0x27, "group": "Render", "func": "generic", "fields": {
-					"enabled": ["Bool", sizeInt],
-					"color": "Color",
-					"output": ["Map8", {0: "Replace", 1: "Additive", 0x100000000: "50/50"}],
-					"audioChannel": ["UInt32", sizeInt, "AudioChannel"],
-					"bands": sizeInt,
 				}},
 		];
