@@ -2,12 +2,9 @@
 
 ## Description
 
-This little Javascript aims to read out the file format of Nullsoft's _Advanced Visualization Studio_ and rewrite it as JSON readable by [WebVS](https://github.com/azeem/webvs).
+This little Javascript reads out the file format of Nullsoft's _Advanced Visualization Studio_ and rewrites it as JSON readable by [WebVS](https://github.com/azeem/webvs).
 
 [Live Demo](http://decoder.visbot.net/)
-
-The framework is mostly done now! And the remaining work is adding effects to the decoder.
-If you want to help out - cool! Have a look at the top of [js/convert.js](https://github.com/grandchild/AVS-File-Decoder/blob/master/js/convert.js) there is a table with formattings for various effects. Just whip out a hex editor (I can recommend [wxHexEditor](http://www.wxhexeditor.org/)), open up a preset file, and add a new entry for a missing effect. Make sure you select "generic" as "func"tion value. And then push it this way. Thanks.
 
 ## Installation
 
@@ -21,7 +18,7 @@ Use the '[zip download](https://github.com/grandchild/AVS-File-Decoder/archive/m
 
 ### Dependencies
 
-By default, JQuery and Bootstrap are loaded from a CDN. Using [Bower](http://bower.io/), you can install the JQuery library locally - a fallback method is already implemented in the application. No Bootstrap fallback as of yet.
+By default, JQuery and Bootstrap are loaded from a CDN. Using [Bower](http://bower.io/), you can install JQuery and Bootstrap locally - an experimental fallback method is already implemented in the application. Bootstrap fallback is not working correctly at this time.
 
 ## Component Checklist:
 
