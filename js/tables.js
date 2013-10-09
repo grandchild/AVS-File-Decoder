@@ -152,4 +152,4 @@ var movementEffects = {
 		'21': ["Grapevine", "x = x + (cos(abs(y-.5) * 8) * .02);\r\ny = y + (sin(abs(x-.5) * 8) * .05);\r\nx = x * .95;\r\ny = y * .95;", 1],
 		'22': ["Quadrant", "y = y * ( 1 + (sin(r + $PI/2) * .3) );\r\nx = x * ( 1 + (cos(r + $PI/2) * .3) );\r\nx = x * .995;\r\ny = y * .995;", 1],
 		'23': ["6-way Kaleida (use Wrap!)", "y = (r*6)/($PI); x = d;", 1],
-}
+};
