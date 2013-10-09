@@ -3,6 +3,8 @@ var outputDir = "";
 
 var pedanticMode = false; // unused
 var verbose = true; // log individual key:value fields
+var allFields = true;
+var prettyPrint = true;
 
 /// needs:
 // util.js
@@ -27,10 +29,10 @@ $(document).ready(function () {
 	});
 });
 
-function saveAvsAsJson (preset, name) {
-	var json = convertPreset(preset, name);
+function saveAvsAsJson (preset, file) {
+	var json = convertPreset(preset, file);
 	var output = ('#output');
-	$(output).html(JSON.stringify(json, null, '    '));
+	$(output).html(JSON.stringify(json, null, prettyPrint?'    ':null));
 	$(output).each(function(i, e) {hljs.highlightBlock(e)});
 }
 
