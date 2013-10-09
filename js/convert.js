@@ -563,7 +563,7 @@ function getCoordinates (blob, offset, size) {
 
 function getDrawMode (blob, offset, size) {
 	var code = size===1 ? blob[offset] : getUInt32(blob, offset);
-	return drawModes[code];
+	return [drawModes[code], size];
 }
 
 function getAudioChannel (code) {
