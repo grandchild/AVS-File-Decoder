@@ -1,12 +1,12 @@
 
 var componentTable = builtinComponents.concat(dllComponents);
 
-function convertPreset (presetFile, name) {
+function convertPreset (presetFile, file) {
 	var preset = {
-		'name': name.substr(0,name.length-4),
-		'author': '',
+		'name': file.name.substr(0,file.name.length-4),
+		'date': file.lastModifiedDate.toISOString(),
+		//'author': '',
 	};
-	//var blob32 = new Uint32Array(preset);
 	var blob8 = new Uint8Array(presetFile);
 	try {
 		var clearFrame = decodePresetHeader(blob8.subarray(0, presetHeaderLength));
@@ -32,7 +32,7 @@ function convertComponents (blob) {
 		var i = getComponentIndex(code, blob, fp);
 		var isDll = code!==0xfffffffe && code>builtinMax;
 		var size = getComponentSize(blob, fp+sizeInt+isDll*32);
-		if(i<=0) {
+		if(i<0) {
 			var res = {'type': 'Unknown: ('+(-i)+')'};
 		} else {
 			var offset = fp+sizeInt*2+isDll*32;
@@ -383,11 +383,32 @@ function getCodeIFB (blob, offset) {
 	return getCodeSection (blob, offset, map);
 }
 
-function getCodeSection (blob, offset, map) {
+// used only by 'Global Variables'
+function getNtCodeIFB (blob, offset) {
+	var map = [
+		["init", 0],
+		["perFrame", 1],
+		["onBeat", 2],
+	];
+	return getCodeSection(blob, offset, map, /*nullterminated*/true);
+}
+
+// used only by 'Triangle'
+function getNtCodeIFBP (blob, offset) {
+	var map = [
+		["init", 0],
+		["perFrame", 1],
+		["onBeat", 2],
+		["perPoint", 3],
+	];
+	return getCodeSection(blob, offset, map, /*nullterminated*/true);
+}
+
+function getCodeSection (blob, offset, map, nt) {
 	var strings = new Array(map.length);
 	var totalSize = 0;
 	for (var i = 0, p = offset; i < map.length; i++, p += strAndSize[1]) {
-		var strAndSize = getSizeString(blob, p);
+		var strAndSize = nt ? getNtString(blob, p) : getSizeString(blob, p);
 		totalSize += strAndSize[1];
 		strings[i] = strAndSize[0];
 	};
@@ -398,22 +419,6 @@ function getCodeSection (blob, offset, map) {
 	return [code, totalSize];
 }
 
-// used only by Global Variables
-function getNtCodeIFB (blob, offset) {
-	var strings = new Array(3);
-	var totalSize = 0;
-	for (var i = 0, p = offset; i < 3; i++, p += strAndSize[1]) {
-		var strAndSize = getNtString(blob, p);
-		totalSize += strAndSize[1];
-		strings[i] = strAndSize[0];
-	};
-	var code = {
-		"init": strings[0],
-		"perFrame": strings[1],
-		"onBeat": strings[2],
-	};
-	return [code, totalSize];
-}
 
 function getColorList (blob, offset) {
 	var colors = [];
@@ -429,19 +434,30 @@ function getColorList (blob, offset) {
 
 function getColorMaps (blob, offset) {
 	var mapOffset = offset+480;
-	var maps = new Array(8);
+	var maps = [];
 	var headerSize = 60; // 4B enabled, 4B num, 4B id, 48B filestring
+	var mi = 0; // map index, might be != i when maps are skipped
 	for (var i = 0; i < 8; i++) {
 		var enabled = getBool(blob, offset+headerSize*i, sizeInt)[0];
 		var num = getUInt32(blob, offset+headerSize*i+sizeInt);
-		var id = getUInt32(blob, offset+headerSize*i+sizeInt*2) // id of the map - not really needed.
-		var mapFile = getNtString(blob, offset+headerSize*i+sizeInt*3)[0];
-		maps[i] = {
-			"enabled": enabled,
-			"id": id,
-			"fileName": mapFile,
-			"map": getColorMap(blob, mapOffset, num),
-		};
+		var map = getColorMap(blob, mapOffset, num);
+		// check if it's a disabled default {0: #000000, 255: #ffffff} map, and only save it if not.
+		if(!enabled && map.length===2 && map[0].color==="#000000" && map[0].position===0 && map[1].color==="#ffffff" && map[1].position===255) {
+			// skip this map
+		} else {
+			maps[mi] = {
+				"index": i,
+				"enabled": enabled,
+			};
+			if(allFields) {
+				var id = getUInt32(blob, offset+headerSize*i+sizeInt*2) // id of the map - not really needed.
+				var mapFile = getNtString(blob, offset+headerSize*i+sizeInt*3)[0];
+				maps[mi]["id"] = id;
+				maps[mi]["fileName"] = mapFile;
+			}
+			maps[mi]["map"] = map;
+			mi++;
+		}
 		mapOffset += num*sizeInt*3;
 	};
 	return [maps, mapOffset-offset];
@@ -477,12 +493,13 @@ function getConvoFilter (blob, offset, dimensions) {
 	var size = dimensions[0]*dimensions[1];
 	var data = new Array(size);
 	for (var i = 0; i < size; i++, offset+=sizeInt) {
-		data[i] = getInt32(blob, offset);
+		data[i] = getInt32(blob, offset)[0];
 	};
 	var matrix = {"width": dimensions[0], "height": dimensions[1], "data": data};
 	return [matrix, size*sizeInt];
 }
 
+// 'Text' needs this
 function getSemiColSplit (str) {
 	var strings = str.split(';');
 	if(strings.length === 1) {

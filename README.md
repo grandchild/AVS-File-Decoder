@@ -74,6 +74,7 @@ By default, JQuery and Bootstrap are loaded from a CDN. Using [Bower](http://bow
 - `Dot Fountain`
 - `Dot Grid`
 - `Dot Plane`
+- `Fluid`
 - `FyrewurX`
 - `Moving Particle`
 - `OnBeat Clear`

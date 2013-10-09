@@ -31,7 +31,7 @@ function loadFile (file, callback) {
 	var reader = new FileReader();
 	reader.onloadend = function(e) {
 		if (e.target.readyState == FileReader.DONE) {
-			callback(e.target.result, file.name);
+			callback(e.target.result, file);
 		}
 	};
 	
