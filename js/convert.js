@@ -1,8 +1,11 @@
 
 var componentTable = builtinComponents.concat(dllComponents);
 
-function convertPreset (presetFile) {
-	var preset = {};
+function convertPreset (presetFile, name) {
+	var preset = {
+		'name': name.substr(0,name.length-4),
+		'author': '',
+	};
 	//var blob32 = new Uint32Array(preset);
 	var blob8 = new Uint8Array(presetFile);
 	try {
@@ -303,13 +306,6 @@ function decode_simple (blob, offset) {
 	return comp;
 }
 
-function decode_colorMap (blob, offset) {
-	return {
-		'type': 'ColorMap',
-	};
-}
-
-
 /**
  * blank decode function
 
@@ -402,6 +398,23 @@ function getCodeSection (blob, offset, map) {
 	return [code, totalSize];
 }
 
+// used only by Global Variables
+function getNtCodeIFB (blob, offset) {
+	var strings = new Array(3);
+	var totalSize = 0;
+	for (var i = 0, p = offset; i < 3; i++, p += strAndSize[1]) {
+		var strAndSize = getNtString(blob, p);
+		totalSize += strAndSize[1];
+		strings[i] = strAndSize[0];
+	};
+	var code = {
+		"init": strings[0],
+		"perFrame": strings[1],
+		"onBeat": strings[2],
+	};
+	return [code, totalSize];
+}
+
 function getColorList (blob, offset) {
 	var colors = [];
 	var num = getUInt32(blob, offset);
@@ -414,18 +427,35 @@ function getColorList (blob, offset) {
 	return [colors, size];
 }
 
-function getColorMap (blob, offset){
-	var num = getUInt32(blob, offset);
-	var size = num;
+function getColorMaps (blob, offset) {
+	var mapOffset = offset+480;
+	var maps = new Array(8);
+	var headerSize = 60; // 4B enabled, 4B num, 4B id, 48B filestring
+	for (var i = 0; i < 8; i++) {
+		var enabled = getBool(blob, offset+headerSize*i, sizeInt)[0];
+		var num = getUInt32(blob, offset+headerSize*i+sizeInt);
+		var id = getUInt32(blob, offset+headerSize*i+sizeInt*2) // id of the map - not really needed.
+		var mapFile = getNtString(blob, offset+headerSize*i+sizeInt*3)[0];
+		maps[i] = {
+			"enabled": enabled,
+			"id": id,
+			"fileName": mapFile,
+			"map": getColorMap(blob, mapOffset, num),
+		};
+		mapOffset += num*sizeInt*3;
+	};
+	return [maps, mapOffset-offset];
+}
+
+function getColorMap (blob, offset, num){
 	var colorMap = [];
-	offset += sizeInt;
 	for (var i = 0; i < num; i++) {
 		var pos = getUInt32(blob, offset);
-		var color = getColor(blob, offset+sizeInt);
-		offset += sizeInt*2 + sizeInt; // there's 4bytes of random foo following each entry...
+		var color = getColor(blob, offset+sizeInt)[0];
+		offset += sizeInt*3; // there's a 4byte id (presumably) following each color.
 		colorMap[i] = {"color": color, "position": pos};
 	};
-	return [colorMap, size*sizeInt*2];
+	return colorMap;
 }
 
 function getColor (blob, offset) {
@@ -480,6 +510,21 @@ function getBlendmodeBuffer (blob, offset, size) {
 function getBlendmodeRender (blob, offset, size) {
 	var code = size===1?blob[offset]:getUInt32(blob, offset);
 	return [blendmodesRender[code], size];
+}
+
+function getBlendmodeColorMap (blob, offset, size) {
+	var code = size===1?blob[offset]:getUInt32(blob, offset);
+	return [blendmodesColorMap[code], size];
+}
+
+function getKeyColorMap (blob, offset, size) {
+	var code = size===1?blob[offset]:getUInt32(blob, offset);
+	return [keysColorMap[code], size];
+}
+
+function getCycleModeColorMap (blob, offset, size) {
+	var code = size===1?blob[offset]:getUInt32(blob, offset);
+	return [cycleModesColorMap[code], size];
 }
 
 // Buffer modes
