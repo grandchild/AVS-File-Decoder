@@ -70,6 +70,21 @@ var blendmodesColorMap = {
 		'8': 'XOR',
 	};
 
+var keysColorMap = {
+		'0': 'Red',
+		'1': 'Green',
+		'2': 'Blue',
+		'3': '(R+G+B)/2',
+		'4': 'MaxChannel',
+		'5': '(R+G+B)/3',
+};
+
+var cycleModesColorMap = {
+		'0': 'None (Map 1)',
+		'1': 'OnBeat Random',
+		'2': 'OnBeat Sequential',
+};
+
 var buffermodes = {
 		'0': 'Save',
 		'1': 'Restore',

@@ -2,7 +2,7 @@ var compat = false;
 var outputDir = "";
 
 var pedanticMode = false; // unused
-var verbose = false; // log individual key:value fields
+var verbose = true; // log individual key:value fields
 
 /// needs:
 // util.js
@@ -28,11 +28,7 @@ $(document).ready(function () {
 });
 
 function saveAvsAsJson (preset, name) {
-	var json = {
-			'name': name.substr(0,name.length-4),
-			'author': '-',
-			'components': convertPreset(preset)
-		};
+	var json = convertPreset(preset, name);
 	var output = ('#output');
 	$(output).html(JSON.stringify(json, null, '    '));
 	$(output).each(function(i, e) {hljs.highlightBlock(e)});

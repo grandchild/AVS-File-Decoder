@@ -33,6 +33,7 @@ By default, JQuery and Bootstrap are loaded from a CDN. Using [Bower](http://bow
 - `Comment`
 - `Custom BPM`
 - `Framerate Limiter`
+- `Global Variables`
 - `MIDI Trace`
 - `Set Render Mode`
 
@@ -43,7 +44,7 @@ By default, JQuery and Bootstrap are loaded from a CDN. Using [Bower](http://bow
 - `Bump`
 - `Channel Shift`
 - `Color Clip`
-- ~~`Color Map`~~ soon!
+- `Color Map`
 - `Color Modifier`
 - `Color Reduction`
 - `Colorfade`
@@ -76,6 +77,7 @@ By default, JQuery and Bootstrap are loaded from a CDN. Using [Bower](http://bow
 - `Dot Fountain`
 - `Dot Grid`
 - `Dot Plane`
+- `FyrewurX`
 - `Moving Particle`
 - `OnBeat Clear`
 - `Oscilliscope Star`
