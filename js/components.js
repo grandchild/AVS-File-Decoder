@@ -443,8 +443,8 @@ var dllComponents = [
 					"absolute": ["Bool", sizeInt], // they can however both be false/zero
 					"2-pass": ["Bool", sizeInt],
 					"kernel": ["ConvoFilter", [7,7]],
-					"bias": ["Bool", sizeInt],
-					"scaling": ["Bool", sizeInt],
+					"bias": "Int32",
+					"scaling": "Int32",
 				}},
 			{"name": "Triangle",
 				"code": // Render: Triangle................
