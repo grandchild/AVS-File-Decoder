@@ -182,7 +182,7 @@ var builtinComponents = [
 				"code": 0x19, "group": "Render", "func": "generic", "fields": {
 					"enabled": ["Bool", sizeInt],
 					"color": ["Color", sizeInt],
-					"output": ["Map8", {0: "Replace", 1: "Additive", 0x100000000: "50/50"}],
+					"output": ["Map8", {0: "Replace", 1: "Additive", 0x100000000: "50/50", 2: "Default"}],
 					"onlyFirst": ["Bool", sizeInt],
 				}},
 			{"name": "Mirror", // r_mirror.cpp
@@ -510,8 +510,8 @@ var dllComponents = [
 					[0x4E, 0x75, 0x6C, 0x6C, 0x73, 0x6F, 0x66, 0x74, 0x20, 0x50, 0x69, 0x78, 0x65, 0x6C, 0x63, 0x6F, 0x72, 0x70, 0x73, 0x3A, 0x20, 0x4D, 0x49, 0x44, 0x49, 0x74, 0x72, 0x61, 0x63, 0x65, 0x20, 0x00],
 				"group": "Misc", "func": "generic", "fields": {
 					"enabled": ["Bool", sizeInt],
-					"channels": sizeInt,
-					"mode": ["Map32", {1: "Current", 2: "Trigger"}],
+					"channel": sizeInt,
+					"mode": ["Map4", {1: "Current", 2: "Trigger"}],
 					"allChannels": ["Bool", sizeInt],
 					"printEvents": ["Bool", sizeInt],
 				}},
