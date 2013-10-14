@@ -529,6 +529,11 @@ function getBlendmodeRender (blob, offset, size) {
 	return [blendmodesRender[code], size];
 }
 
+function getBlendmodePicture2 (blob, offset, size) {
+	var code = size===1?blob[offset]:getUInt32(blob, offset);
+	return [blendmodesPicture2[code], size];
+}
+
 function getBlendmodeColorMap (blob, offset, size) {
 	var code = size===1?blob[offset]:getUInt32(blob, offset);
 	return [blendmodesColorMap[code], size];

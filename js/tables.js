@@ -58,6 +58,20 @@ var blendmodesRender = {
 		'8': 'XOR',
 	};
 
+var blendmodesPicture2 = {
+		 '0': 'Replace',
+		 '1': 'Additive',
+		 '2': 'Maximum',
+		 '3': 'Minimum',
+		 '4': '50/50',
+		 '5': 'Dest-Src',
+		 '6': 'Src-Dest',
+		 '7': 'Multiply',
+		 '8': 'XOR',
+		 '9': 'Adjustable',
+		'10': 'Ignore',
+	};
+
 var blendmodesColorMap = {
 		'0': 'Replace',
 		'1': 'Additive',

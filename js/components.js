@@ -264,7 +264,7 @@ var builtinComponents = [
 				"code": 0x1E, "group": "Trans", "func": "generic", "fields": {
 					"enabled": ["Bool", sizeInt],
 					"size": sizeInt,
-					"sizeOnBeat": sizeInt,
+					"onBeatSize": sizeInt,
 					"output": ["Map8", {0: "Replace", 1: "Additive", 0x100000000: "50/50"}],
 					"onbeat": ["Bool", sizeInt],
 					"durFrames": sizeInt,
@@ -523,12 +523,13 @@ var dllComponents = [
 					"color": "Color",
 					"size": sizeInt,
 				}},
-			{"name": "AVI Player",
+			{"name": "AVI Player", // Goebish avi player - incomplete! Many many options, supposedly very unstable APE (i.e. no one used this) - until now to lazy to implement
 				"code": // VFX AVI PLAYER..................
 					[0x56, 0x46, 0x58, 0x20, 0x41, 0x56, 0x49, 0x20, 0x50, 0x4C, 0x41, 0x59, 0x45, 0x52, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00],
 				"group": "Misc", "func": "generic", "fields": {
 					"filePath": ["SizeString", 256],
 					"enabled": ["Bool", sizeInt],
+					// more...
 				}},
 			{"name": "FyrewurX",
 				"code": // FunkyFX FyrewurX v1.............
@@ -552,6 +553,18 @@ var dllComponents = [
 					[0x47, 0x65, 0x69, 0x73, 0x73, 0x46, 0x6C, 0x75, 0x69, 0x64, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00],
 				"group": "Misc", "func": "generic", "fields": {
 					null0: sizeInt, // Fluid saves its parameter globally somewhere, not in the preset file - great... :/
+				}},
+			{"name": "Picture II",
+				"code": // Picture II......................
+					[0x50, 0x69, 0x63, 0x74, 0x75, 0x72, 0x65, 0x20, 0x49, 0x49, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00],
+				"group": "Misc", "func": "generic", "fields": {
+					"image": ["NtString", 260],
+					"output": ["BlendmodePicture2", sizeInt],
+					"onBeatOutput": ["BlendmodePicture2", sizeInt],
+					"bilinear": ["Bool", sizeInt],
+					"onBeatBilinear": ["Bool", sizeInt],
+					"adjustBlend": sizeInt, // 0 to 255
+					"onBeatAdjustBlend": sizeInt, // 0 to 255
 				}},
 			/*
 			{"name": "",
