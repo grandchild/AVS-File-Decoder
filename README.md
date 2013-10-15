@@ -80,12 +80,14 @@ By default, JQuery and Bootstrap are loaded from a CDN. Using [Bower](http://bow
 - `OnBeat Clear`
 - `Oscilliscope Star`
 - `Picture`
+- `Picture II`
 - `Ring`
 - `Rotating Stars`
 - `Simple`
 - `Starfield`
 - `Super Scope`
 - `SVP`
+- ~~`Texer`~~
 - `Texer II`
 - `Text`
 - `Timescope`
