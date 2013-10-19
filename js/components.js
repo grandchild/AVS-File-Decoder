@@ -69,7 +69,17 @@ var builtinComponents = [
 					"onBeatSize": sizeInt,
 					"output": ["Map4", {0: "Replace", 1: "Additive", 2: "50/50", 3: "Default"}],
 				}},
-			//// 0x09 ?
+			{"name": "Roto Blitter",
+				"code": 0x09, "group": "Trans", "func": "generic", "fields": {
+					"zoom": sizeInt,
+					"rotate": sizeInt,
+					"output": ["map4", {"0": "Replace", "1": "50/50"}],
+					"onBeatReverse": ["boolean", sizeInt],
+					"reversalSpeed": sizeInt, // inverted - 0: fastest, 8: slowest
+					"onBeatZoom": sizeInt,
+					"onBeat": ["boolean", sizeInt],
+					"bilinear": ["boolean", sizeInt],
+				}},
 			{"name": "SVP", // r_svp.cpp
 				"code": 0x0A, "group": "Render", "func": "generic", "fields": {
 					"library": ["SizeString", 260],
