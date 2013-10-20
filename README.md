@@ -61,6 +61,7 @@ By default, JQuery and Bootstrap are loaded from a CDN. Using [Bower](http://bow
 - `Multi Delay`
 - `Multiplier`
 - `Normalize`
+- `Roto Blitter`
 - `Scatter`
 - `Unique Tone`
 - `Video Delay`
