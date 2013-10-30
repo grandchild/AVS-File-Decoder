@@ -10,10 +10,10 @@
     <title>AVS File Decoder</title>
 
     <!-- Bootstrap core CSS -->
-    <link href="//netdna.bootstrapcdn.com/bootswatch/3.0.0/flatly/bootstrap.min.css" rel="stylesheet">
+    <link href="http://netdna.bootstrapcdn.com/bootswatch/3.0.0/flatly/bootstrap.min.css" rel="stylesheet">
 
     <!-- Custom styles for this template & highlighter.js -->
-    <link href="css/_combined.css" rel="stylesheet">
+    <link href="build/styles.min.css" rel="stylesheet">
   </head>
 
   <body>
@@ -36,7 +36,7 @@
     </div><!-- /.container -->
 
     <!-- Core JavaScript -->
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
     <script type="text/javascript">
       if (typeof jQuery == 'undefined') {
           document.write(unescape("%3Cscript src='bower_components/jquery/jquery.min.js' type='text/javascript'%3E%3C/script%3E"));
@@ -45,16 +45,7 @@
 
     <script type="text/javascript" src="lib/bootstrap-filestyle.min.js"></script>
     <script src="lib/highlight.pack.js"></script>
-    <!-- when deployed use combined.js
-    <script type="text/javascript" src="js/_combined.js"></script?>
-    -->
-    <!-- Use original files until then: -->
-    <script type="text/javascript" src="js/util.js"></script>
-    <script type="text/javascript" src="js/components.js"></script>
-    <script type="text/javascript" src="js/tables.js"></script>
-    <script type="text/javascript" src="js/convert.js"></script>
-    <script type="text/javascript" src="js/files.js"></script>
-    <script type="text/javascript" src="js/main.js"></script>
+    <script type="text/javascript" src="build/scripts.min.js"></script?>
     <script type="text/javascript">
       //highlight
       hljs.initHighlightingOnLoad();
