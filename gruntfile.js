@@ -2,6 +2,18 @@ module.exports = function(grunt){
 
 	require("matchdep").filterDev("grunt-*").forEach(grunt.loadNpmTasks);
 
+	var jsFiles = [
+		// maintain file order!
+        'src/js/util.js',
+        'src/js/files.js',
+        'src/js/tables.js',
+        'src/js/components.js',
+        'src/js/convert.js',
+        'src/js/main.js',
+        'src/js/ui.js'
+    ];
+
+
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
 
@@ -26,7 +38,7 @@ module.exports = function(grunt){
 		    	options: {
 			      mangle: false
 			    },
-		        src: ['src/js/util.js', 'src/js/files.js', 'src/js/tables.js', 'src/js/components.js', 'src/js/convert.js', 'src/js/main.js', 'src/js/ui.js' ],
+		        src: jsFiles,
     			dest: 'build/scripts.min.js'
 		    }
 		},
@@ -55,6 +67,7 @@ module.exports = function(grunt){
 
     });
 
-    grunt.registerTask('default', []);
+    grunt.registerTask('default',
+    	[]);
 
 };
