@@ -22,7 +22,7 @@ By default, JQuery and Bootstrap are loaded from a CDN. Using [Bower](http://bow
 
 ### Building
 
-We're using [Grunt](gruntjs.com) to lint HTML, uglify JavaScript and to minify CSS.
+We're using [Grunt](http://gruntjs.com) to lint HTML, uglify JavaScript and to minify CSS.
 
 1. Install dependencies using `npm install` (first time only)
 2. Run the Grunt task using `grunt`
