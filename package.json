@@ -1,7 +1,8 @@
 {
   "name": "AVS-File-Decoder",
   "version": "0.0.0",
-  "author": "grandchild",
+  "contributors": ["grandchild", "idleberg"],
+  "license" : "MIT",
   "private": true,
   "devDependencies": {
     "grunt": "~0.4.0",
