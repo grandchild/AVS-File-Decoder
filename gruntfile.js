@@ -26,8 +26,8 @@ module.exports = function(grunt){
 		    	options: {
 			      mangle: false
 			    },
-		        src : 'src/js/**/*.js',
-    			dest : 'build/scripts.min.js'
+		        src: ['src/js/util.js', 'src/js/files.js', 'src/js/tables.js', 'src/js/components.js', 'src/js/convert.js', 'src/js/main.js', 'src/js/ui.js' ],
+    			dest: 'build/scripts.min.js'
 		    }
 		},
 
