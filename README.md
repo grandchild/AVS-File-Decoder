@@ -20,6 +20,14 @@ Use the '[zip download](https://github.com/grandchild/AVS-File-Decoder/archive/m
 
 By default, JQuery and Bootstrap are loaded from a CDN. Using [Bower](http://bower.io/), you can install JQuery and Bootstrap locally - an experimental fallback method is already implemented in the application. Bootstrap fallback is not working correctly at this time.
 
+### Building
+
+We're using [Grunt](gruntjs.com) to lint HTML, uglify JavaScript and to minify CSS.
+
+1. Install dependencies using `npm install` if you haven't before
+2. Run the Grunt task using `grunt watch`
+3. Edit the source-files (`index.html` or `src/*`)
+
 ## Component Checklist:
 
 - `Effect List`
