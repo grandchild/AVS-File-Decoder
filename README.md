@@ -28,7 +28,7 @@ We're using [Grunt](http://gruntjs.com) to lint HTML, uglify JavaScript and to m
 2. Run the Grunt task using `grunt`
 3. Edit the source-files
 
-Whenever changes are made to the source-files (`index.html` or `src/*`), the files in the `build/` directory will be updated.
+Whenever changes are made to the source-files (`index.html` or `src/*`), the files in the `build/` directory will be updated. Alternatively, you can uglify the JavaScript using `grunt uglify` or minify the CSS files using `grunt cssmin`.
 
 ## Component Checklist:
 
