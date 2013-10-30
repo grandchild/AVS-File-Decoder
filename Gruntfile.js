@@ -13,7 +13,6 @@ module.exports = function(grunt){
         'src/js/ui.js'
     ];
 
-
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
 
@@ -33,6 +32,13 @@ module.exports = function(grunt){
 		    }
 		},
 
+		// JavaScript
+		/*
+		jshint: {
+		    src: jsFiles
+		},
+		*/
+
         uglify: {
 		    build: {
 		    	options: {
@@ -43,6 +49,7 @@ module.exports = function(grunt){
 		    }
 		},
 
+		// CSS
 		cssmin: {
             build: {
                 src: 'src/css/**/*.css',
@@ -50,6 +57,13 @@ module.exports = function(grunt){
             }
         },
 
+        csslint: {
+		  strict: {
+		    src: 'src/css/**/*.css'
+		  }
+		},
+
+		// Watch
         watch: {
 		    html: {
 		        files: ['index.html'],
@@ -61,7 +75,7 @@ module.exports = function(grunt){
 		    },
 		    css: {
 		        files: ['src/css/**/*.css'],
-		        tasks: ['cssmin']
+		        tasks: ['csslint', 'cssmin']
 		    }
 		}
 
