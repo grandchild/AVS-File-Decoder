@@ -10,7 +10,6 @@
     "grunt-contrib-cssmin": "*",
     "grunt-contrib-uglify": "*",
     "grunt-contrib-watch": "*",
-    "grunt-cssc": "*",
     "grunt-htmlhint": "*",
     "matchdep": "*"
   }
