@@ -4,7 +4,7 @@
 
 This little Javascript reads out the file format of Nullsoft's _Advanced Visualization Studio_ and rewrites it as JSON readable by [WebVS](https://github.com/azeem/webvs).
 
-[Live Demo](http://decoder.visbot.net/)
+[Live Demo](grandchild.github.io/AVS-File-Decoder/)
 
 ## Installation
 
