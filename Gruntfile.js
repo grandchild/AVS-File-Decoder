@@ -4,13 +4,13 @@ module.exports = function(grunt){
 
 	var jsFiles = [
 		// maintain file order!
-        'src/js/util.js',
-        'src/js/files.js',
-        'src/js/tables.js',
-        'src/js/components.js',
-        'src/js/convert.js',
-        'src/js/main.js',
-        'src/js/ui.js'
+        'app/scripts/util.js',
+        'app/scripts/files.js',
+        'app/scripts/tables.js',
+        'app/scripts/components.js',
+        'app/scripts/convert.js',
+        'app/scripts/main.js',
+        'app/scripts/ui.js'
     ];
 
     grunt.initConfig({
@@ -45,21 +45,21 @@ module.exports = function(grunt){
 			      mangle: false
 			    },
 		        src: jsFiles,
-    			dest: 'build/scripts.min.js'
+    			dest: 'dist/scripts.min.js'
 		    }
 		},
 
 		// CSS
 		cssmin: {
             build: {
-                src: 'src/css/**/*.css',
-                dest: 'build/styles.min.css'
+                src: 'app/styles/**/*.css',
+                dest: 'dist/styles.min.css'
             }
         },
 
         csslint: {
 		  strict: {
-		    src: 'src/css/**/*.css'
+		    src: 'app/styles/**/*.css'
 		  }
 		},
 
@@ -70,11 +70,11 @@ module.exports = function(grunt){
 		        tasks: ['htmlhint']
 		    },
 		    js: {
-		        files: ['src/js/**/*.js'],
+		        files: ['app/scripts/**/*.js'],
 		        tasks: ['uglify']
 		    },
 		    css: {
-		        files: ['src/css/**/*.css'],
+		        files: ['app/styles/**/*.css'],
 		        tasks: ['csslint', 'cssmin']
 		    }
 		}
