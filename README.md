@@ -69,7 +69,7 @@ Whenever changes are made to the source-files (`index.html` or `src/*`), the fil
 - `Mosaic`
 - `Movement`
 - `Multi Delay`
-- ~~`Multi Filter`~~
+- `Multi Filter`
 - `Multiplier`
 - `Normalize`
 - `Roto Blitter`
@@ -99,7 +99,7 @@ Whenever changes are made to the source-files (`index.html` or `src/*`), the fil
 - `Starfield`
 - `Super Scope`
 - `SVP`
-- ~~`Texer`~~
+- `Texer`
 - `Texer II`
 - `Text`
 - `Timescope`

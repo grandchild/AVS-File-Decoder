@@ -84,6 +84,11 @@ var blendmodesColorMap = {
 		'8': 'XOR',
 	};
 
+var blendmodesTexer = {
+		'0': 'Texture',
+		'1': 'Masked Texture'
+	};
+
 var keysColorMap = {
 		'0': 'Red',
 		'1': 'Green',
@@ -91,13 +96,13 @@ var keysColorMap = {
 		'3': '(R+G+B)/2',
 		'4': 'MaxChannel',
 		'5': '(R+G+B)/3',
-};
+	};
 
 var cycleModesColorMap = {
 		'0': 'None (Map 1)',
 		'1': 'OnBeat Random',
 		'2': 'OnBeat Sequential',
-};
+	};
 
 var buffermodes = {
 		'0': 'Save',
@@ -109,35 +114,42 @@ var buffermodes = {
 var coordinates = {
 		'0': 'Polar',
 		'1': 'Cartesian',
-}
+	};
 
 var drawModes = {
 		'0': 'Dots',
 		'1': 'Lines',
-}
+	};
 
 var audioChannels = {
 		'0': 'Left',
 		'1': 'Right',
 		'2': 'Center',
-}
+	};
 
 var audioSources = {
 		'0': 'Waveform',
 		'1': 'Spectrum',
-}
+	};
 
 var positionsX = {
 		'0': 'Left',
 		'1': 'Right',
 		'2': 'Center',
-}
+	};
 
 var positionsY = {
 		'0': 'Top',
 		'1': 'Bottom',
 		'2': 'Center',
-}
+	};
+
+var multiFilterEffect = {
+		'0': 'Chrome',
+		'1': 'Double Chrome',
+		'2': 'Triple Chrome',
+		'3': 'Infinite Root Multiplier + Small Border Convolution'
+	};
 
 // pretty much directly from vis_avs/r_trans.cpp
 // [name, script code representation (if any), 0:polar/1:cartesian]
@@ -166,4 +178,4 @@ var movementEffects = {
 		'21': ["Grapevine", "x = x + (cos(abs(y-.5) * 8) * .02);\r\ny = y + (sin(abs(x-.5) * 8) * .05);\r\nx = x * .95;\r\ny = y * .95;", 1],
 		'22': ["Quadrant", "y = y * ( 1 + (sin(r + $PI/2) * .3) );\r\nx = x * ( 1 + (cos(r + $PI/2) * .3) );\r\nx = x * .995;\r\ny = y * .995;", 1],
 		'23': ["6-way Kaleida (use Wrap!)", "y = (r*6)/($PI); x = d;", 1],
-};
+	};

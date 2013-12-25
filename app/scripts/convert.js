@@ -539,6 +539,11 @@ function getBlendmodeColorMap (blob, offset, size) {
 	return [blendmodesColorMap[code], size];
 }
 
+function getBlendmodeTexer (blob, offset, size) {
+	var code = size===1?blob[offset]:getUInt32(blob, offset);
+	return [blendmodesTexer[code], size];
+}
+
 function getKeyColorMap (blob, offset, size) {
 	var code = size===1?blob[offset]:getUInt32(blob, offset);
 	return [keysColorMap[code], size];
@@ -585,4 +590,8 @@ function getPositionX (code) {
 
 function getPositionY (code) {
 	return positionsY[code];
+}
+
+function getMultiFilterEffect(code) {
+	return multiFilterEffect[code];
 }
