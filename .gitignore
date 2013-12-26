@@ -2,3 +2,4 @@ bin/
 bower_components/
 node_modules/
 .Sync*
+npm-debug.log
