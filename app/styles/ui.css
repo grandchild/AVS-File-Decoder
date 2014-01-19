@@ -11,26 +11,36 @@ textinput {
 }
 
 code, pre { 
-	width:100%;
+	border: 0;
+	line-height: 125%;
+	margin: 10px 0;
 	min-height: 400px;
-	text-align: left;
 	overflow: auto;
+	text-align: left;
+	width:100%;
 }
 
 textarea {
-	width: 100%;
-	margin: 20px 0;
+	background-color:#2f1e2e;
+	border-radius: 4px;
 	border: 0;
-	background-color:#fff;
-	color:#888;
-	min-height:68px;
-	max-width: 100%;
-	font-size: 18px;
+	color:#06b6ef;
+	font-family: Monaco,Menlo,Consolas,"Courier New",monospace;
+	font-size: 14px;
 	line-height: 125%;
+	margin: 20px 0;
+	max-width: 100%;
+	min-height: 400px;
+	width: 100%;
 }
 
 .jumbotron {
 	text-align: center;
+}
+
+.container .jumbotron {
+	padding-right: 20px;
+	padding-left: 20px;
 }
 
 pre {

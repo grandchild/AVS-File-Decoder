@@ -24,8 +24,14 @@
       <div class="jumbotron">
           <input type="file" id="preset" class="filestyle" data-classButton="btn btn-lg btn-success" data-input="false" data-buttonText="Load" />
           <input type="button" class="btn btn-lg btn-danger" onclick="$('#log, #output').empty()" value="Clear" />
-          <textarea id="log" readonly="readonly" onclick="this.focus();this.select()"></textarea>
-          <pre><code id="output">{"message": "Please load file"}</code></pre>
+          
+          <div class="row">
+            <div class="col-xs-12 col-md-6"><textarea id="log" readonly="readonly" onclick="this.focus();this.select()"></textarea></div>
+            <div class="col-xs-12 col-md-6"><pre><code id="output">{"message": "Please load file"}</code></pre></div>
+          </div>
+          
+          
+          
       </div>
 
       <!-- Site footer -->
