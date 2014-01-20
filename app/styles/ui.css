@@ -11,23 +11,16 @@ textinput {
 }
 
 code, pre { 
-	border: 0;
 	margin: 10px 0;
-	min-height: 400px;
 	overflow: auto;
 	text-align: left;
-	width:100%;
 }
 
 textarea {
 	background-color:#2f1e2e;
-	border-radius: 4px;
-	border: 0;
 	color:#06b6ef;
 	margin: 20px 0;
 	max-width: 100%;
-	min-height: 400px;
-	width: 100%;
 }
 
 .jumbotron {
@@ -47,4 +40,12 @@ textarea, code, pre {
 	font-size: 12px;
 	font-family: Monaco,Menlo,Consolas,"Courier New",monospace;
 	line-height: 125%;
+	width: 100%;
+	border: 0;
+	border-radius: 4px;
+	min-height: 400px;
+}
+
+textarea, pre code {
+	padding:5px;
 }
