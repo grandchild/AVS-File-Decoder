@@ -6,11 +6,12 @@
   "private": true,
   "devDependencies": {
     "grunt": "~0.4.0",
-    "grunt-contrib-csslint": "*",
-    "grunt-contrib-cssmin": "*",
-    "grunt-contrib-uglify": "*",
-    "grunt-contrib-watch": "*",
-    "grunt-htmlhint": "*",
-    "matchdep": "*"
+    "grunt-autoprefixer": "~0.7.5",
+    "grunt-contrib-csslint": "~0.2.0",
+    "grunt-contrib-cssmin": "~0.10.0",
+    "grunt-contrib-uglify": "~0.5.0",
+    "grunt-contrib-watch": "~0.6.1",
+    "grunt-htmlhint": "~0.4.0",
+    "matchdep": "~0.3.0"
   }
 }
