@@ -80,4 +80,7 @@ module.exports = function(grunt){
 		}
 
     });
+
+    grunt.registerTask('default', ['htmlhint', 'uglify', 'csslint', 'cssmin']);
+
 };
