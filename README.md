@@ -1,4 +1,4 @@
-# AVS File Decoder [![Built with Grunt](https://cdn.gruntjs.com/builtwith.png)](http://gruntjs.com/)
+# AVS File Decoder [![Build Status](https://secure.travis-ci.org/grandchild/AVS-File-Decoder.png)](http://travis-ci.org/grandchild/AVS-File-Decoder) [![Built with Grunt](https://cdn.gruntjs.com/builtwith.png)](http://gruntjs.com/)
 
 ## Description
 
