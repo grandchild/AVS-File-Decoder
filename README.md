@@ -1,4 +1,4 @@
-# AVS File Decoder [![Build Status](https://secure.travis-ci.org/grandchild/AVS-File-Decoder.png)](http://travis-ci.org/grandchild/AVS-File-Decoder) [![Built with Grunt](https://cdn.gruntjs.com/builtwith.png)](http://gruntjs.com/)
+# AVS File Decoder [![Build Status](https://secure.travis-ci.org/grandchild/AVS-File-Decoder.png)](http://travis-ci.org/grandchild/AVS-File-Decoder)
 
 ## Description
 
@@ -22,13 +22,13 @@ By default, JQuery and Bootstrap are loaded from a CDN. Using [Bower](http://bow
 
 ### Building
 
-We're using [Grunt](http://gruntjs.com) to lint HTML, uglify JavaScript and to minify CSS.
+We're using [gulp](http://gulpjs.com) to uglify JavaScript and to minify CSS.
 
 1. Install dependencies using `npm install` (first time only)
-2. Run the Grunt watch task using `grunt watch`
+2. Run the gulp watch task using `gulp watch`
 3. Edit the source-files
 
-Whenever changes are made to the source-files (`index.html` or `app/*`), the files in the `dist/` directory will be updated. Alternatively, you can uglify the JavaScript using `grunt uglify` or minify the CSS files using `grunt cssmin`.
+Whenever changes are made to the source-files `app/*`, the files in the `dist/` directory will be generated. Alternatively, you can uglify the JavaScript using `gulp js` or minify the CSS files using `gulp css`.
 
 ## Component Checklist:
 
