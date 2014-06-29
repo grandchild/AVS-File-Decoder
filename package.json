@@ -5,14 +5,14 @@
   "license" : "MIT",
   "private": true,
   "devDependencies": {
-      "gulp":               "~3.8.5",
-      "gulp-concat":        "~2.2.0",
-      "gulp-css":           "~0.0.5",
-      "gulp-css-validator": "~0.0.4",
-      "gulp-debug":         "~0.3.0",
-      "gulp-jshint":        "~1.5.1",
-      "gulp-uglify":        "~0.2.1",
-      "gulp-util":          "~2.2.19"
+      "gulp":                "~3.8.5",
+      "gulp-concat":         "~2.2.0",
+      "gulp-css":            "~0.0.5",
+      "gulp-css-validator":  "~0.0.4",
+      "gulp-debug":          "~0.3.0",
+      "gulp-jshint":         "~1.5.1",
+      "gulp-uglify":         "~0.2.1",
+      "gulp-util":           "~2.2.19"
   },
   "scripts": {
     "test": "gulp"
