@@ -16,7 +16,7 @@ var prettyPrint = true;
 
 $(document).ready(function() {
     checkCompat();
-    log("File API check: " + (compat ? "success" : "fail") + ".");
+    log("<span class=\"danger\">File API check: " + (compat ? "success" : "fail") + ".</span>");
 
     var files = [];
 
@@ -25,7 +25,7 @@ $(document).ready(function() {
         log("Found " + files.length + " files in directory.");
         for (var i = 0; i < files.length; i++) {
             loadFile(files[i], saveAvsAsJson);
-        };
+        }
     });
 });
 
@@ -34,7 +34,7 @@ function saveAvsAsJson(preset, file) {
     var output = ('#output');
     $(output).html(JSON.stringify(json, null, prettyPrint ? '    ' : null));
     $(output).each(function(i, e) {
-        hljs.highlightBlock(e)
+        hljs.highlightBlock(e);
     });
     console.log('loaded:\n' + atob(json));
 }

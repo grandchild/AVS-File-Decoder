@@ -7,22 +7,24 @@ hljs.initHighlightingOnLoad();
 function SelectText(element) {
     var doc = document;
     var text = doc.getElementById(element);
+    var range = null;
     if (doc.body.createTextRange) {
-        var range = doc.body.createTextRange();
+        range = doc.body.createTextRange();
         range.moveToElementText(text);
-        range.select()
+        range.select();
     } else {
         if (window.getSelection) {
             var selection = window.getSelection();
-            var range = doc.createRange();
+            range = doc.createRange();
             range.selectNodeContents(text);
             selection.removeAllRanges();
-            selection.addRange(range)
+            selection.addRange(range);
         }
     }
-};
+}
+
 $(function() {
     $("#output").click(function() {
-        SelectText("output")
-    })
+        SelectText("output");
+    });
 });

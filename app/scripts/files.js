@@ -13,7 +13,7 @@ function loadDir (element, pattern) {
 		if(pattern.test(allfiles[i].name)) {
 			files.push(allfiles[i]);
 		}
-	};
+	}
 	return files;
 }
 

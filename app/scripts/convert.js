@@ -9,9 +9,9 @@ function convertPreset(presetFile, file) {
     var blob8 = new Uint8Array(presetFile);
     try {
         var clearFrame = decodePresetHeader(blob8.subarray(0, presetHeaderLength));
-        preset['clearFrame'] = clearFrame;
+        preset.clearFrame = clearFrame;
         var components = convertComponents(blob8.subarray(presetHeaderLength));
-        preset['components'] = components;
+        preset.components = components;
     } catch (e) {
         if (e instanceof ConvertException) {
             log("Error: " + e.message);
@@ -60,15 +60,15 @@ function getComponentIndex(code, blob, offset) {
                 log("Found component: " + componentTable[i].name + " (" + code + ")");
                 return i;
             }
-        };
+        }
     } else {
-        for (var i = builtinComponents.length; i < componentTable.length; i++) {
+        for (i = builtinComponents.length; i < componentTable.length; i++) {
             if (componentTable[i].code instanceof Array &&
                 cmpBytes(blob, offset + sizeInt, componentTable[i].code)) {
                 log("Found component: " + componentTable[i].name);
                 return i;
             }
-        };
+        }
     }
     log("Found unknown component (code: " + code + ")");
     return -code;
@@ -130,13 +130,13 @@ function decode_effectList(blob, offset) {
         var extSize = getUInt32(blob, extOffset);
         contOffset += effectList28plusHeader.length + sizeInt + extSize;
         contSize = size - 37 - effectList28plusHeader.length - sizeInt - extSize;
-        comp['codeEnabled'] = getUInt32(blob, extOffset + sizeInt) === 1;
+        comp.codeEnabled = getUInt32(blob, extOffset + sizeInt) === 1;
         var initSize = getUInt32(blob, extOffset + sizeInt * 2);
-        comp['init'] = getSizeString(blob, extOffset + sizeInt * 2)[0];
-        comp['frame'] = getSizeString(blob, extOffset + sizeInt * 3 + initSize)[0];
+        comp.init = getSizeString(blob, extOffset + sizeInt * 2)[0];
+        comp.frame = getSizeString(blob, extOffset + sizeInt * 3 + initSize)[0];
     } //else: old Effect List format, inside components just start
     var content = convertComponents(blob.subarray(contOffset, contOffset + contSize));
-    comp['components'] = content;
+    comp.components = content;
     return comp;
 }
 
@@ -220,7 +220,7 @@ function decode_generic(blob, offset, fields, name, end) {
         comp[k] = value;
         if (verbose) log("k: " + k + ", val: " + value + ", offset: " + offset);
         offset += size;
-    };
+    }
     return comp;
 }
 
@@ -235,7 +235,7 @@ function decode_movement(blob, offset) {
     var code;
     if (effectIdOld !== 0) {
         if (effectIdOld === 32767) {
-            var strAndSize = getSizeString(blob, offset + sizeInt + 1) // for some reason there is a single byte reading '0x01' before custom code.
+            var strAndSize = getSizeString(blob, offset + sizeInt + 1); // for some reason there is a single byte reading '0x01' before custom code.
             offset += strAndSize[1];
             code = strAndSize[0];
         } else {
@@ -246,18 +246,18 @@ function decode_movement(blob, offset) {
         effect = movementEffects[effectIdNew];
     }
     if (effect.length) {
-        comp["builtinEffect"] = effect[0];
+        comp.builtinEffect = effect[0];
     }
-    comp["output"] = getUInt32(blob, offset + sizeInt) ? "50/50" : "Replace";
-    comp["sourceMapped"] = getBool(blob, offset + sizeInt * 2, sizeInt)[0];
-    comp["coordinates"] = getCoordinates(blob, offset + sizeInt * 3, sizeInt);
-    comp["bilinear"] = getBool(blob, offset + sizeInt * 4, sizeInt)[0];
-    comp["wrap"] = getBool(blob, offset + sizeInt * 5, sizeInt)[0];
+    comp.output = getUInt32(blob, offset + sizeInt) ? "50/50" : "Replace";
+    comp.sourceMapped = getBool(blob, offset + sizeInt * 2, sizeInt)[0];
+    comp.coordinates = getCoordinates(blob, offset + sizeInt * 3, sizeInt);
+    comp.bilinear = getBool(blob, offset + sizeInt * 4, sizeInt)[0];
+    comp.wrap = getBool(blob, offset + sizeInt * 5, sizeInt)[0];
     if (effect.length && effectIdOld !== 1 && effectIdOld !== 7) { // 'slight fuzzify' and 'blocky partial out' have no script representation.
         code = effect[1];
-        comp["coordinates"] = effect[2] // overwrite
+        comp.coordinates = effect[2]; // overwrite
     }
-    comp["code"] = code;
+    comp.code = code;
     return comp;
 }
 
@@ -267,20 +267,20 @@ function decode_avi(blob, offset) {
         "enabled": getBool(blob, offset, sizeInt)[0],
     };
     var strAndSize = getNtString(blob, offset + sizeInt * 3);
-    comp["file"] = strAndSize[0];
-    comp["speed"] = getUInt32(blob, offset + sizeInt * 5 + strAndSize[1]); // 0: fastest, 1000: slowest
+    comp.file = strAndSize[0];
+    comp.speed = getUInt32(blob, offset + sizeInt * 5 + strAndSize[1]); // 0: fastest, 1000: slowest
     var beatAdd = getUInt32(blob, offset + sizeInt * 3 + strAndSize[1]);
     if (beatAdd) {
-        comp["output"] = "50/50";
+        comp.output = "50/50";
     } else {
-        comp["output"] = getMap8(blob, offset + sizeInt, {
+        comp.output = getMap8(blob, offset + sizeInt, {
             0: "Replace",
             1: "Additive",
             0x100000000: "50/50"
         });
     }
-    comp["onBeatAdd"] = beatAdd;
-    comp["persist"] = getUInt32(blob, offset + sizeInt * 4 + strAndSize[1]); // 0-32
+    comp.onBeatAdd = beatAdd;
+    comp.persist = getUInt32(blob, offset + sizeInt * 4 + strAndSize[1]); // 0-32
     return comp;
 }
 
@@ -290,31 +290,31 @@ function decode_simple(blob, offset) {
     };
     var effect = getUInt32(blob, offset);
     if (effect & (1 << 6)) {
-        comp["audioSource"] = (effect & 2) ? "Waveform" : "Spectrum";
-        comp["renderType"] = "Dots";
+        comp.audioSource = (effect & 2) ? "Waveform" : "Spectrum";
+        comp.renderType = "Dots";
     } else {
         switch (effect & 3) {
             case 0: // solid analyzer
-                comp["audioSource"] = "Spectrum";
-                comp["renderType"] = "Solid";
+                comp.audioSource = "Spectrum";
+                comp.renderType = "Solid";
                 break;
             case 1: // line analyzer
-                comp["audioSource"] = "Spectrum";
-                comp["renderType"] = "Lines";
+                comp.audioSource = "Spectrum";
+                comp.renderType = "Lines";
                 break;
             case 2: // line scope
-                comp["audioSource"] = "Waveform";
-                comp["renderType"] = "Lines";
+                comp.audioSource = "Waveform";
+                comp.renderType = "Lines";
                 break;
             case 3: // solid scope
-                comp["audioSource"] = "Waveform";
-                comp["renderType"] = "Solid";
+                comp.audioSource = "Waveform";
+                comp.renderType = "Solid";
                 break;
         }
     }
-    comp["audioChannel"] = getAudioChannel((effect >> 2) & 3);
-    comp["positionY"] = getPositionY((effect >> 4) & 3);
-    comp["colors"] = getColorList(blob, offset + sizeInt)[0];
+    comp.audioChannel = getAudioChannel((effect >> 2) & 3);
+    comp.positionY = getPositionY((effect >> 4) & 3);
+    comp.colors = getColorList(blob, offset + sizeInt)[0];
     return comp;
 }
 
@@ -352,7 +352,7 @@ function getRadioButton(blob, offset, map) {
         if (on) { // in case of (erroneous) multiple selections, the last one selected wins
             key = on * (i + 1);
         }
-    };
+    }
     return [getMapping(map, key), sizeInt * map.length];
 }
 
@@ -433,11 +433,11 @@ function getCodeSection(blob, offset, map, nt) {
         var strAndSize = nt ? getNtString(blob, p) : getSizeString(blob, p);
         totalSize += strAndSize[1];
         strings[i] = strAndSize[0];
-    };
+    }
     var code = {};
-    for (var i = 0; i < strings.length; i++) {
+    for (i = 0; i < strings.length; i++) {
         code[map[i][0]] = strings[map[i][1]];
-    };
+    }
     return [code, totalSize];
 }
 
@@ -472,16 +472,16 @@ function getColorMaps(blob, offset) {
                 "enabled": enabled,
             };
             if (allFields) {
-                var id = getUInt32(blob, offset + headerSize * i + sizeInt * 2) // id of the map - not really needed.
+                var id = getUInt32(blob, offset + headerSize * i + sizeInt * 2); // id of the map - not really needed.
                 var mapFile = getNtString(blob, offset + headerSize * i + sizeInt * 3)[0];
-                maps[mi]["id"] = id;
-                maps[mi]["fileName"] = mapFile;
+                maps[mi].id = id;
+                maps[mi].fileName = mapFile;
             }
-            maps[mi]["map"] = map;
+            maps[mi].map = map;
             mi++;
         }
         mapOffset += num * sizeInt * 3;
-    };
+    }
     return [maps, mapOffset - offset];
 }
 
@@ -495,7 +495,7 @@ function getColorMap(blob, offset, num) {
             "color": color,
             "position": pos
         };
-    };
+    }
     return colorMap;
 }
 
@@ -507,7 +507,7 @@ function getColor(blob, offset) {
     var padding = "";
     for (var i = color.length; i < 6; i++) {
         padding += "0";
-    };
+    }
     return ["#" + padding + color, sizeInt];
 }
 
@@ -519,7 +519,7 @@ function getConvoFilter(blob, offset, dimensions) {
     var data = new Array(size);
     for (var i = 0; i < size; i++, offset += sizeInt) {
         data[i] = getInt32(blob, offset)[0];
-    };
+    }
     var matrix = {
         "width": dimensions[0],
         "height": dimensions[1],
