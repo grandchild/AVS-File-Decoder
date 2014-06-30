@@ -35,7 +35,7 @@ var blendmodesBuffer = {
 		 '0': 'Replace',
 		 '1': '50/50',
 		 '2': 'Additive',
-		 '5': 'EveryOtherPixel',
+		 '3': 'EveryOtherPixel',
 		 '4': 'Dest-Src',
 		 '5': 'EveryOtherLine',
 		 '6': 'XOR',
