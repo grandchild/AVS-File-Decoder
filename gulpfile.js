@@ -24,7 +24,7 @@ gulp.task('js', function() {
     .pipe(jshint.reporter('default'))
     .pipe(uglify())
     .pipe(concat('scripts.min.js'))
-    .pipe(gulp.dest('./'))
+    .pipe(gulp.dest('./dist'))
 });
 
 gulp.task('watch', function () {

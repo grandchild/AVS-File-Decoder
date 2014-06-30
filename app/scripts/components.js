@@ -237,7 +237,7 @@ var builtinComponents = [
 											// LONG  lfEscapement;
 											// LONG  lfOrientation;
 						// LONG  lfWeight;
-						"weight": ["Map4", {"0": "Dontcare", "100": "Thin", "200": "Extralight", "200": "Ultralight", "300": "Light", "400": "Normal", "400": "Regular", "500": "Medium", "600": "Semibold", "600": "Demibold", "700": "Bold", "800": "Extrabold", "800": "Ultrabold", "900": "Heavy", "900": "Black"}],
+							"weight": ["Map4", {"0": "Dontcare", "100": "Thin", "200": "Extralight", "200": "Ultralight", "300": "Light", "400": "Normal", "400": "Regular", "500": "Medium", "600": "Semibold", "600": "Demibold", "700": "Bold", "800": "Extrabold", "800": "Ultrabold", "900": "Heavy", "900": "Black"}],
 						"italic": ["Bool", 1], // BYTE  lfItalic;
 						"underline": ["Bool", 1], // BYTE  lfUnderline;
 						"strikeOut": ["Bool", 1], // BYTE  lfStrikeOut;

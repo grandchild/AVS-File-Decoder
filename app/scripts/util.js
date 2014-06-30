@@ -64,7 +64,7 @@ function getBool (blob, offset, size) {
 }
 
 function getBoolified (num) {
-	return num===0?false:true;
+	return num==0?false:true;
 }
 
 function getSizeString (blob, offset, size) {
