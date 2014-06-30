@@ -1,8 +1,6 @@
 // highlighter
 hljs.initHighlightingOnLoad();
 
-// localStorage.getItem("last_preset");
-
 // selection
 function SelectText(element) {
     var doc = document;
@@ -21,8 +19,8 @@ function SelectText(element) {
         }
     }
 };
-$(function() {
-    $("#output").click(function() {
+$(function () {
+    $("#output").click(function () {
         SelectText("output")
     })
 });
