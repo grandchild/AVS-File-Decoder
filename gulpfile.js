@@ -3,7 +3,7 @@ var gulp   = require('gulp'),
     cssmin = require('gulp-css'),
     cssv   = require('gulp-css-validator'),
     debug  = require('gulp-debug'),
-    jshint = require('gulp-jshint'),
+    jslint = require('gulp-jslint'),
     uglify = require('gulp-uglify');
 
 gulp.task('default', ['css', 'js']);
@@ -18,10 +18,14 @@ gulp.task('css', function() {
 });
 
 gulp.task('js', function() {
-  gulp.src('./app/scripts/*.js')
+  gulp.src(['./app/scripts/*.js'])
     // .pipe(debug({verbose: true}))
-    .pipe(jshint())
-    .pipe(jshint.reporter('default'))
+    // .pipe(jslint({
+    //     nomen: true,
+    //     white: true,
+    //     reporter: 'default',
+    //     errorsOnly: true
+    // }))
     .pipe(uglify())
     .pipe(concat('scripts.min.js'))
     .pipe(gulp.dest('./dist'))
