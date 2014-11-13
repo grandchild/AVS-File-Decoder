@@ -5,7 +5,8 @@
   "license" : "MIT",
   "private": true,
   "devDependencies": {
-    "grunt":                 "~0.4.5",
+    "bower":                 "^1.3.12",
+    "grunt":                 "^0.4.5",
     "grunt-autoprefixer":    "~0.7.5",
     "grunt-cli":             "~0.1.13",
     "grunt-contrib-csslint": "~0.2.0",
