@@ -16,6 +16,7 @@
     "matchdep":              "~0.3.0"
   },
   "scripts": {
-    "test": "grunt --verbose"
+    "test": "grunt --verbose",
+    "postinstall": "bower install"
   }
 }
