@@ -168,7 +168,7 @@ var movementEffects = {
 		'11': ["5 Pointed Distro", "d = d * (0.95 + (cos(((r-$PI*0.5) * 5.0) - ($PI / 2.50)) * 0.03));", 0],
 		'12': ["Tunneling", "r = r + 0.04;\r\nd = d * (0.96 + cos(d * $PI) * 0.05);", 0],
 		'13': ["Bleedin'", "t = cos(d * $PI);\r\nr = r + (0.07 * t);\r\nd = d * (0.98 + t * 0.10);", 0],
-		'14': ["Shifted Big Swirl Out", "d=sqrt(x*x+y*y); r=atan2(y,x);\r\nr=r+0.1-0.2*d; d=d*0.96;\r\nx=cos(r)*d + 8/128; y=sin(r)*d;", 0, 1], // comment from AVS src: // this is a very bad approximation in script. fix\r\n
+		'14': ["Shifted Big Swirl Out", "d=sqrt(x*x+y*y); r=atan2(y,x);\r\nr=r+0.1-0.2*d; d=d*0.96;\r\nx=cos(r)*d + 8/128; y=sin(r)*d;", 1], // comment from AVS src: // this is a very bad approximation in script. fix\r\n
 		'15': ["Psychotic Beaming Outward", "d = 0.15", 0],
 		'16': ["Cosine Radial 3-way", "r = cos(r * 3)", 0],
 		'17': ["Spinny Tube", "d = d * (1 - ((d - .35) * .5));\r\nr = r + .1;", 0],
