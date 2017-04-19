@@ -1,5 +1,14 @@
-bin/
-bower_components/
-node_modules/
+// Project
+**/_*.*
+assets/
+
+// Global
 .Sync*
+error.log
+node_modules/
 npm-debug.log
+
+// Temporary
+bower.json
+bower_components/
+Gruntfile.js

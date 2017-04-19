@@ -1,0 +1,61 @@
+#!/usr/bin/env node
+
+'use babel';
+
+const meta = require('../package.json');
+const Convert = require('../src/lib/convert');
+
+const program = require('commander');
+const fs = require('fs');
+const glob = require('glob');
+const path = require('path');
+
+
+
+program
+    .version(meta.version)
+    .usage('[options] <file>')
+    .option('-m, --minify', 'Minify generated JSON')
+    // .option('-v, --verbose', 'Minify generated JSON')
+    .parse(process.argv);
+
+if (program.args !== 'undefined' && program.args.length > 0) {
+    program.args.forEach( function(element, index) {
+        glob(element, function (error, files) {
+            if (error) throw error;
+
+            files.forEach(function(file) {
+                fs.lstat(file, function(error, stats) {
+                    if (error) return;
+
+                    if (stats.isFile()) {
+                        convertPreset(file);
+                    }
+                })
+            });
+        });
+    });
+}
+
+if (program.args.length === 0) program.help();
+
+function convertPreset(file) {
+    fs.readFile(file, (error, data) => {
+        console.log(`\nReading "${file}"`);
+
+        var whitespace = program.minify ? true : null || 4;
+        var presetObj = Convert.convertPreset(data, file);
+        var presetJson = JSON.stringify(presetObj, null, whitespace);
+        var baseName = path.basename(file, ".avs");
+        var dirName = path.dirname(file);
+        var outFile = path.join(dirName, baseName + '.webvs');
+
+        console.log(`Writing "${outFile}"`);
+        try {
+            fs.writeFileSync(outFile, presetJson);
+        } catch(e) {
+            console.log(e);
+        }
+    });
+
+}

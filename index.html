@@ -48,11 +48,6 @@
     
     <script type="text/javascript" src="lib/bootstrap-filestyle.min.js"></script>
     <script src="lib/highlight.pack.js"></script>
-    <script type="text/javascript" src="dist/scripts.min.js"></script?>
-    <script type="text/javascript">
-      //select
-      function SelectText(element){var doc=document;var text=doc.getElementById(element);if(doc.body.createTextRange){var range=doc.body.createTextRange();range.moveToElementText(text);range.select()}else{if(window.getSelection){var selection=window.getSelection();var range=doc.createRange();range.selectNodeContents(text);selection.removeAllRanges();selection.addRange(range)}}};
-      $(function(){$("#output").click(function(){SelectText("output")})});
-    </script>
+    <script type="text/javascript" src="assets/js/app.js"></script>
   </body>
 </html>
