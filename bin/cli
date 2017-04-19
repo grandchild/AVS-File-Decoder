@@ -15,8 +15,9 @@ const path = require('path');
 program
     .version(meta.version)
     .usage('[options] <file(s)>')
+    .option('-d, --debug', 'Prints in-depth information')
     .option('-m, --minify', 'Minify generated JSON')
-    // .option('-v, --verbose', 'Minify generated JSON')
+    .option('-s, --silent', 'Prints errors only')
     .parse(process.argv);
 
 if (program.args !== 'undefined' && program.args.length > 0) {
@@ -29,7 +30,7 @@ if (program.args !== 'undefined' && program.args.length > 0) {
                     if (error) return;
 
                     if (stats.isFile()) {
-                        convertPreset(file);
+                        convertPreset(file, program);
                     }
                 })
             });
@@ -39,18 +40,18 @@ if (program.args !== 'undefined' && program.args.length > 0) {
 
 if (program.args.length === 0) program.help();
 
-function convertPreset(file) {
+function convertPreset(file, args) {
     fs.readFile(file, (error, data) => {
-        console.log(`\nReading "${file}"`);
+        if (args.silent !== true) console.log(`\nReading "${file}"`);
 
         var whitespace = program.minify ? true : null || 4;
-        var presetObj = Convert.convertPreset(data, file);
+        var presetObj = Convert.convertPreset(data, file, args);
         var presetJson = JSON.stringify(presetObj, null, whitespace);
         var baseName = path.basename(file, ".avs");
         var dirName = path.dirname(file);
         var outFile = path.join(dirName, baseName + '.webvs');
 
-        console.log(`Writing "${outFile}"`);
+        if (args.silent !== true) console.log(`Writing "${outFile}"`);
         try {
             fs.writeFileSync(outFile, presetJson);
         } catch(e) {

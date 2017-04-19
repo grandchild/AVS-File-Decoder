@@ -10,12 +10,16 @@ const chalk = require('chalk');
 
 // Constants
 const sizeInt = 4;
-const verbose = false; // log individual key:value fields
+let verbose = false; // log individual key:value fields
+let debug = false; // log individual key:value fields
 var componentTable = Components.builtin.concat(Components.dll);
 
 module.exports = {
 
-    convertPreset(presetFile, file) {
+    convertPreset(presetFile, file, args) {
+        verbose = args.silent;
+        debug = args.debug;
+
         var modifiedTime = fs.statSync(file).mtime;
         var preset = {
             'name': path.basename(file, path.extname(file)),
@@ -30,7 +34,8 @@ module.exports = {
             preset['components'] = components;
         } catch (e) {
             // TODO
-            console.log(chalk.red(e))
+            if (args.silent === true) console.log(chalk.red(`Error in "${file}"`))
+            console.log(chalk.red(e + '\n'))
             // if(e instanceof Util.ConvertException) {
             //     console.error("Error: "+e.message);
             //     return null;
@@ -41,7 +46,7 @@ module.exports = {
         return preset;
     },
 
-    convertComponents(blob) {
+    convertComponents(blob, args) {
         var fp = 0;
         var components = [];
         while (fp < blob.length) {
@@ -73,7 +78,7 @@ module.exports = {
         if (code < Util.builtinMax || code === 0xfffffffe) {
             for (var i = 0; i < componentTable.length; i++) {
                 if (code === componentTable[i].code) {
-                    console.log(chalk.dim(`Found component: ${componentTable[i].name} (${code})`));
+                    if (debug === true)  console.log(chalk.dim(`Found component: ${componentTable[i].name} (${code})`));
                     return i;
                 }
             };
@@ -81,13 +86,13 @@ module.exports = {
             for (var i = Components.builtin.length; i < componentTable.length; i++) {
                 if (componentTable[i].code instanceof Array &&
                     Util.cmpBytes(blob, offset + sizeInt, componentTable[i].code)) {
-                    console.log(chalk.dim(`Found component: ${componentTable[i].name}`));
+                    if (debug === true) console.log(chalk.dim(`Found component: ${componentTable[i].name}`));
                     return i;
                 }
             };
         }
 
-        console.log(chalk.dim(`Found unknown component (code: ${code})`));
+        if (debug === true) console.log(chalk.dim(`Found unknown component (code: ${code})`));
         return -code;
     },
 
@@ -237,7 +242,7 @@ module.exports = {
 
             // save value or function result of value in field
             comp[k] = value;
-            if (verbose) console.log(" key: " + k + ", val: " + value + ", offset: " + offset);
+            if (debug === true) console.log(chalk.dim("- key: " + k + "\n- val: " + value + "\n- offset: " + offset + "\n"));
             offset += size;
         };
         return comp;
