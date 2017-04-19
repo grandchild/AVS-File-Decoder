@@ -16,11 +16,32 @@ Clone the repository `git clone https://github.com/grandchild/AVS-File-Decoder.g
 
 Use the '[zip download](https://github.com/grandchild/AVS-File-Decoder/archive/master.zip)' option and extract its content
 
-### Dependencies
+### Prerequisites
 
-By default, JQuery and Bootstrap are loaded from a CDN. Using [Bower](http://bower.io/), you can install JQuery and Bootstrap locally - an experimental fallback method is already implemented in the application. Bootstrap fallback is not working correctly at this time.
+Make sure you already have [Node](https://nodejs.org) installed and in you [PATH environmental variable](https://superuser.com/questions/284342/what-are-path-and-other-environment-variables-and-how-can-i-set-or-use-them/284351#284351). [Yarn](https://yarnpkg.com/) is recommended, but entirely optional.
+
+```sh
+$ cd AVS-File-Decoder
+$ yarn || npm install
+```
+
+### CLI
+
+```sh
+$ node bin/cli
+
+  Usage: cli [options] <file(s)>
+
+  Options:
+
+    -h, --help     output usage information
+    -V, --version  output the version number
+    -m, --minify   Minify generated JSON
+```
 
 ### Building
+
+**Note:** The following does not apply to this branch!
 
 We're using [gulp](http://gulpjs.com) to uglify JavaScript and to minify CSS.
 

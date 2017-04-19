@@ -14,7 +14,7 @@ const path = require('path');
 
 program
     .version(meta.version)
-    .usage('[options] <file>')
+    .usage('[options] <file(s)>')
     .option('-m, --minify', 'Minify generated JSON')
     // .option('-v, --verbose', 'Minify generated JSON')
     .parse(process.argv);
