@@ -2,7 +2,7 @@ const webpack = require('webpack');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 module.exports = {
-  entry: './src/lib/app.js',
+  entry: './src/app.js',
   output: {
     path: __dirname + '/assets',
     filename: 'js/app.js',
