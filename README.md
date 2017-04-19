@@ -20,12 +20,16 @@ Use the '[zip download](https://github.com/grandchild/AVS-File-Decoder/archive/m
 
 Make sure you already have [Node](https://nodejs.org) installed and in you [PATH environmental variable](https://superuser.com/questions/284342/what-are-path-and-other-environment-variables-and-how-can-i-set-or-use-them/284351#284351). [Yarn](https://yarnpkg.com/) is recommended, but entirely optional.
 
+Next, install dependencies:
+
 ```sh
 $ cd AVS-File-Decoder
 $ yarn || npm install
 ```
 
 ### CLI
+
+Once setup, you can run `node bin/cli` to list available options.
 
 ```sh
 $ node bin/cli
@@ -38,6 +42,8 @@ $ node bin/cli
     -V, --version  output the version number
     -m, --minify   Minify generated JSON
 ```
+
+Commonly, you would run `node bin/cli "avs/**/.avs"` to convert a bunch of presets, or just one.
 
 ### Building
 
