@@ -40,7 +40,9 @@ $ node bin/cli
 
     -h, --help     output usage information
     -V, --version  output the version number
+    -d, --debug    Prints in-depth information
     -m, --minify   Minify generated JSON
+    -s, --silent   Prints errors only
 ```
 
 Commonly, you would run `node bin/cli "avs/**/.avs"` to convert a bunch of presets, or just one.
