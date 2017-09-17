@@ -1,16 +1,19 @@
-// Project
+# Project
 **/_*.*
+*.avs
+*.webvs
 assets/
 avs/
 build/
 
-// Global
+# Global
 .Sync*
 error.log
 node_modules/
 npm-debug.log
 
-// Temporary
+# Temporary
 bower.json
 bower_components/
 Gruntfile.js
+webpack.config.js
