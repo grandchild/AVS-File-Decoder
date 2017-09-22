@@ -17,6 +17,7 @@
   },
   "devDependencies": {
     "@types/node": "^8.0.28",
+    "ava": "^0.22.0",
     "gulp": "github:gulpjs/gulp#4.0",
     "gulp-debug": "^3.1.0",
     "gulp-jsonmin": "^1.1.0",
@@ -24,6 +25,7 @@
     "typescript": "^2.5.2"
   },
   "scripts": {
-    "build": "tsc -p ./"
+    "build": "tsc -p ./",
+    "test": "node_modules/.bin/ava ./test/default.js --verbose --serial --fail-fast"
   }
 }
