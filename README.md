@@ -1,5 +1,7 @@
 # AVS File Decoder [![Build Status](https://secure.travis-ci.org/grandchild/AVS-File-Decoder.png)](http://travis-ci.org/grandchild/AVS-File-Decoder)
 
+**This branch is work-in-progress**
+
 ## Description
 
 This little Javascript reads out the file format of Nullsoft's _Advanced Visualization Studio_ and rewrites it as JSON readable by [Webvs](https://github.com/azeem/webvs).
@@ -18,18 +20,21 @@ Use the '[zip download](https://github.com/grandchild/AVS-File-Decoder/archive/m
 
 ### Prerequisites
 
-Make sure you already have [Node](https://nodejs.org) installed and in you [PATH environmental variable](https://superuser.com/questions/284342/what-are-path-and-other-environment-variables-and-how-can-i-set-or-use-them/284351#284351). [Yarn](https://yarnpkg.com/) is recommended, but entirely optional.
-
-Next, install dependencies:
+Make sure you already have [Node](https://nodejs.org) installed and in your [PATH environmental variable](https://superuser.com/questions/284342/what-are-path-and-other-environment-variables-and-how-can-i-set-or-use-them/284351#284351). Using [Yarn](https://yarnpkg.com/) is recommended over `npm`, but entirely optional.
 
 ```sh
 $ cd AVS-File-Decoder
+
+# Install Dependencies
 $ yarn || npm install
+
+# Link Binary
+$ yarn link || npm link
 ```
 
 ### CLI
 
-Once setup, you can run `node bin/cli` to list available options.
+Once setup, you can run `webvsc --help` to list available options.
 
 ```sh
 $ node bin/cli
@@ -45,19 +50,15 @@ $ node bin/cli
     -s, --silent   Prints errors only
 ```
 
-Commonly, you would run `node bin/cli "avs/**/.avs"` to convert a bunch of presets, or just one.
+Commonly, you would run `webvsc "avs/**/.avs"` to convert a bunch of presets, or just one.
 
 ### Building
 
-**Note:** The following does not apply to this branch!
+IWith [TypeScript](https://www.npmjs.com/package/typescript) installed in global scope, you can build both, library and CLI application:
 
-We're using [gulp](http://gulpjs.com) to uglify JavaScript and to minify CSS.
-
-1. Install dependencies using `npm install` (first time only)
-2. Run the gulp watch task using `gulp watch`
-3. Edit the source-files
-
-Whenever changes are made to the source-files `app/*`, the files in the `dist/` directory will be generated. Alternatively, you can uglify the JavaScript using `gulp js` or minify the CSS files using `gulp css`.
+```sh
+npm run build
+```
 
 ## Component Checklist:
 
