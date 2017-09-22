@@ -32,10 +32,10 @@ $ yarn link || npm link
 
 ### CLI
 
-Once setup, you can run `webvsc --help` to list available options.
+Once setup, you can run `webvsc --help` to list available options. Alternatively, use `node build/cli.js`.
 
 ```sh
-$ node bin/cli
+$ webvsc
 
   Usage: cli [options] <file(s)>
 
