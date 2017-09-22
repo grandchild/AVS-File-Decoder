@@ -1,4 +1,7 @@
-# AVS File Decoder [![Build Status](https://secure.travis-ci.org/grandchild/AVS-File-Decoder.png)](http://travis-ci.org/grandchild/AVS-File-Decoder)
+# AVS File Decoder
+
+[![The MIT License](https://img.shields.io/badge/license-MIT-orange.svg?style=flat-square)](http://opensource.org/licenses/MIT)
+[![Travis CI](https://img.shields.io/travis/grandchild/AVS-File-Decoder/typescript.svg?style=flat-square)](https://travis-ci.org/grandchild/AVS-File-Decoder)
 
 **Note:** This branch is still work-in-progress!
 
