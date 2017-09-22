@@ -52,7 +52,7 @@ Commonly, you would run `webvsc "avs/**/.avs"` to convert a bunch of presets, or
 
 ### Building
 
-IWith [TypeScript](https://www.npmjs.com/package/typescript) installed in global scope, you can build both, library and CLI application:
+With [TypeScript](https://www.npmjs.com/package/typescript) installed in global scope, you can build both, library and CLI application:
 
 ```sh
 npm run build
