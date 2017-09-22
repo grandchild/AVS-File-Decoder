@@ -26,7 +26,7 @@ $ cd AVS-File-Decoder
 # Install Dependencies
 $ yarn || npm install
 
-# Link Binary
+# Sym-link webvsc.js
 $ yarn link || npm link
 ```
 
