@@ -37,7 +37,7 @@ Once setup, you can run `webvsc --help` to list available options. Alternatively
 ```sh
 $ webvsc
 
-  Usage: cli [options] <file(s)>
+  Usage: webvsc [options] <file(s)>
 
   Options:
 
