@@ -14,7 +14,7 @@ Clone the repository `git clone https://github.com/grandchild/AVS-File-Decoder.g
 
 ### Download
 
-Use the '[zip download](https://github.com/grandchild/AVS-File-Decoder/archive/master.zip)' option and extract its content
+Use the '[zip download](https://github.com/grandchild/AVS-File-Decoder/archive/typescript.zip)' option and extract its content
 
 ### Prerequisites
 
