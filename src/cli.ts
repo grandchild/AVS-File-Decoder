@@ -33,7 +33,7 @@ const convert = (file, args) => {
         try {
             writeFileSync(outFile, presetJson);
         } catch (e) {
-            console.log(e);
+            console.error(e);
         }
     });
 };
