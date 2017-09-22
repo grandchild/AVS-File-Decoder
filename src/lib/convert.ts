@@ -62,6 +62,7 @@ const convertComponents = (blob, args) => {
                 offset,
                 componentTable[i].fields,
                 componentTable[i].name,
+                componentTable[i].group,
                 offset + size);
         }
         if (!res || typeof res !== 'object') { // should not happen, decode functions should throw their own.
@@ -162,9 +163,10 @@ const decode_effectList = (blob, offset) => {
 };
 
 // generic field decoding function that most components use.
-const decode_generic = (blob, offset, fields, name, end) => {
+const decode_generic = (blob, offset, fields, name, group, end) => {
     let comp = {
-        'type': Util.removeSpaces(name)
+        'type': Util.removeSpaces(name),
+        'group': group,
     };
     let keys = Object.keys(fields);
     let lastWasABitField = false;
@@ -250,6 +252,7 @@ const decode_generic = (blob, offset, fields, name, end) => {
 const decode_movement = (blob, offset) => {
     let comp = {
         'type': 'Movement',
+        'group': 'Trans',
     };
     // the special value 0 is because 'old versions of AVS barf' if the id is > 15, so
     // AVS writes out 0 in that case, and sets the actual id at the end of the save block.
@@ -287,6 +290,7 @@ const decode_movement = (blob, offset) => {
 const decode_avi = (blob, offset) => {
     let comp = {
         'type': 'AVI',
+        'group': 'Render',
         'enabled': Util.getBool(blob, offset, sizeInt)[0],
     };
     let strAndSize = Util.getNtString(blob, offset + sizeInt * 3);
@@ -306,6 +310,7 @@ const decode_avi = (blob, offset) => {
 const decode_simple = (blob, offset) => {
     let comp = {
         'type': 'Simple',
+        'group': 'Render',
     };
     let effect = Util.getUInt32(blob, offset);
     if (effect & (1 << 6)) {
