@@ -29,6 +29,9 @@ $ cd AVS-File-Decoder
 # Install Dependencies
 $ yarn || npm install
 
+# Transpile TypeScript
+$ yarn build || npm run build
+
 # Sym-link webvsc.js
 $ yarn link || npm link
 ```
@@ -46,20 +49,12 @@ $ webvsc
 
     -h, --help     output usage information
     -V, --version  output the version number
-    -d, --debug    Prints in-depth information
-    -m, --minify   Minify generated JSON
-    -s, --silent   Prints errors only
+    -d, --debug    prints in-depth information
+    -m, --minify   minify generated JSON
+    -s, --silent   prints errors only
 ```
 
 Commonly, you would run `webvsc "avs/**/.avs"` to convert a bunch of presets, or just one.
-
-### Building
-
-With [TypeScript](https://www.npmjs.com/package/typescript) installed in global scope, you can build both, library and CLI application:
-
-```sh
-npm run build
-```
 
 ## Component Checklist:
 
