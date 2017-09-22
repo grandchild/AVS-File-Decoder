@@ -1,6 +1,6 @@
 # AVS File Decoder [![Build Status](https://secure.travis-ci.org/grandchild/AVS-File-Decoder.png)](http://travis-ci.org/grandchild/AVS-File-Decoder)
 
-**This branch is work-in-progress**
+**Note:** This branch is still work-in-progress!
 
 ## Description
 
