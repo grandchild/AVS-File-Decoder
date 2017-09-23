@@ -29,7 +29,7 @@ $ cd AVS-File-Decoder
 # Install Dependencies
 $ yarn || npm install
 
-# Transpile TypeScript
+# Build
 $ yarn build || npm run build
 
 # Sym-link webvsc.js
