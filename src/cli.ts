@@ -10,6 +10,11 @@ import { basename, dirname, join } from 'path';
 // Modules
 import { convertPreset } from './lib/convert';
 
+interface Parameter {
+    silent?: boolean;
+    debug?: boolean;
+}
+
 program
     .version(require('../package.json').version)
     .usage('[options] <file(s)>')
@@ -18,8 +23,8 @@ program
     .option('-s, --silent', 'Prints errors only')
     .parse(argv);
 
-const convert = (file: string, args: object): void => {
-    readFile(file, (error, data) => {
+const convert = (file: string, args: Parameter): void => {
+    readFile(file, (error: Object, data: Object) => {
         if (args.silent !== true) console.log(`\nReading "${file}"`);
 
         let whitespace: number = (program.minify === true) ? 0 : 4;
@@ -39,12 +44,12 @@ const convert = (file: string, args: object): void => {
 };
 
 if (program.args !== 'undefined' && program.args.length > 0) {
-    program.args.forEach( (element, index) => {
-        glob(element, (error, files) => {
+    program.args.forEach( (element: string, index: number) => {
+        glob(element, (error: Object, files: Object) => {
             if (error) throw error;
 
             files.forEach( file => {
-                lstat(file, (error, stats) => {
+                lstat(file, (error: Object, stats: Object) => {
                     if (error) return;
 
                     if (stats.isFile()) {
