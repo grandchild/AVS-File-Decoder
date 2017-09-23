@@ -2,17 +2,17 @@
 import * as Table from './tables';
 
 // Constants
-const sizeInt = 4;
-const allFields = true;
-const presetHeaderLength = 25;
-const builtinMax = 16384;
+const sizeInt: number = 4;
+const allFields: boolean  = true;
+const presetHeaderLength: number = 25;
+const builtinMax: number = 16384;
 
-const ConvertException = (message) => {
+const ConvertException = (message: string): void => {
     this.message = message;
     this.name = 'ConvertException';
 };
 
-const cmpBytes = (arr, offset, test) => {
+const cmpBytes = (arr: Object, offset: number, test: Object): boolean => {
     for (let i = 0; i < test.length; i++) {
         if (test[i] === null) {
             continue; // null means 'any value' - a letiable
@@ -24,7 +24,7 @@ const cmpBytes = (arr, offset, test) => {
     return true;
 };
 
-const getBit = (blob, offset, pos) => {
+const getBit = (blob: Object, offset: number, pos: number) => {
     if (pos instanceof Array) {
         if (pos.length !== 2) new this.ConvertException('Wrong Bitfield range');
         let mask = (2 << (pos[1] - pos[0])) - 1;
@@ -34,41 +34,41 @@ const getBit = (blob, offset, pos) => {
     }
 };
 
-const getUInt32 = (blob, offset) => {
+const getUInt32 = (blob: Object, offset: number) => {
     if (!offset) offset = 0;
     let array = blob.buffer.slice(blob.byteOffset + offset, blob.byteOffset + offset + sizeInt);
     return new Uint32Array(array, 0, 1)[0];
 };
 
-const getInt32 = (blob, offset) => {
+const getInt32 = (blob: Object, offset: number) => {
     if (!offset) offset = 0;
     let array = blob.buffer.slice(blob.byteOffset + offset, blob.byteOffset + offset + sizeInt);
     return [new Int32Array(array, 0, 1)[0], 4];
 };
 
-const getUInt64 = (blob, offset) => {
+const getUInt64 = (blob: Object, offset: number) => {
     if (!offset) offset = 0;
     let array = blob.buffer.slice(blob.byteOffset + offset, blob.byteOffset + offset + sizeInt * 2);
     let two32 = new Uint32Array(array, 0, 2);
     return two32[0] + two32[1] * 0x100000000;
 };
 
-const getFloat32 = (blob, offset) => {
+const getFloat32 = (blob: Object, offset: number) => {
     if (!offset) offset = 0;
     let array = blob.buffer.slice(blob.byteOffset + offset, blob.byteOffset + offset + sizeInt);
     return [new Float32Array(array, 0, 1)[0], 4];
 };
 
-const getBool = (blob, offset, size) => {
+const getBool = (blob: Object, offset: number, size) => {
     let val = size === 1 ? blob[offset] : this.getUInt32(blob, offset);
     return [val !== 0, size];
 };
 
-const getBoolified = (num) => {
+const getBoolified = (num: number): boolean => {
     return num === 0 ? false : true;
 };
 
-const getSizeString = (blob, offset, size = null /* TODO: @grandchild*/) => {
+const getSizeString = (blob: Object, offset: number, size: Object = null) => {
     let add = 0;
     let result = '';
     if (!size) {
@@ -85,7 +85,7 @@ const getSizeString = (blob, offset, size = null /* TODO: @grandchild*/) => {
     return [result, size + add];
 };
 
-const getNtString = (blob, offset) => {
+const getNtString = (blob: Object, offset: number) => {
     let result = '';
     let i = offset;
     let c = blob[i];
@@ -96,23 +96,23 @@ const getNtString = (blob, offset) => {
     return [result, i - offset + 1];
 };
 
-const removeSpaces = (str) => {
+const removeSpaces = (str: string): string => {
     return str.replace(/[ ]/g, '');
 };
 
-const getMap1 = (blob, offset, map) => {
+const getMap1 = (blob: Object, offset: number, map: Object) => {
     return [this.getMapping(map, blob[offset]), 1];
 };
 
-const getMap4 = (blob, offset, map) => {
+const getMap4 = (blob: Object, offset: number, map: Object) => {
     return [this.getMapping(map, this.getUInt32(blob, offset)), sizeInt];
 };
 
-const getMap8 = (blob, offset, map) => {
+const getMap8 = (blob: Object, offset: number, map: Object) => {
     return [this.getMapping(map, this.getUInt64(blob, offset)), sizeInt * 2];
 };
 
-const getRadioButton = (blob, offset, map) => {
+const getRadioButton = (blob: Object, offset: number, map: Object) => {
     let key = 0;
     for (let i = 0; i < map.length; i++) {
         let on = this.getUInt32(blob, offset + sizeInt * i) !== 0;
@@ -123,7 +123,7 @@ const getRadioButton = (blob, offset, map) => {
     return [this.getMapping(map, key), sizeInt * map.length];
 };
 
-const getMapping = (map, key) => {
+const getMapping = (map: Object, key: number) => {
     let value = map[key];
     if (value === undefined) {
         throw new this.ConvertException(`Map: A value for key '${key}' does not exist.`);
@@ -133,7 +133,7 @@ const getMapping = (map, key) => {
 };
 
 // Point, Frame, Beat, Init code fields - reorder to I,F,B,P order.
-const getCodePFBI = (blob, offset) => {
+const getCodePFBI = (blob: Object, offset: number) => {
     let map = [ // this is the sort map, lines are 'need'-sorted with 'is'-index.
         ['init', 3],
         ['perFrame', 1],
@@ -144,7 +144,7 @@ const getCodePFBI = (blob, offset) => {
 };
 
 // Frame, Beat, Init code fields - reorder to I,F,B order.
-const getCodeFBI = (blob, offset) => {
+const getCodeFBI = (blob: Object, offset: number) => {
     let map = [ // see PFBI
         ['init', 2],
         ['perFrame', 1],
@@ -153,7 +153,7 @@ const getCodeFBI = (blob, offset) => {
     return this.getCodeSection(blob, offset, map);
 };
 
-const getCodeIFBP = (blob, offset) => {
+const getCodeIFBP = (blob: Object, offset: number) => {
     let map = [ // in this case the mapping is pretty redundant. the fields are already in order.
         ['init', 0],
         ['perFrame', 1],
@@ -163,7 +163,7 @@ const getCodeIFBP = (blob, offset) => {
     return this.getCodeSection(blob, offset, map);
 };
 
-const getCodeIFB = (blob, offset) => {
+const getCodeIFB = (blob: Object, offset: number) => {
     let map = [ // see IFBP
         ['init', 0],
         ['perFrame', 1],
@@ -173,7 +173,7 @@ const getCodeIFB = (blob, offset) => {
 };
 
 // used only by 'Global letiables'
-const getNtCodeIFB = (blob, offset) => {
+const getNtCodeIFB = (blob: Object, offset: number) => {
     let map = [
         ['init', 0],
         ['perFrame', 1],
@@ -183,7 +183,7 @@ const getNtCodeIFB = (blob, offset) => {
 };
 
 // used only by 'Triangle'
-const getNtCodeIFBP = (blob, offset) => {
+const getNtCodeIFBP = (blob: Object, offset: number) => {
     let map = [
         ['init', 0],
         ['perFrame', 1],
@@ -193,7 +193,7 @@ const getNtCodeIFBP = (blob, offset) => {
     return this.getCodeSection(blob, offset, map, /*nullterminated*/ true);
 };
 
-const getCodeSection = (blob, offset, map, nt) => {
+const getCodeSection = (blob: Object, offset: number, map: Object, nt: boolean = false) => {
     let strings = new Array(map.length);
     let totalSize = 0;
     let strAndSize;
@@ -209,7 +209,7 @@ const getCodeSection = (blob, offset, map, nt) => {
     return [code, totalSize];
 };
 
-const getColorList = (blob, offset) => {
+const getColorList = (blob: Object, offset: number) => {
     let colors = [];
     let num = this.getUInt32(blob, offset);
     let size = sizeInt + num * sizeInt;
@@ -221,7 +221,7 @@ const getColorList = (blob, offset) => {
     return [colors, size];
 };
 
-const getColorMaps = (blob, offset) => {
+const getColorMaps = (blob: Object, offset: number) => {
     let mapOffset = offset + 480;
     let maps = [];
     let headerSize = 60; // 4B enabled, 4B num, 4B id, 48B filestring
@@ -252,7 +252,7 @@ const getColorMaps = (blob, offset) => {
     return [maps, mapOffset - offset];
 };
 
-const getColorMap = (blob, offset, num) => {
+const getColorMap = (blob: Object, offset: number, num: number) => {
     let colorMap = [];
     for (let i = 0; i < num; i++) {
         let pos = this.getUInt32(blob, offset);
@@ -263,7 +263,7 @@ const getColorMap = (blob, offset, num) => {
     return colorMap;
 };
 
-const getColor = (blob, offset) => {
+const getColor = (blob: Object, offset: number) => {
     // Colors in AVS are saved as (A)RGB (where A is always 0).
     // Maybe one should use an alpha channel right away and set
     // that to 0xff? For now, no 4th byte means full alpha.
@@ -275,7 +275,7 @@ const getColor = (blob, offset) => {
     return ['#' + padding + color, sizeInt];
 };
 
-const getConvoFilter = (blob, offset, dimensions) => {
+const getConvoFilter = (blob: Object, offset: number, dimensions: object) => {
     if (!(dimensions instanceof Array) && dimensions.length !== 2) {
         throw new this.ConvertException('ConvoFilter: Size must be array with x and y dimensions in dwords.');
     }
@@ -289,7 +289,7 @@ const getConvoFilter = (blob, offset, dimensions) => {
 };
 
 // 'Text' needs this
-const getSemiColSplit = (str) => {
+const getSemiColSplit = (str: string) => {
     let strings = str.split(';');
     if (strings.length === 1) {
         return strings[0];
@@ -298,90 +298,90 @@ const getSemiColSplit = (str) => {
     }
 };
 
-const getBlendmodeIn = (blob, offset, size) => {
+const getBlendmodeIn = (blob: Object, offset: number, size: number) => {
     let code = size === 1 ? blob[offset] : this.getUInt32(blob, offset);
     return [Table.blendmodesIn[code], size];
 };
 
-const getBlendmodeOut = (blob, offset, size) => {
+const getBlendmodeOut = (blob: Object, offset: number, size: number) => {
     let code = size === 1 ? blob[offset] : this.getUInt32(blob, offset);
     return [Table.blendmodesOut[code], size];
 };
 
-const getBlendmodeBuffer = (blob, offset, size) => {
+const getBlendmodeBuffer = (blob: Object, offset: number, size: number) => {
     let code = size === 1 ? blob[offset] : this.getUInt32(blob, offset);
     return [Table.blendmodesBuffer[code], size];
 };
 
-const getBlendmodeRender = (blob, offset, size) => {
+const getBlendmodeRender = (blob: Object, offset: number, size: number) => {
     let code = size === 1 ? blob[offset] : this.getUInt32(blob, offset);
     return [Table.blendmodesRender[code], size];
 };
 
-const getBlendmodePicture2 = (blob, offset, size) => {
+const getBlendmodePicture2 = (blob: Object, offset: number, size: number) => {
     let code = size === 1 ? blob[offset] : this.getUInt32(blob, offset);
     return [Table.blendmodesPicture2[code], size];
 };
 
-const getBlendmodeColorMap = (blob, offset, size) => {
+const getBlendmodeColorMap = (blob: Object, offset: number, size: number) => {
     let code = size === 1 ? blob[offset] : this.getUInt32(blob, offset);
     return [Table.blendmodesColorMap[code], size];
 };
 
-const getBlendmodeTexer = (blob, offset, size) => {
+const getBlendmodeTexer = (blob: Object, offset: number, size: number) => {
     let code = size === 1 ? blob[offset] : this.getUInt32(blob, offset);
     return [Table.blendmodesTexer[code], size];
 };
 
-const getKeyColorMap = (blob, offset, size) => {
+const getKeyColorMap = (blob: Object, offset: number, size: number) => {
     let code = size === 1 ? blob[offset] : this.getUInt32(blob, offset);
     return [Table.keysColorMap[code], size];
 };
 
-const getCycleModeColorMap = (blob, offset, size) => {
+const getCycleModeColorMap = (blob: Object, offset: number, size: number) => {
     let code = size === 1 ? blob[offset] : this.getUInt32(blob, offset);
     return [Table.cycleModesColorMap[code], size];
 };
 
 // Buffer modes
-const getBufferMode = (blob, offset, size) => {
+const getBufferMode = (blob: Object, offset: number, size: number) => {
     let code = size === 1 ? blob[offset] : this.getUInt32(blob, offset);
     return [Table.buffermodes[code], size];
 };
 
-const getBufferNum = (blob, offset, size) => {
+const getBufferNum = (blob: Object, offset: number, size: number) => {
     let code = size === 1 ? blob[offset] : this.getUInt32(blob, offset);
     if (code === 0) return ['Current', size];
     else return [this.getUInt32(blob, offset), size];
 };
 
-const getCoordinates = (blob, offset, size) => {
+const getCoordinates = (blob: Object, offset: number, size: number) => {
     let code = size === 1 ? blob[offset] : this.getUInt32(blob, offset);
     return [Table.coordinates[code], size];
 };
 
-const getDrawMode = (blob, offset, size) => {
+const getDrawMode = (blob: Object, offset: number, size: number) => {
     let code = size === 1 ? blob[offset] : this.getUInt32(blob, offset);
     return [Table.drawModes[code], size];
 };
 
-const getAudioChannel = (code) => {
+const getAudioChannel = (code: number) => {
     return Table.audioChannels[code];
 };
 
-const getAudioSource = (code) => {
+const getAudioSource = (code: number) => {
     return Table.audioSources[code];
 };
 
-const getPositionX = (code) => {
+const getPositionX = (code: number) => {
     return Table.positionsX[code];
 };
 
-const getPositionY = (code) => {
+const getPositionY = (code: number) => {
     return Table.positionsY[code];
 };
 
-const getMultiFilterEffect = (code) => {
+const getMultiFilterEffect = (code: Object) => {
     return Table.multiFilterEffect[code];
 };
 

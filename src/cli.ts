@@ -18,7 +18,7 @@ program
     .option('-s, --silent', 'Prints errors only')
     .parse(argv);
 
-const convert = (file, args) => {
+const convert = (file: string, args: object): void => {
     readFile(file, (error, data) => {
         if (args.silent !== true) console.log(`\nReading "${file}"`);
 

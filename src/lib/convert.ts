@@ -14,7 +14,7 @@ let verbose = false; // log individual key:value fields
 let debug = false; // log individual key:value fields
 const componentTable = Components.builtin.concat(Components.dll);
 
-const convertPreset = (presetFile, file, args) => {
+const convertPreset = (presetFile: Object, file: string, args: Object) => {
     verbose = args.silent;
     debug = args.debug;
 
@@ -44,7 +44,7 @@ const convertPreset = (presetFile, file, args) => {
     return preset;
 };
 
-const convertComponents = (blob, args) => {
+const convertComponents = (blob: Object) => {
     let fp = 0;
     let components = [];
     let res;
@@ -74,7 +74,7 @@ const convertComponents = (blob, args) => {
     return components;
 };
 
-const getComponentIndex = (code, blob, offset) => {
+const getComponentIndex = (code: number, blob: Object, offset: number) => {
     if (code < Util.builtinMax || code === 0xfffffffe) {
         for (let i = 0; i < componentTable.length; i++) {
             if (code === componentTable[i].code) {
@@ -96,11 +96,11 @@ const getComponentIndex = (code, blob, offset) => {
     return -code;
 };
 
-const getComponentSize = (blob, offset) => {
+const getComponentSize = (blob: Object, offset: number) => {
     return Util.getUInt32(blob, offset);
 };
 
-const decodePresetHeader = (blob) => {
+const decodePresetHeader = (blob: Object) => {
     let presetHeader0_1 = [ // reads: 'Nullsoft AVS Preset 0.1 \x1A'
         0x4E, 0x75, 0x6C, 0x6C, 0x73, 0x6F, 0x66, 0x74,
         0x20, 0x41, 0x56, 0x53, 0x20, 0x50, 0x72, 0x65,
@@ -119,7 +119,7 @@ const decodePresetHeader = (blob) => {
 };
 
 //// component decode functions,
-const decode_effectList = (blob, offset) => {
+const decode_effectList = (blob: Object, offset: number) => {
     let size = Util.getUInt32(blob, offset - sizeInt);
     let comp = {
         'type': 'EffectList',
@@ -163,7 +163,7 @@ const decode_effectList = (blob, offset) => {
 };
 
 // generic field decoding function that most components use.
-const decode_generic = (blob, offset, fields, name, group, end) => {
+const decode_generic = (blob: Object, offset: number, fields: Object, name: string, group: string, end: number) => {
     let comp = {
         'type': Util.removeSpaces(name),
         'group': group,
@@ -249,7 +249,7 @@ const decode_generic = (blob, offset, fields, name, group, end) => {
     return comp;
 };
 
-const decode_movement = (blob, offset) => {
+const decode_movement = (blob: Object, offset: number) => {
     let comp = {
         'type': 'Movement',
         'group': 'Trans',
@@ -287,7 +287,7 @@ const decode_movement = (blob, offset) => {
     return comp;
 };
 
-const decode_avi = (blob, offset) => {
+const decode_avi = (blob: Object, offset: number) => {
     let comp = {
         'type': 'AVI',
         'group': 'Render',
@@ -307,7 +307,7 @@ const decode_avi = (blob, offset) => {
     return comp;
 };
 
-const decode_simple = (blob, offset) => {
+const decode_simple = (blob: Object, offset: number) => {
     let comp = {
         'type': 'Simple',
         'group': 'Render',
