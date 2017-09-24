@@ -10,6 +10,7 @@ import { basename, dirname, join } from 'path';
 // Modules
 import { convertPreset } from './lib/convert';
 
+// TODO: move to declaration file
 interface Arguments {
     debug?: boolean;
     silent?: boolean;
