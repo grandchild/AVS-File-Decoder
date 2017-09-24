@@ -10,10 +10,8 @@ import { basename, dirname, join } from 'path';
 // Modules
 import { convertPreset } from './lib/convert';
 
-interface Parameter {
-    silent?: boolean;
-    debug?: boolean;
-}
+// Definitions
+import { Arguments} from 'defs/'
 
 program
     .version(require('../package.json').version)
@@ -23,7 +21,7 @@ program
     .option('-s, --silent', 'Prints errors only')
     .parse(argv);
 
-const convert = (file: string, args: Parameter): void => {
+const convert = (file: string, args: Arguments): void => {
     readFile(file, (error: Object, data: Object) => {
         if (args.silent !== true) console.log(`\nReading "${file}"`);
 
@@ -45,7 +43,7 @@ const convert = (file: string, args: Parameter): void => {
 
 if (program.args !== 'undefined' && program.args.length > 0) {
     program.args.forEach( (element: string, index: number) => {
-        glob(element, (error: Object, files: Object) => {
+        glob(element, (error: Object, files: any[]) => {
             if (error) throw error;
 
             files.forEach( file => {
