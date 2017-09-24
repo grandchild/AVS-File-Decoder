@@ -14,7 +14,7 @@ let verbose = false; // log individual key:value fields
 let debug = false; // log individual key:value fields
 const componentTable = Components.builtin.concat(Components.dll);
 
-const convertPreset = (presetFile: Object, file: string, args: Object) => {
+const convertPreset = (presetFile: Object, file: string, args: Object): Object => {
     verbose = args.silent;
     debug = args.debug;
 
@@ -41,10 +41,11 @@ const convertPreset = (presetFile: Object, file: string, args: Object) => {
             // throw e;
         // }
     }
+
     return preset;
 };
 
-const convertComponents = (blob: Object) => {
+const convertComponents = (blob: Object): Object => {
     let fp = 0;
     let components = [];
     let res;
@@ -71,14 +72,16 @@ const convertComponents = (blob: Object) => {
         components.push(res);
         fp += size + sizeInt * 2 + isDll * 32;
     }
+
     return components;
 };
 
-const getComponentIndex = (code: number, blob: Object, offset: number) => {
+const getComponentIndex = (code: number, blob: Object, offset: number): number => {
     if (code < Util.builtinMax || code === 0xfffffffe) {
         for (let i = 0; i < componentTable.length; i++) {
             if (code === componentTable[i].code) {
                 if (debug === true)  console.log(chalk.dim(`Found component: ${componentTable[i].name} (${code})`));
+
                 return i;
             }
         }
@@ -87,12 +90,14 @@ const getComponentIndex = (code: number, blob: Object, offset: number) => {
             if (componentTable[i].code instanceof Array &&
                 Util.cmpBytes(blob, offset + sizeInt, componentTable[i].code)) {
                 if (debug === true) console.log(chalk.dim(`Found component: ${componentTable[i].name}`));
+
                 return i;
             }
         }
     }
 
     if (debug === true) console.log(chalk.dim(`Found unknown component (code: ${code})`));
+
     return -code;
 };
 
@@ -100,7 +105,7 @@ const getComponentSize = (blob: Object, offset: number) => {
     return Util.getUInt32(blob, offset);
 };
 
-const decodePresetHeader = (blob: Object) => {
+const decodePresetHeader = (blob: Object): boolean => {
     let presetHeader0_1 = [ // reads: 'Nullsoft AVS Preset 0.1 \x1A'
         0x4E, 0x75, 0x6C, 0x6C, 0x73, 0x6F, 0x66, 0x74,
         0x20, 0x41, 0x56, 0x53, 0x20, 0x50, 0x72, 0x65,
@@ -115,11 +120,12 @@ const decodePresetHeader = (blob: Object) => {
         !Util.cmpBytes(blob, /*offset*/ 0, presetHeader0_1)) { // 0.1 only if 0.2 failed because it's far rarer.
         throw new Util.ConvertException('Invalid preset header.');
     }
+
     return blob[Util.presetHeaderLength - 1] === 1; // 'Clear Every Frame'
 };
 
 //// component decode functions,
-const decode_effectList = (blob: Object, offset: number) => {
+const decode_effectList = (blob: Object, offset: number): Object => {
     let size = Util.getUInt32(blob, offset - sizeInt);
     let comp = {
         'type': 'EffectList',
@@ -159,11 +165,12 @@ const decode_effectList = (blob: Object, offset: number) => {
     } // else: old Effect List format, inside components just start
     let content = this.convertComponents(blob.subarray(contOffset, contOffset + contSize));
     comp['components'] = content;
+
     return comp;
 };
 
 // generic field decoding function that most components use.
-const decode_generic = (blob: Object, offset: number, fields: Object, name: string, group: string, end: number) => {
+const decode_generic = (blob: Object, offset: number, fields: Object, name: string, group: string, end: number): Object => {
     let comp = {
         'type': Util.removeSpaces(name),
         'group': group,
@@ -246,10 +253,11 @@ const decode_generic = (blob: Object, offset: number, fields: Object, name: stri
         if (debug === true) console.log(chalk.dim('- key: ' + k + '\n- val: ' + value + '\n- offset: ' + offset + '\n'));
         offset += size;
     }
+
     return comp;
 };
 
-const decode_movement = (blob: Object, offset: number) => {
+const decode_movement = (blob: Object, offset: number): Object => {
     let comp = {
         'type': 'Movement',
         'group': 'Trans',
@@ -284,10 +292,11 @@ const decode_movement = (blob: Object, offset: number) => {
         comp['coordinates'] = effect[2]; // overwrite
     }
     comp['code'] = code;
+
     return comp;
 };
 
-const decode_avi = (blob: Object, offset: number) => {
+const decode_avi = (blob: Object, offset: number): Object => {
     let comp = {
         'type': 'AVI',
         'group': 'Render',
@@ -304,10 +313,11 @@ const decode_avi = (blob: Object, offset: number) => {
     }
     comp['onBeatAdd'] = beatAdd;
     comp['persist'] = Util.getUInt32(blob, offset + sizeInt * 4 + strAndSize[1]); // 0-32
+
     return comp;
 };
 
-const decode_simple = (blob: Object, offset: number) => {
+const decode_simple = (blob: Object, offset: number): Object => {
     let comp = {
         'type': 'Simple',
         'group': 'Render',
@@ -339,6 +349,7 @@ const decode_simple = (blob: Object, offset: number) => {
     comp['audioChannel'] = Util.getAudioChannel((effect >> 2) & 3);
     comp['positionY'] = Util.getPositionY((effect >> 4) & 3);
     comp['colors'] = Util.getColorList(blob, offset + sizeInt)[0];
+
     return comp;
 };
 
