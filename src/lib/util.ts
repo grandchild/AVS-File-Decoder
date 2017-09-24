@@ -142,14 +142,14 @@ const getMapping = (map: Object, key: number): string => {
 };
 
 // Point, Frame, Beat, Init code fields - reorder to I,F,B,P order.
-const getCodePFBI = (blob: Object, offset: number) => {
+const getCodePFBI = (blob: Object, offset: number): Object => {
     let map = [ // this is the sort map, lines are 'need'-sorted with 'is'-index.
         ['init', 3],
         ['perFrame', 1],
         ['onBeat', 2],
         ['perPoint', 0],
     ];
-    getCodePFBI.log('getCodePFBI', typeof this.getCodeSection(blob, offset, map));
+
     return this.getCodeSection(blob, offset, map);
 };
 
