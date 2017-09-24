@@ -10,8 +10,11 @@ import { basename, dirname, join } from 'path';
 // Modules
 import { convertPreset } from './lib/convert';
 
-// Definitions
-import { Arguments} from 'defs/'
+interface Arguments {
+    debug?: boolean;
+    silent?: boolean;
+    minify?: boolean;
+}
 
 program
     .version(require('../package.json').version)
