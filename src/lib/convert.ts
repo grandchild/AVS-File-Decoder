@@ -158,10 +158,11 @@ const decode_effectList = (blob: Object, offset: number): Object => {
         let extSize = Util.getUInt32(blob, extOffset);
         contOffset += effectList28plusHeader.length + sizeInt + extSize;
         contSize = size - 37 - effectList28plusHeader.length - sizeInt - extSize;
-        comp['codeEnabled'] = Util.getUInt32(blob, extOffset + sizeInt) === 1;
+        comp['code'] = {}
+        comp['code']['enabled'] = Util.getUInt32(blob, extOffset + sizeInt) === 1;
         let initSize = Util.getUInt32(blob, extOffset + sizeInt * 2);
-        comp['init'] = Util.getSizeString(blob, extOffset + sizeInt * 2)[0];
-        comp['frame'] = Util.getSizeString(blob, extOffset + sizeInt * 3 + initSize)[0];
+        comp['code']['init'] = Util.getSizeString(blob, extOffset + sizeInt * 2)[0];
+        comp['code']['frame'] = Util.getSizeString(blob, extOffset + sizeInt * 3 + initSize)[0];
     } // else: old Effect List format, inside components just start
     let content = this.convertComponents(blob.subarray(contOffset, contOffset + contSize));
     comp['components'] = content;
