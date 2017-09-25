@@ -234,7 +234,6 @@ const decode_generic = (blob: Object, offset: number, fields: Object, name: stri
             }
             try {
                 // console.log(chalk.yellow('get' + f))
-                // if (f[0] === 'MultiFilterEffect') console.log(chalk.green('get' + f[0] + `(${blob}, ${offset}, ${f[1]})`));
                 result = Util['get' + f[0]](blob, offset, f[1]);
                 value = result[0];
                 if (f[2]) { // further processing if wanted

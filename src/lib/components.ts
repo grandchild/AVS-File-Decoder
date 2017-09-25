@@ -908,7 +908,7 @@ const dll = [
         'func': 'generic',
         'fields': {
             'enabled': ['Bool', sizeInt],
-            'effect': ['MultiFilterEffect', sizeInt],
+            'effect': 'MultiFilterEffect',
             'onBeat': ['Bool', sizeInt],
             null0: ['Bool', sizeInt]
         }

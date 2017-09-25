@@ -401,6 +401,11 @@ const getDrawMode = (blob: Object, offset: number, size: number): Object => {
     return [Table.drawModes[code], size];
 };
 
+const getMultiFilterEffect = (blob: Object, offset: number): string => {
+    let code = this.getUInt32(blob, offset);
+    return [Table.multiFilterEffect[code], sizeInt];
+};
+
 const getAudioChannel = (code: number): string => {
     return Table.audioChannels[code];
 };
@@ -415,10 +420,6 @@ const getPositionX = (code: number): string => {
 
 const getPositionY = (code: number): string => {
     return Table.positionsY[code];
-};
-
-const getMultiFilterEffect = (code: Object): string => {
-    return Table.multiFilterEffect[code];
 };
 
 export {
