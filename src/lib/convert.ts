@@ -215,10 +215,11 @@ const decode_generic = (blob: Object, offset: number, fields: Object, name: stri
                 // console.log(chalk.yellow('get' + f))
                 result = Util['get' + f](blob, offset);
             } catch (e) {
-                if (e.message.search(/has no method'/) >= 0) {
+                if (e.message.search(/not a function/) >= 0) {
                     throw new Util.ConvertException(`Method '${f}' was not found. (correct capitalization?)`);
                 } else {
-                    throw e; }
+                    throw e;
+                }
             }
             value = result[0];
             size = result[1];
@@ -241,9 +242,10 @@ const decode_generic = (blob: Object, offset: number, fields: Object, name: stri
                     value = Util['get' + f[2]](value);
                 }
             } catch (e) {
-                if (e.message.search(/has no method/) >= 0) {
+                if (e.message.search(/not a function/) >= 0) {
                     throw new Util.ConvertException(`Method '${f}' was not found. (correct capitalization?)`); } else {
-                    throw e; }
+                    throw e;
+                }
             }
             size = result[1];
         }

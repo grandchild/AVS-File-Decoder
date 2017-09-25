@@ -7,10 +7,18 @@ const allFields: boolean  = true;
 const presetHeaderLength: number = 25;
 const builtinMax: number = 16384;
 
-const ConvertException = (message: string): void => {
-    this.message = message;
-    this.name = 'ConvertException';
-};
+class ConvertException implements Error {
+    name: string = 'ConvertException';
+    message: string;
+
+    constructor(public message: string) {
+        this.message = message;
+    }
+
+    toString(): string {
+        return `${this.name} : ${this.message}`;
+    }
+}
 
 const cmpBytes = (arr: Object, offset: number, test: Object): boolean => {
     for (let i = 0; i < test.length; i++) {
