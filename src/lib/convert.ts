@@ -243,7 +243,8 @@ const decode_generic = (blob: Object, offset: number, fields: Object, name: stri
                 }
             } catch (e) {
                 if (e.message.search(/not a function/) >= 0) {
-                    throw new Util.ConvertException(`Method '${f}' was not found. (correct capitalization?)`); } else {
+                    throw new Util.ConvertException(`Method '${f[0]}' was not found. (correct capitalization?)`);
+                } else {
                     throw e;
                 }
             }
