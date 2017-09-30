@@ -2,6 +2,7 @@
 import * as Components from './components';
 import * as Util from './util';
 import * as Table from './tables';
+import { Arguments, ComponentDefinition, jsontypes } from './types';
 
 // Dependencies
 import { basename, extname } from 'path';
@@ -10,13 +11,12 @@ import * as chalk from 'chalk';
 
 // Constants
 const sizeInt = 4;
-let verbose = false; // log individual key:value fields
-let debug = false; // log individual key:value fields
-const componentTable = Components.builtin.concat(Components.dll);
+let verbosity = 0; // log individual key:value fields
+const componentTable: ComponentDefinition[] = Components.builtin.concat(Components.dll);
 
-const convertPreset = (presetFile: Object, file: string, args: Object): Object => {
-    verbose = args.silent;
-    debug = args.debug;
+const convertPreset = (presetFile: ArrayBuffer, file: string, args: Arguments): Object => {
+    verbosity = args.debug;
+    verbosity = args.silent ? -1 : verbosity;
 
     let modifiedTime = statSync(file).mtime;
     let preset = {
@@ -26,39 +26,40 @@ const convertPreset = (presetFile: Object, file: string, args: Object): Object =
     };
     let blob8 = new Uint8Array(presetFile);
     try {
-        let clearFrame = this.decodePresetHeader(blob8.subarray(0, Util.presetHeaderLength));
+        let clearFrame = decodePresetHeader(blob8.subarray(0, Util.presetHeaderLength));
         preset['clearFrame'] = clearFrame;
-        let components = this.convertComponents(blob8.subarray(Util.presetHeaderLength));
+        let components = convertComponents(blob8.subarray(Util.presetHeaderLength));
         preset['components'] = components;
     } catch (e) {
         // TODO
-        if (args.silent === true) console.log(chalk.red(`Error in '${file}'`));
-        console.log(chalk.red(e + '\n'));
+        if (verbosity < 0) console.log(chalk.red(`Error in '${file}'`));
+        if (verbosity >= 1) console.log(chalk.red(e.stack));
+        else console.log(chalk.red(e + '\n'));
         // if(e instanceof Util.ConvertException) {
         //     console.error('Error: '+e.message);
         //     return null;
         // } else {
-            // throw e;
+        //     throw e;
         // }
     }
 
     return preset;
 };
 
-const convertComponents = (blob: Object): Object => {
-    let fp = 0;
-    let components = [];
+const convertComponents = (blob: Uint8Array): Object => {
+    let fp: number = 0;
+    let components: any[] = [];
     let res;
     while (fp < blob.length) {
         let code = Util.getUInt32(blob, fp);
-        let i = this.getComponentIndex(code, blob, fp);
-        let isDll = code !== 0xfffffffe && code > Util.builtinMax;
-        let size = this.getComponentSize(blob, fp + sizeInt + isDll * 32);
+        let i = getComponentIndex(code, blob, fp);
+        let isDll: number = (code !== 0xfffffffe && code >= Util.builtinMax) ? 1 : 0;
+        let size = getComponentSize(blob, fp + sizeInt + isDll * 32);
         if (i < 0) {
             res = { 'type': 'Unknown: (' + (-i) + ')' };
         } else {
             let offset = fp + sizeInt * 2 + isDll * 32;
-            res = this['decode_' + componentTable[i].func](
+            res = eval('decode_' + componentTable[i].func)(
                 blob,
                 offset,
                 componentTable[i].fields,
@@ -76,11 +77,11 @@ const convertComponents = (blob: Object): Object => {
     return components;
 };
 
-const getComponentIndex = (code: number, blob: Object, offset: number): number => {
+const getComponentIndex = (code: number, blob: Uint8Array, offset: number): number => {
     if (code < Util.builtinMax || code === 0xfffffffe) {
         for (let i = 0; i < componentTable.length; i++) {
             if (code === componentTable[i].code) {
-                if (debug === true)  console.log(chalk.dim(`Found component: ${componentTable[i].name} (${code})`));
+                if (verbosity >= 1)  console.log(chalk.dim(`Found component: ${componentTable[i].name} (${code})`));
 
                 return i;
             }
@@ -88,24 +89,24 @@ const getComponentIndex = (code: number, blob: Object, offset: number): number =
     } else {
         for (let i = Components.builtin.length; i < componentTable.length; i++) {
             if (componentTable[i].code instanceof Array &&
-                Util.cmpBytes(blob, offset + sizeInt, componentTable[i].code)) {
-                if (debug === true) console.log(chalk.dim(`Found component: ${componentTable[i].name}`));
+                Util.cmpBytes(blob, offset + sizeInt, <number[]>componentTable[i].code)) {
+                if (verbosity >= 1) console.log(chalk.dim(`Found component: ${componentTable[i].name}`));
 
                 return i;
             }
         }
     }
 
-    if (debug === true) console.log(chalk.dim(`Found unknown component (code: ${code})`));
+    if (verbosity >= 1) console.log(chalk.dim(`Found unknown component (code: ${code})`));
 
     return -code;
 };
 
-const getComponentSize = (blob: Object, offset: number) => {
+const getComponentSize = (blob: Uint8Array, offset: number) => {
     return Util.getUInt32(blob, offset);
 };
 
-const decodePresetHeader = (blob: Object): boolean => {
+const decodePresetHeader = (blob: Uint8Array): boolean => {
     let presetHeader0_1 = [ // reads: 'Nullsoft AVS Preset 0.1 \x1A'
         0x4E, 0x75, 0x6C, 0x6C, 0x73, 0x6F, 0x66, 0x74,
         0x20, 0x41, 0x56, 0x53, 0x20, 0x50, 0x72, 0x65,
@@ -125,53 +126,49 @@ const decodePresetHeader = (blob: Object): boolean => {
 };
 
 //// component decode functions,
-const decode_effectList = (blob: Object, offset: number): Object => {
-    let size = Util.getUInt32(blob, offset - sizeInt);
+const decode_effectList = (blob: Uint8Array, offset: number, _: Object, name: string): Object => {
+    let size: number = Util.getUInt32(blob, offset - sizeInt);
     let comp = {
-        'type': 'EffectList',
+        'type': name,
         'enabled': Util.getBit(blob, offset, 1)[0] !== 1,
         'clearFrame': Util.getBit(blob, offset, 0)[0] === 1,
-        'input': Util.getBlendmodeIn(blob, offset + 2, 1)[0],
-        'output': Util.getBlendmodeOut(blob, offset + 3, 1)[0],
-        // ignore constant el config size of 36 bytes (9 x int32)
-        'inAdjustBlend': Util.getUInt32(blob, offset + 5),
-        'outAdjustBlend': Util.getUInt32(blob, offset + 9),
-        'inBuffer': Util.getUInt32(blob, offset + 13),
-        'outBuffer': Util.getUInt32(blob, offset + 17),
-        'inBufferInvert': Util.getUInt32(blob, offset + 21) === 1,
-        'outBufferInvert': Util.getUInt32(blob, offset + 25) === 1,
-        'enableOnBeat': Util.getUInt32(blob, offset + 29) === 1,
-        'onBeatFrames': Util.getUInt32(blob, offset + 33),
+        'input': Table['blendmodeIn'][blob[offset + 2]],
+        'output': Table['blendmodeOut'][blob[offset + 3]],
     };
-    let effectList28plusHeader = [ // reads: .$..AVS 2.8+ Effect List Config....
+    let modebit: boolean = Util.getBit(blob, offset, 7)[0] === 1; // is true in all presets I know, probably only for truly ancient versions
+    if (!modebit) { console.log(chalk.red('EL modebit is off!! If you\'re seeing this, send this .avs file in please!')); }
+    let configSize: number = (modebit ? blob[offset + 4] : blob[offset]) + 1;
+    if (configSize > 1) {
+        comp['inAdjustBlend'] = Util.getUInt32(blob, offset + 5);
+        comp['outAdjustBlend'] = Util.getUInt32(blob, offset + 9);
+        comp['inBuffer'] = Util.getUInt32(blob, offset + 13);
+        comp['outBuffer'] = Util.getUInt32(blob, offset + 17);
+        comp['inBufferInvert'] = Util.getUInt32(blob, offset + 21) === 1;
+        comp['outBufferInvert'] = Util.getUInt32(blob, offset + 25) === 1;
+        comp['enableOnBeat'] = Util.getUInt32(blob, offset + 29) === 1;
+        comp['onBeatFrames'] = Util.getUInt32(blob, offset + 33);
+    }
+    let effectList28plusHeader = [ // reads: hex(builtinMax) + 'AVS 2.8+ Effect List Config....'
         0x00, 0x40, 0x00, 0x00, 0x41, 0x56, 0x53, 0x20,
         0x32, 0x2E, 0x38, 0x2B, 0x20, 0x45, 0x66, 0x66,
         0x65, 0x63, 0x74, 0x20, 0x4C, 0x69, 0x73, 0x74,
         0x20, 0x43, 0x6F, 0x6E, 0x66, 0x69, 0x67, 0x00,
         0x00, 0x00, 0x00, 0x00
     ];
-    let extOffset = offset + 37;
-    let contSize = size - 37;
-    let contOffset = extOffset;
-    if (Util.cmpBytes(blob, extOffset, effectList28plusHeader)) {
-        extOffset += effectList28plusHeader.length;
-        let extSize = Util.getUInt32(blob, extOffset);
-        contOffset += effectList28plusHeader.length + sizeInt + extSize;
-        contSize = size - 37 - effectList28plusHeader.length - sizeInt - extSize;
-        comp['code'] = {}
-        comp['code']['enabled'] = Util.getUInt32(blob, extOffset + sizeInt) === 1;
-        let initSize = Util.getUInt32(blob, extOffset + sizeInt * 2);
-        comp['code']['init'] = Util.getSizeString(blob, extOffset + sizeInt * 2)[0];
-        comp['code']['frame'] = Util.getSizeString(blob, extOffset + sizeInt * 3 + initSize)[0];
-    } // else: old Effect List format, inside components just start
-    let content = this.convertComponents(blob.subarray(contOffset, contOffset + contSize));
+    let contentOffset = offset + configSize;
+    if (Util.cmpBytes(blob, contentOffset, effectList28plusHeader)) {
+        let codeOffset: number = offset + configSize + effectList28plusHeader.length;
+        let codeSize: number = Util.getUInt32(blob, codeOffset);
+        comp['code'] = Util.getCodeEIF(blob, codeOffset + sizeInt)[0];
+        contentOffset = codeOffset + sizeInt + codeSize;
+    }
+    let content = convertComponents(blob.subarray(contentOffset, offset + size));
     comp['components'] = content;
-
     return comp;
 };
 
 // generic field decoding function that most components use.
-const decode_generic = (blob: Object, offset: number, fields: Object, name: string, group: string, end: number): Object => {
+const decode_generic = (blob: Uint8Array, offset: number, fields: Object, name: string, group: string, end: number): Object => {
     let comp = {
         'type': Util.removeSpaces(name),
         'group': group,
@@ -184,6 +181,7 @@ const decode_generic = (blob: Object, offset: number, fields: Object, name: stri
         }
         let k = keys[i];
         let f = fields[k];
+        // console.log(chalk.yellow(`key: ${k}, field: ${f}`));
         if (k.match(/^null[_0-9]*$/)) {
             offset += f;
             // 'null_: 0' resets bitfield continuity to allow several consecutive bitfields
@@ -191,40 +189,27 @@ const decode_generic = (blob: Object, offset: number, fields: Object, name: stri
             continue;
         }
         let size = 0;
-        let value, result;
-        let num = typeof f === 'number';
-        let other = typeof f === 'string';
-        let array = f instanceof Array;
+        let value: jsontypes;
+        let result: [jsontypes, number];
+        let num: boolean = typeof f === 'number';
+        let other: boolean = typeof f === 'string';
+        let array: boolean = f instanceof Array;
         if (num) {
-            switch (f) {
-                case 1:
-                    size = 1;
-                    value = blob[offset];
-                    break;
-                case sizeInt:
-                    size = sizeInt;
-                    value = Util.getUInt32(blob, offset);
-                    break;
-                default:
-                    throw new Util.ConvertException('Invalid field size: ' + f + '.');
+            size = f;
+            try {
+                value = Util.getUInt(blob, offset, size);
+            } catch(e) {
+                throw new Util.ConvertException('Invalid field size: ' + f + '.');
             }
             lastWasABitField = false;
         } else if (other) {
             let func = 'get' + f;
-            try {
-                // console.log(chalk.yellow('get' + f))
-                result = Util['get' + f](blob, offset);
-            } catch (e) {
-                if (e.message.search(/not a function/) >= 0) {
-                    throw new Util.ConvertException(`Method '${f}' was not found. (correct capitalization?)`);
-                } else {
-                    throw e;
-                }
-            }
+            // console.log(chalk.yellow(`get: ${f}`));
+            result = Util.callFunction(f, blob, offset);
             value = result[0];
             size = result[1];
             lastWasABitField = false;
-        } else if (f && f.length >= 2) {
+        } else if (array && f.length >= 2) {
             if (f[0] === 'Bit') {
                 if (lastWasABitField) {
                     offset -= 1; // compensate to stay in same bitfield
@@ -233,37 +218,64 @@ const decode_generic = (blob: Object, offset: number, fields: Object, name: stri
             } else {
                 lastWasABitField = false;
             }
-            try {
-                // console.log(chalk.yellow('get' + f))
-                result = Util['get' + f[0]](blob, offset, f[1]);
+            // console.log(chalk.yellow(`get: ${f[0]} ${f[1]} ${typeof f[1]}`));
+            let tableName: string = Util.lowerInitial(f[0]);
+            if (tableName in Table) {
+                let tableKey: number = Util.getUInt(blob, offset, f[1]);
+                value = Table[tableName][tableKey];
+                size = f[1];
+            } else {
+                result = Util.callFunction(f[0], blob, offset, f[1])
+                size = result[1];
                 value = result[0];
-                if (f[2]) { // further processing if wanted
-                    // console.log(chalk.yellow('get' + f[2]))
-                    value = Util['get' + f[2]](value);
-                }
-            } catch (e) {
-                if (e.message.search(/not a function/) >= 0) {
-                    throw new Util.ConvertException(`Method '${f[0]}' was not found. (correct capitalization?)`);
+            }
+            if (f[2]) { // further processing if wanted
+                // console.log(chalk.yellow('get' + f[2]));
+                tableName = Util.lowerInitial(f[2]);
+                if (tableName in Table) {
+                    value = Table[tableName][<number>value];
                 } else {
-                    throw e;
+                    value = Util.callFunction(f[2], value);
                 }
             }
-            size = result[1];
         }
 
         // save value or function result of value in field
-        comp[k] = value;
-        if (debug === true) console.log(chalk.dim('- key: ' + k + '\n- val: ' + value + '\n- offset: ' + offset + '\n'));
+        if (k !== 'new_version') { // but don't save new_version marker, if present
+            comp[k] = value;
+            if (verbosity >= 2) {
+                console.log(chalk.dim('- key: ' + k + '\n- val: ' + value));
+                if (k == 'code') Util.printTable('- code', value);
+                if (verbosity >= 3) console.log(chalk.dim('- offset: ' + offset + '\n- size: ' + size));
+                console.log();
+            }
+        }
         offset += size;
     }
 
     return comp;
 };
 
-const decode_movement = (blob: Object, offset: number): Object => {
+const decode_versioned_generic = (blob: Uint8Array, offset: number, fields: Object, name: string, group: string, end: number): Object => {
+    let version: number = blob[offset];
+    if (version === 1) {
+        return decode_generic(blob, offset, fields, name, group, end);
+    } else {
+        let oldFields = {};
+        for (let key in fields) {
+            if (key == 'new_version') continue;
+            if (key == 'code') oldFields[key] = fields['code'].replace(/Code([IFBP]+)/, '256Code$1');
+            else oldFields[key] = fields[key];
+        }
+        if (verbosity >= 3) console.log('oldFields, code changed to:', oldFields['code']);
+        return decode_generic(blob, offset, oldFields, name, group, end);
+    }
+}
+
+const decode_movement = (blob: Uint8Array, offset: number, _: Object, name: string, group: string, end: number): Object => {
     let comp = {
-        'type': 'Movement',
-        'group': 'Trans',
+        'type': name,
+        'group': group,
     };
     // the special value 0 is because 'old versions of AVS barf' if the id is > 15, so
     // AVS writes out 0 in that case, and sets the actual id at the end of the save block.
@@ -272,34 +284,49 @@ const decode_movement = (blob: Object, offset: number): Object => {
     let code;
     if (effectIdOld !== 0) {
         if (effectIdOld === 32767) {
-            let strAndSize = Util.getSizeString(blob, offset + sizeInt + 1); // for some reason there is a single byte reading '0x01' before custom code.
+            let strAndSize: [string, number] = ["", 0];
+            if (blob[offset + sizeInt] === 1) { // new-version marker
+                strAndSize = Util.getSizeString(blob, offset + sizeInt + 1);
+            } else {
+                strAndSize = Util.getSizeString(blob, offset + sizeInt, 256);
+            }
             offset += strAndSize[1];
             code = strAndSize[0];
         } else {
-            effect = Table.movementEffects[effectIdOld];
+            if (effectIdOld > 15) {
+                if (verbosity >= 0) {
+                    console.log(chalk.red(`Movement: Unknown effect id ${effectIdOld}. This is a known bug.`));
+                    console.log(chalk.green('If you know an AVS version that will display this Movement as anything else but "None", then please send it in!'));
+                }
+                effect = Table.movementEffect[0];
+            } else {
+                effect = Table.movementEffect[effectIdOld];
+            }
         }
     } else {
-        let effectIdNew = Util.getUInt32(blob, offset + sizeInt * 6); // 1*sizeInt, because of oldId=0, and 5*sizeint because of the other settings.
-        effect = Table.movementEffects[effectIdNew];
+        let effectIdNew: number = 0;
+        if(offset + sizeInt * 6 < end) {
+            effectIdNew = Util.getUInt32(blob, offset + sizeInt * 6); // 1*sizeInt, because of oldId=0, and 5*sizeint because of the other settings.
+        }
+        effect = Table.movementEffect[effectIdNew];
     }
-    if (effect.length > 0) {
+    if (effect && effect.length > 0) {
         comp['builtinEffect'] = effect[0];
     }
     comp['output'] = Util.getUInt32(blob, offset + sizeInt) ? '50/50' : 'Replace';
     comp['sourceMapped'] = Util.getBool(blob, offset + sizeInt * 2, sizeInt)[0];
-    comp['coordinates'] = Util.getCoordinates(blob, offset + sizeInt * 3, sizeInt);
+    comp['coordinates'] = Table.coordinates[Util.getUInt32(blob, offset + sizeInt * 3)];
     comp['bilinear'] = Util.getBool(blob, offset + sizeInt * 4, sizeInt)[0];
     comp['wrap'] = Util.getBool(blob, offset + sizeInt * 5, sizeInt)[0];
-    if (effect.length && effectIdOld !== 1 && effectIdOld !== 7) { // 'slight fuzzify' and 'blocky partial out' have no script representation.
+    if (effect && effect.length && effectIdOld !== 1 && effectIdOld !== 7) { // 'slight fuzzify' and 'blocky partial out' have no script representation.
         code = effect[1];
         comp['coordinates'] = effect[2]; // overwrite
     }
     comp['code'] = code;
-
     return comp;
 };
 
-const decode_avi = (blob: Object, offset: number): Object => {
+const decode_avi = (blob: Uint8Array, offset: number): Object => {
     let comp = {
         'type': 'AVI',
         'group': 'Render',
@@ -320,7 +347,7 @@ const decode_avi = (blob: Object, offset: number): Object => {
     return comp;
 };
 
-const decode_simple = (blob: Object, offset: number): Object => {
+const decode_simple = (blob: Uint8Array, offset: number): Object => {
     let comp = {
         'type': 'Simple',
         'group': 'Render',
@@ -349,22 +376,12 @@ const decode_simple = (blob: Object, offset: number): Object => {
                 break;
         }
     }
-    comp['audioChannel'] = Util.getAudioChannel((effect >> 2) & 3);
-    comp['positionY'] = Util.getPositionY((effect >> 4) & 3);
+    comp['audioChannel'] = Table.audioChannel[(effect >> 2) & 3];
+    comp['positionY'] = Table.positionY[(effect >> 4) & 3];
     comp['colors'] = Util.getColorList(blob, offset + sizeInt)[0];
-
     return comp;
 };
 
 export {
     convertPreset,
-    convertComponents,
-    getComponentIndex,
-    getComponentSize,
-    decodePresetHeader,
-    decode_effectList,
-    decode_generic,
-    decode_movement,
-    decode_avi,
-    decode_simple
 };

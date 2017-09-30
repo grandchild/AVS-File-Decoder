@@ -1,7 +1,9 @@
+import { ComponentDefinition } from './types';
+
 // Constants
 const sizeInt = 4;
 
-const builtin = [
+const builtin: ComponentDefinition[] = [
     {
         'name': 'Effect List', // builtin and r_list.cpp for extended Effect Lists
         'code': 0xfffffffe,
@@ -51,7 +53,7 @@ const builtin = [
         'func': 'generic',
         'fields': {
             'speed': sizeInt,
-            'color': ['Color', sizeInt],
+            'color': 'Color',
         }
     },
     {
@@ -323,7 +325,7 @@ const builtin = [
         'func': 'generic',
         'fields': {
             'enabled': ['Bool', sizeInt],
-            'color': ['Color', sizeInt],
+            'color': 'Color',
             'output': ['Map8', { 0: 'Replace', 1: 'Additive', 0x100000000: '50/50', 2: 'Default' }],
             'onlyFirst': ['Bool', sizeInt],
         }
@@ -354,10 +356,10 @@ const builtin = [
             'enabled': sizeInt,
             'color': 'Color',
             'output': ['Map8', { 0: 'Replace', 1: 'Additive', 0x100000000: '50/50' }],
-            'WarpSpeed': ['Float32', sizeInt],
+            'WarpSpeed': 'Float',
             'MaxStars_set': sizeInt,
             'onbeat': sizeInt,
-            'spdBeat': ['Float32', sizeInt],
+            'spdBeat': 'Float',
             'durFrames': sizeInt,
         }
     },
@@ -368,7 +370,7 @@ const builtin = [
         'func': 'generic',
         'fields': {
             'enabled': ['Bool', sizeInt],
-            'color': ['Color', sizeInt],
+            'color': 'Color',
             'output': ['Map8', { 0: 'Replace', 1: 'Additive', 0x100000000: '50/50' }],
             'onBeat': ['Bool', sizeInt],
             'insertBlanks': ['Bool', sizeInt],
@@ -384,7 +386,7 @@ const builtin = [
             // LONG  lfEscapement;
             // LONG  lfOrientation;
             // LONG  lfWeight;
-            'weight': ['Map4', { '0': 'Dontcare', '100': 'Thin', '200': 'Extralight', '200': 'Ultralight', '300': 'Light', '400': 'Normal', '400': 'Regular', '500': 'Medium', '600': 'Semibold', '600': 'Demibold', '700': 'Bold', '800': 'Extrabold', '800': 'Ultrabold', '900': 'Heavy', '900': 'Black' }],
+            'weight': ['Map4', { '0': 'Dontcare', '100': 'Thin', '200': 'Extralight', '300': 'Light', '400': 'Regular', '500': 'Medium', '600': 'Semibold', '700': 'Bold', '800': 'Extrabold', '900': 'Black' }],
             'italic': ['Bool', 1], // BYTE  lfItalic;
             'underline': ['Bool', 1], // BYTE  lfUnderline;
             'strikeOut': ['Bool', 1], // BYTE  lfStrikeOut;
@@ -491,21 +493,21 @@ const builtin = [
         'name': 'Dynamic Distance Modifier', // r_ddm.cpp
         'code': 0x23,
         'group': 'Trans',
-        'func': 'generic',
+        'func': 'versioned_generic',
         'fields': {
-            null0: 1,
+            'new_version': ['Bool', 1],
             'code': 'CodePFBI',
             'output': ['Map4', { 0: 'Replace', 1: '50/50' }],
             'bilinear': ['Bool', sizeInt],
         }
     },
     {
-        'name': 'Super Scope', // r_ssc.cpp
+        'name': 'Super Scope', // r_sscope.cpp
         'code': 0x24,
         'group': 'Render',
-        'func': 'generic',
+        'func': 'versioned_generic',
         'fields': {
-            'version': ['Bool', 1], // 0: v0.1, 1: v0.2
+            'new_version': ['Bool', 1],
             'code': 'CodePFBI',
             'audioChannel': ['Bit', [0, 1], 'AudioChannel'],
             'audioSource': ['Bit', 2, 'AudioSource'],
@@ -561,7 +563,7 @@ const builtin = [
         }
     },
     {
-        'name': 'Interference', // r_interf.cpp
+        'name': 'Interferences', // r_interf.cpp
         'code': 0x29,
         'group': 'Trans',
         'func': 'generic',
@@ -578,16 +580,16 @@ const builtin = [
             'onBeatRotation': sizeInt,
             'separateRGB': ['Bool', sizeInt],
             'onBeat': ['Bool', sizeInt],
-            'speed': 'Float32', // 0.01 to 1.28
+            'speed': 'Float', // 0.01 to 1.28
         }
     },
     {
-        'name': 'Dynamic Shift', // r_sPhift.cpp
+        'name': 'Dynamic Shift', // r_shift.cpp
         'code': 0x2A,
         'group': 'Trans',
-        'func': 'generic',
+        'func': 'versioned_generic',
         'fields': {
-            'version': ['Bool', 1], // 0: v0.1, v1: 0.2
+            'new_version': ['Bool', 1],
             'code': 'CodeIFB',
             'output': ['Map4', { 0: 'Replace', 1: '50/50' }],
             'bilinear': ['Bool', sizeInt],
@@ -599,7 +601,7 @@ const builtin = [
         'group': 'Trans',
         'func': 'generic',
         'fields': {
-            'version': ['Bool', 1], // 0: v0.1, v1: 0.2
+            'new_version': ['Bool', 1],
             'code': 'CodePFBI',
             'bilinear': ['Bool', sizeInt],
             'coordinates': ['Coordinates', sizeInt],
@@ -634,7 +636,7 @@ const builtin = [
 
 
 //// APEs
-const dll = [
+const dll: ComponentDefinition[] = [
     {
         'name': 'AVS Trans Automation',
         'code': // Misc: AVSTrans Automation.......
@@ -688,10 +690,11 @@ const dll = [
         'group': 'Trans',
         'func': 'generic',
         'fields': {
-            'key': ['KeyColorMap', sizeInt],
+            'key': ['ColorMapKey', sizeInt],
             'output': ['BlendmodeColorMap', sizeInt],
-            'mapCycling': ['CycleModeColorMap', sizeInt],
-            null0: 2,
+            'mapCycling': ['ColorMapCycleMode', sizeInt],
+            'adjustBlend': 1,
+            null0: 1,
             'dontSkipFastBeats': ['Bool', 1],
             'cycleSpeed': 1, // 1 to 64
             'maps': 'ColorMaps',
@@ -712,7 +715,7 @@ const dll = [
         'name': 'Convolution Filter',
         'code': // Holden03: Convolution Filter....
             [0x48, 0x6F, 0x6C, 0x64, 0x65, 0x6E, 0x30, 0x33, 0x3A, 0x20, 0x43, 0x6F, 0x6E, 0x76, 0x6F, 0x6C, 0x75, 0x74, 0x69, 0x6F, 0x6E, 0x20, 0x46, 0x69, 0x6C, 0x74, 0x65, 0x72, 0x00, 0x00, 0x00, 0x00],
-        'group': 'Misc',
+        'group': 'Trans',
         'func': 'generic',
         'fields': {
             'enabled': ['Bool', sizeInt],
@@ -741,7 +744,8 @@ const dll = [
         'group': 'Misc',
         'func': 'generic',
         'fields': {
-            'mode': ['Map4', { 1144: 'RGB', 1020: 'RBG', 1019: 'BRG', 1021: 'BGR', 1018: 'GBR', 1022: 'GRB' }], // strange... would make sense as '1024-mode' but something goes awry at 'RGB'.
+            // some keys seeem to have changed between versions.
+            'mode': ['Map4', { 1023: 'RGB', 1144: 'RGB', 1020: 'RBG', 1019: 'BRG', 1021: 'BGR', 1018: 'GBR', 1022: 'GRB', 1183: 'RGB'/*1183 (probably from an old APE version?) presents as if nothing is selected, so set to RGB*/ }],
             'onBeatRandom': ['Bool', sizeInt],
         }
     },
@@ -809,6 +813,19 @@ const dll = [
             'delay4': sizeInt,
             'useBeats5': ['Bool', sizeInt],
             'delay5': sizeInt,
+        }
+    },
+    {
+        'name': 'Buffer Blend',
+        'code': // Misc: Buffer blend..............
+            [0x4D, 0x69, 0x73, 0x63, 0x3A, 0x20, 0x42, 0x75, 0x66, 0x66, 0x65, 0x72, 0x20, 0x62, 0x6C, 0x65, 0x6E, 0x64, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00],
+        'group': 'Misc',
+        'func': 'generic',
+        'fields': {
+            'enabled': ['Bool', sizeInt],
+            'bufferB': ['BufferBlendBuffer', sizeInt],
+            'bufferA': ['BufferBlendBuffer', sizeInt],
+            'mode': ['BufferBlendMode', sizeInt],
         }
     },
     {
@@ -908,9 +925,41 @@ const dll = [
         'func': 'generic',
         'fields': {
             'enabled': ['Bool', sizeInt],
-            'effect': 'MultiFilterEffect',
+            'effect': ['MultiFilterEffect', sizeInt],
             'onBeat': ['Bool', sizeInt],
             null0: ['Bool', sizeInt]
+        }
+    },
+    {'name': 'Particle System',
+        'code': // ParticleSystem..................
+            [0x50, 0x61, 0x72, 0x74, 0x69, 0x63, 0x6C, 0x65, 0x53, 0x79, 0x73, 0x74, 0x65, 0x6D, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00],
+        'group': 'Render',
+        'func': 'generic',
+        'fields': {
+            'enabled': ['Bool', 1],
+            'bigParticles': ['Bool', 1],
+            null0: 2,
+            'particles': sizeInt,
+            'particles+/-': sizeInt,
+            'lifetime': sizeInt,
+            'lifetime+/-': sizeInt,
+            null1: 32,
+            'spread': 'Float', // 0 to 1
+            'initialSpeed': 'Float',
+            'initialSpeed+/-': 'Float',
+            'acceleration': 'Float',
+            'accelerationType': ['ParticleSystemAccelerationType', sizeInt],
+            'color': 'Color',
+            'color+/-': 'Color',
+            'colorChange3': 1,
+            'colorChange2': 1,
+            'colorChange1': 1,
+            null2: 1,
+            'colorChange+/-3': 1,
+            'colorChange+/-2': 1,
+            'colorChange+/-1': 1,
+            null3: 1,
+            'colorBounce': ['ParticleSystemColorBounce', sizeInt]
         }
     }
     /*

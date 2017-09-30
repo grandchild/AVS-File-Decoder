@@ -62,6 +62,7 @@ Commonly, you would run `webvsc "avs/**/.avs"` to convert a bunch of presets, or
 
 ### Misc
 - `AVS Trans Automation`
+- `Buffer Blend`
 - `Buffer Save`
 - `Comment`
 - `Custom BPM`
@@ -88,7 +89,7 @@ Commonly, you would run `webvsc "avs/**/.avs"` to convert a bunch of presets, or
 - `FadeOut`
 - `Fast Brightness`
 - `Grain`
-- `Interference`
+- `Interferences`
 - `Interleave`
 - `Invert`
 - `Mirror`
@@ -117,6 +118,7 @@ Commonly, you would run `webvsc "avs/**/.avs"` to convert a bunch of presets, or
 - `Moving Particle`
 - `OnBeat Clear`
 - `Oscilliscope Star`
+- `Particle System`
 - `Picture`
 - `Picture II`
 - `Ring`

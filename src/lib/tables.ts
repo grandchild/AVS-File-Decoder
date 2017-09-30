@@ -1,4 +1,4 @@
-const blendmodesIn = {
+const blendmodeIn = {
      '0': 'Ignore',
      '1': 'Replace',
      '2': '50/50',
@@ -14,7 +14,7 @@ const blendmodesIn = {
     '12': 'Buffer',
 };
 
-const blendmodesOut = {
+const blendmodeOut = {
      '0': 'Replace',
      '1': 'Ignore',
      '2': 'Maximum',
@@ -31,7 +31,7 @@ const blendmodesOut = {
     '13': 'Buffer',
 };
 
-const blendmodesBuffer = {
+const blendmodeBuffer = {
      '0': 'Replace',
      '1': '50/50',
      '2': 'Additive',
@@ -46,7 +46,7 @@ const blendmodesBuffer = {
     '11': 'Adjustable',
 };
 
-const blendmodesRender = {
+const blendmodeRender = {
     '0': 'Replace',
     '1': 'Additive',
     '2': 'Maximum',
@@ -58,7 +58,7 @@ const blendmodesRender = {
     '8': 'XOR',
 };
 
-const blendmodesPicture2 = {
+const blendmodePicture2 = {
      '0': 'Replace',
      '1': 'Additive',
      '2': 'Maximum',
@@ -72,24 +72,25 @@ const blendmodesPicture2 = {
     '10': 'Ignore',
 };
 
-const blendmodesColorMap = {
+const blendmodeColorMap = {
     '0': 'Replace',
     '1': 'Additive',
     '2': 'Maximum',
-    '3': '50/50',
-    '4': 'Dest-Src',
-    '5': 'Src-Dest',
-    '6': 'Multiply',
-    '7': 'Adjustable',
+    '3': 'Minimum',
+    '4': '50/50',
+    '5': 'Dest-Src',
+    '6': 'Src-Dest',
+    '7': 'Multiply',
     '8': 'XOR',
+    '9': 'Adjustable',
 };
 
-const blendmodesTexer = {
+const blendmodeTexer = {
     '0': 'Texture',
     '1': 'Masked Texture'
 };
 
-const keysColorMap = {
+const colorMapKey = {
     '0': 'Red',
     '1': 'Green',
     '2': 'Blue',
@@ -98,13 +99,13 @@ const keysColorMap = {
     '5': '(R+G+B)/3',
 };
 
-const cycleModesColorMap = {
+const colorMapCycleMode = {
     '0': 'None (Map 1)',
     '1': 'OnBeat Random',
     '2': 'OnBeat Sequential',
 };
 
-const buffermodes = {
+const bufferMode = {
     '0': 'Save',
     '1': 'Restore',
     '2': 'AlternateSaveRestore',
@@ -116,29 +117,29 @@ const coordinates = {
     '1': 'Cartesian',
 };
 
-const drawModes = {
+const drawMode = {
     '0': 'Dots',
     '1': 'Lines',
 };
 
-const audioChannels = {
+const audioChannel = {
     '0': 'Left',
     '1': 'Right',
     '2': 'Center',
 };
 
-const audioSources = {
+const audioSource = {
     '0': 'Waveform',
     '1': 'Spectrum',
 };
 
-const positionsX = {
+const positionX = {
     '0': 'Left',
     '1': 'Right',
     '2': 'Center',
 };
 
-const positionsY = {
+const positionY = {
     '0': 'Top',
     '1': 'Bottom',
     '2': 'Center',
@@ -151,9 +152,52 @@ const multiFilterEffect = {
     '3': 'Infinite Root Multiplier + Small Border Convolution'
 };
 
+const bufferBlendMode = {
+     '0': 'a=b (Replace)',
+     '1': 'a=a+b (Additive)',
+     '2': 'a=max(a,b) (Maximum)',
+     '3': 'a=(a+b)/2 (50/50)',
+     '4': 'a=a-b (Subtractive 1)',
+     '5': 'a=b-a (Subtractive 2)',
+     '6': 'a=a*b (Multiply)',
+     '7': 'a=a*x+b*(1-x) (Adjustable)',
+     '8': 'a=a xor b (XOR)',
+     '9': 'a=min(a,b) (Minimum)',
+    '10': 'a=|a-b| (Absolute difference)'
+};
+
+const bufferBlendBuffer = {
+    '0': 0,
+    '1': 1,
+    '2': 2,
+    '3': 3,
+    '4': 4,
+    '5': 5,
+    '6': 6,
+    '7': 7,
+    '8': 'Current'
+};
+
+const particleSystemAccelerationType = {
+    '0': 'Constant',
+    '1': 'Fade out by 0.9',
+    '2': 'Fade out by 0.6',
+    '3': 'Cosine',
+    '4': 'Squared Cosine'
+};
+
+const particleSystemColorBounce = {
+    '0': 'Stop',
+    '1': 'Wrap each',
+    '2': 'Wave each',
+    '3': 'Wrap all',
+    '4': 'Wave all'
+};
+
+
 // pretty much directly from vis_avs/r_trans.cpp
 // [name, script code representation (if any), 0:polar/1:cartesian]
-const movementEffects = {
+const movementEffect = {
      '0': ['None', '', 0],
      '1': ['Slight Fuzzify', '', 0],
      '2': ['Shift Rotate Left', 'x=x+1/32, // use wrap for this one', 1],
@@ -181,22 +225,26 @@ const movementEffects = {
 };
 
 export {
-    audioChannels,
-    audioSources,
-    blendmodesBuffer,
-    blendmodesColorMap,
-    blendmodesIn,
-    blendmodesOut,
-    blendmodesPicture2,
-    blendmodesRender,
-    blendmodesTexer,
-    buffermodes,
+    audioChannel,
+    audioSource,
+    blendmodeBuffer,
+    blendmodeColorMap,
+    blendmodeIn,
+    blendmodeOut,
+    blendmodePicture2,
+    blendmodeRender,
+    blendmodeTexer,
+    bufferBlendMode,
+    bufferBlendBuffer,
+    bufferMode,
+    colorMapKey,
+    colorMapCycleMode,
     coordinates,
-    cycleModesColorMap,
-    drawModes,
-    keysColorMap,
-    movementEffects,
+    drawMode,
+    movementEffect,
     multiFilterEffect,
-    positionsX,
-    positionsY
+    particleSystemAccelerationType,
+    particleSystemColorBounce,
+    positionX,
+    positionY
 };

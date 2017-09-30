@@ -9,24 +9,18 @@ import { basename, dirname, join } from 'path';
 
 // Modules
 import { convertPreset } from './lib/convert';
-
-// TODO: move to declaration file
-interface Arguments {
-    debug?: boolean;
-    silent?: boolean;
-    minify?: boolean;
-}
+import { Arguments } from './lib/types';
 
 program
     .version(require('../package.json').version)
     .usage('[options] <file(s)>')
-    .option('-d, --debug', 'Prints in-depth information')
+    .option('-d, --debug', 'Prints in-depth information', (d, t:number):number => { return t+1; }, 1)
     .option('-m, --minify', 'Minify generated JSON')
     .option('-s, --silent', 'Prints errors only')
     .parse(argv);
 
 const convert = (file: string, args: Arguments): void => {
-    readFile(file, (error: Object, data: Object) => {
+    readFile(file, (error: Object, data: ArrayBuffer) => {
         if (args.silent !== true) console.log(`\nReading "${file}"`);
 
         let whitespace: number = (program.minify === true) ? 0 : 4;
@@ -51,7 +45,7 @@ if (program.args !== 'undefined' && program.args.length > 0) {
             if (error) throw error;
 
             files.forEach( file => {
-                lstat(file, (error: Object, stats: Object) => {
+                lstat(file, (error: Object, stats: {isFile}) => {
                     if (error) return;
 
                     if (stats.isFile()) {
