@@ -14,9 +14,11 @@ const sizeInt = 4;
 let verbosity = 0; // log individual key:value fields
 const componentTable: ComponentDefinition[] = Components.builtin.concat(Components.dll);
 
+
 const convertPreset = (presetFile: ArrayBuffer, file: string, args: Arguments): Object => {
     verbosity = args.debug;
     verbosity = args.silent ? -1 : verbosity;
+    Util.setHiddenStrings(args.hidden);
 
     let modifiedTime = statSync(file).mtime;
     let preset = {
@@ -287,9 +289,10 @@ const decode_movement = (blob: Uint8Array, offset: number, _: Object, name: stri
     let effectIdOld = Util.getUInt32(blob, offset);
     let effect = [];
     let code;
+    let hidden: string[];
     if (effectIdOld !== 0) {
         if (effectIdOld === 0x7fff) {
-            let strAndSize: [string, number] = ["", 0];
+            let strAndSize: [string, number]|[string, number, string[]] = ["", 0];
             if (blob[offset + sizeInt] === 1) { // new-version marker
                 strAndSize = Util.getSizeString(blob, offset + sizeInt + 1);
             } else {
@@ -297,6 +300,9 @@ const decode_movement = (blob: Uint8Array, offset: number, _: Object, name: stri
             }
             offset += strAndSize[1];
             code = strAndSize[0];
+            if (strAndSize.length > 2) {
+                hidden = (<[string, number, string[]]>strAndSize)[2];
+            }
         } else {
             if (effectIdOld > 15) {
                 if (verbosity >= 0) {
@@ -328,6 +334,7 @@ const decode_movement = (blob: Uint8Array, offset: number, _: Object, name: stri
         comp['coordinates'] = effect[2]; // overwrite
     }
     comp['code'] = code;
+    if (hidden) comp['_hidden'] = hidden;
     return comp;
 };
 

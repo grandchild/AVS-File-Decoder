@@ -6,6 +6,7 @@ interface Arguments {
     debug?: number;
     silent?: boolean;
     minify?: boolean;
+    hidden?: boolean;
 }
 
 interface ColorMap {
@@ -22,6 +23,7 @@ interface CodeSection {
 	perFrame: string;
 	onBeat?: string;
 	perPoint?: string;
+	_hidden?: string[];
 }
 
 interface ComponentDefinition {

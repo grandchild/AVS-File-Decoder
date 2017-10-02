@@ -10,6 +10,10 @@ const allFields: boolean  = true;
 const presetHeaderLength: number = 25;
 const builtinMax: number = 16384;
 
+let hiddenStrings: boolean = false;
+const setHiddenStrings = (value: boolean): void => { hiddenStrings = value; }
+
+
 class ConvertException implements Error {
     name: string = 'ConvertException';
     message: string;
@@ -157,12 +161,15 @@ const getBoolified = (num: number): boolean => {
     return num === 0 ? false : true;
 };
 
-const getSizeString = (blob: Uint8Array, offset: number, size?: number): [string, number] => {
+const getSizeString = (blob: Uint8Array, offset: number, size?: number): [string, number]|[string, number, string[]] => {
     let add = 0;
     let result = '';
+    let getHidden: boolean = false;
     if (!size) {
         size = this.getUInt32(blob, offset);
         add = sizeInt;
+    } else {
+        getHidden = hiddenStrings;
     }
     let end = offset + size + add;
     let i = offset + add;
@@ -171,8 +178,41 @@ const getSizeString = (blob: Uint8Array, offset: number, size?: number): [string
         result += String.fromCharCode(c);
         c = blob[++i];
     }
-    return [result, size + add];
+    let hidden: string[] = [];
+    if (getHidden) {
+        hidden = getHiddenStrings(blob, i, end);
+    }
+    if (hidden.length == 0) {
+        return [result, size + add];
+    } else {
+        return [result, size + add, hidden];
+    }
 };
+
+const getHiddenStrings = (blob: Uint8Array, i: number, end: number): string[] => {
+    let nonPrintables: number[] = [
+        0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,
+        17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,
+        127,129,141,143,144,157,173];
+    let hidden: string[] = [];
+    while (i < end) {
+        let c = blob[i];
+        let s: string = "";
+        while(nonPrintables.indexOf(c) < 0 && i < end) {
+            s += String.fromCharCode(c);
+            c = blob[++i];
+        }
+        i++;
+        // mostly of interest might be (lost) code, and thus check for '=' to
+        // weed out a lot of random uninteresting strings.
+        // TODO: more sophisticated filter
+        if (s.length > 4 && s.indexOf('=') >= 0) {
+            // console.log("found hidden string:", s);
+            hidden.push(s);
+        }
+    }
+    return hidden;
+}
 
 const getNtString = (blob: Uint8Array, offset: number): [string, number] => {
     let result: string = '';
@@ -325,15 +365,22 @@ const get256CodeIFB = (blob: Uint8Array, offset: number): [CodeSection, number] 
 const getCodeSection = (blob: Uint8Array, offset: number, map: [string, number][], nt: boolean = false, fixedSize?: number): [CodeSection, number] => {
     let strings = new Array(map.length);
     let totalSize = 0;
-    let strAndSize;
+    let strAndSize: [string, number]|[string, number, string[]];
+    let hidden: string[] = [];
     for (let i = 0, p = offset; i < map.length; i++, p += strAndSize[1]) {
         strAndSize = nt ? getNtString(blob, p) : getSizeString(blob, p, fixedSize);
         totalSize += strAndSize[1];
         strings[i] = strAndSize[0];
+        if (strAndSize.length > 2) {
+            hidden = hidden.concat((<[string, number, string[]]>strAndSize)[2]);
+        }
     }
     let code = {};
     for (let i = 0; i < strings.length; i++) {
         code[map[i][0]] = strings[map[i][1]];
+    }
+    if (hidden.length > 0) {
+        code['_hidden'] = hidden;
     }
     return [<CodeSection>code, totalSize];
 };
@@ -477,4 +524,5 @@ export {
     presetHeaderLength,
     printTable,
     removeSpaces,
+    setHiddenStrings,
 };
