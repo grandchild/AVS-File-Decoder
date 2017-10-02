@@ -287,7 +287,7 @@ const decode_movement = (blob: Uint8Array, offset: number, _: Object, name: stri
     let effect = [];
     let code;
     if (effectIdOld !== 0) {
-        if (effectIdOld === 32767) {
+        if (effectIdOld === 0x7fff) {
             let strAndSize: [string, number] = ["", 0];
             if (blob[offset + sizeInt] === 1) { // new-version marker
                 strAndSize = Util.getSizeString(blob, offset + sizeInt + 1);
@@ -321,7 +321,11 @@ const decode_movement = (blob: Uint8Array, offset: number, _: Object, name: stri
     comp['sourceMapped'] = Util.getBool(blob, offset + sizeInt * 2, sizeInt)[0];
     comp['coordinates'] = Table.coordinates[Util.getUInt32(blob, offset + sizeInt * 3)];
     comp['bilinear'] = Util.getBool(blob, offset + sizeInt * 4, sizeInt)[0];
-    comp['wrap'] = Util.getBool(blob, offset + sizeInt * 5, sizeInt)[0];
+    if(offset + sizeInt * 5 <= blob.length - sizeInt) {
+        comp['wrap'] = Util.getBool(blob, offset + sizeInt * 5, sizeInt)[0];
+    } else {
+        comp['wrap'] = false;
+    }
     if (effect && effect.length && effectIdOld !== 1 && effectIdOld !== 7) { // 'slight fuzzify' and 'blocky partial out' have no script representation.
         code = effect[1];
         comp['coordinates'] = effect[2]; // overwrite
