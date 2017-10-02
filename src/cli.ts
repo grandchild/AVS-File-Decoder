@@ -3,7 +3,7 @@
 // Dependencies
 import * as program from 'commander';
 import { argv }from 'process';
-import { lstat, readFile, writeFileSync } from 'fs';
+import { lstat, readFile, writeFileSync } from 'graceful-fs';
 import * as glob from 'glob';
 import { basename, dirname, join } from 'path';
 
@@ -41,11 +41,11 @@ const convert = (file: string, args: Arguments): void => {
 
 if (program.args !== 'undefined' && program.args.length > 0) {
     program.args.forEach( (element: string, index: number) => {
-        glob(element, (error: Object, files: any[]) => {
+        glob(element, (error: Error, files: string[]) => {
             if (error) throw error;
 
             files.forEach( file => {
-                lstat(file, (error: Object, stats: {isFile}) => {
+                lstat(file, (error: Error, stats: {isFile}) => {
                     if (error) return;
 
                     if (stats.isFile()) {
