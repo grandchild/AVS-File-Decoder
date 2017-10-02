@@ -54,7 +54,11 @@ $ webvsc
     -s, --silent   prints errors only
 ```
 
-Commonly, you would run `webvsc "avs/**/.avs"` to convert a bunch of presets, or just one.
+Commonly, you would run `webvsc "avs/**/*.avs"` to convert a bunch of presets, or just one.
+
+If you have literally thousands of presets you might run into _EMFILE_ errors. In that case use something like:
+
+`for dir in avs/*; do echo $dir; webvsc $dir/**/*.avs --silent; done`
 
 ## Component Checklist:
 
