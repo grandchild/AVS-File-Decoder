@@ -745,7 +745,7 @@ const dll: ComponentDefinition[] = [
         'func': 'generic',
         'fields': {
             // some keys seeem to have changed between versions.
-            'mode': ['Map4', { 1023: 'RGB', 1144: 'RGB', 1020: 'RBG', 1019: 'BRG', 1021: 'BGR', 1018: 'GBR', 1022: 'GRB', 1183: 'RGB'/*1183 (probably from an old APE version?) presents as if nothing is selected, so set to RGB*/ }],
+            'mode': ['Map4', { 0: 'RGB', 1023: 'RGB', 1144: 'RGB', 1020: 'RBG', 1019: 'BRG', 1021: 'BGR', 1018: 'GBR', 1022: 'GRB', 1183: 'RGB'/*1183 (probably from an old APE version?) presents as if nothing is selected, so set to RGB*/ }],
             'onBeatRandom': ['Bool', sizeInt],
         }
     },
