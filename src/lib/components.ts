@@ -599,7 +599,7 @@ const builtin: ComponentDefinition[] = [
         'name': 'Dynamic Movement', // r_dmove.cpp
         'code': 0x2B,
         'group': 'Trans',
-        'func': 'generic',
+        'func': 'versioned_generic',
         'fields': {
             'new_version': ['Bool', 1],
             'code': 'CodePFBI',
