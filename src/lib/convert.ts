@@ -59,6 +59,7 @@ const convertComponents = (blob: Uint8Array): Object => {
         let i = getComponentIndex(code, blob, fp);
         let isDll: number = (code !== 0xfffffffe && code >= Util.builtinMax) ? 1 : 0;
         let size = getComponentSize(blob, fp + sizeInt + isDll * 32);
+        // console.log("component size", size, "blob size", blob.length);
         if (i < 0) {
             res = { 'type': 'Unknown: (' + (-i) + ')' };
         } else {
@@ -321,11 +322,7 @@ const decode_movement = (blob: Uint8Array, offset: number, _: Object, name: stri
     comp['sourceMapped'] = Util.getBool(blob, offset + sizeInt * 2, sizeInt)[0];
     comp['coordinates'] = Table.coordinates[Util.getUInt32(blob, offset + sizeInt * 3)];
     comp['bilinear'] = Util.getBool(blob, offset + sizeInt * 4, sizeInt)[0];
-    if(offset + sizeInt * 5 <= blob.length - sizeInt) {
-        comp['wrap'] = Util.getBool(blob, offset + sizeInt * 5, sizeInt)[0];
-    } else {
-        comp['wrap'] = false;
-    }
+    comp['wrap'] = Util.getBool(blob, offset + sizeInt * 5, sizeInt)[0];
     if (effect && effect.length && effectIdOld !== 1 && effectIdOld !== 7) { // 'slight fuzzify' and 'blocky partial out' have no script representation.
         code = effect[1];
         comp['coordinates'] = effect[2]; // overwrite

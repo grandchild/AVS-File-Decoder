@@ -74,6 +74,7 @@ const getBit = (blob: Uint8Array, offset: number, pos: any): [number, number] =>
 };
 
 const getUInt = (blob: Uint8Array, offset: number, size: number): number => {
+    if(offset > blob.length - size) return 0;
     switch(size) {
         case 1:
             return blob[offset];
@@ -88,6 +89,7 @@ const getUInt = (blob: Uint8Array, offset: number, size: number): number => {
 
 const getUInt32 = (blob: Uint8Array, offset: number): number => {
     if (!offset) offset = 0;
+    if(offset > blob.length - sizeInt) return 0;
     let array = blob.buffer.slice(blob.byteOffset + offset, blob.byteOffset + offset + sizeInt);
     try{
         return new Uint32Array(array, 0, 1)[0];
@@ -103,9 +105,10 @@ const getUInt32 = (blob: Uint8Array, offset: number): number => {
 
 const getInt32 = (blob: Uint8Array, offset: number): [number, number] => {
     if (!offset) offset = 0;
+    if(offset > blob.length - sizeInt) return [0, sizeInt];
     let array = blob.buffer.slice(blob.byteOffset + offset, blob.byteOffset + offset + sizeInt);
     try{
-        return [new Int32Array(array, 0, 1)[0], 4];
+        return [new Int32Array(array, 0, 1)[0], sizeInt];
     } catch(e) {
         if (e instanceof RangeError) {
             throw new ConvertException(`Invalid offset ${offset} to getInt32.\nIs this preset very old? Send it in, so we can look at it!`);
@@ -117,6 +120,7 @@ const getInt32 = (blob: Uint8Array, offset: number): [number, number] => {
 
 const getUInt64 = (blob: Uint8Array, offset: number): number => {
     if (!offset) offset = 0;
+    if(offset > blob.length - sizeInt * 2) return 0;
     let array = blob.buffer.slice(blob.byteOffset + offset, blob.byteOffset + offset + sizeInt * 2);
     try {
         let two32 = new Uint32Array(array, 0, 2);
