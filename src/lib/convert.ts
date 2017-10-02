@@ -50,7 +50,11 @@ const convertComponents = (blob: Uint8Array): Object => {
     let fp: number = 0;
     let components: any[] = [];
     let res;
-    while (fp < blob.length) {
+    // read file as long as there are compontents left.
+    // a component takes at least two int32s of space, if there are less bytes than that left,
+    // ignore them. usually fp < blob.length should suffice but some rare presets have trailing
+    // bytes. found in one preset's trailing colormap so far.
+    while (fp <= blob.length - sizeInt*2) {
         let code = Util.getUInt32(blob, fp);
         let i = getComponentIndex(code, blob, fp);
         let isDll: number = (code !== 0xfffffffe && code >= Util.builtinMax) ? 1 : 0;
