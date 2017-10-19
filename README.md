@@ -1,40 +1,44 @@
-# AVS File Decoder
+# webvsc
 
 [![The MIT License](https://img.shields.io/badge/license-MIT-orange.svg?style=flat-square)](http://opensource.org/licenses/MIT)
 [![Travis CI](https://img.shields.io/travis/grandchild/AVS-File-Decoder/typescript.svg?style=flat-square)](https://travis-ci.org/grandchild/AVS-File-Decoder)
 
 ## Description
 
-This little Javascript reads out the file format of Nullsoft's _Advanced Visualization Studio_ and rewrites it as JSON readable by [Webvs](https://github.com/azeem/webvs).
+CLI tool to convert [Winamp AVS presets](https://www.wikiwand.com/en/Advanced_Visualization_Studio) into [Webvs](https://github.com/azeem/webvs) native JSON format. Take a look at the [supported components](doc/components.md).
 
-[Live Demo](http://grandchild.github.io/AVS-File-Decoder/) (older version)
+[Live Demo](http://grandchild.github.io/AVS-File-Decoder/) (uses an older version)
 
 ## Installation
 
-### GitHub
+### npm
 
-Clone the repository `git clone https://github.com/grandchild/AVS-File-Decoder.git`
-
-### Download
-
-Use the '[zip download](https://github.com/grandchild/AVS-File-Decoder/archive/typescript.zip)' option and extract its content
-
-### Prerequisites
-
-Make sure you already have [Node](https://nodejs.org) installed and in your [PATH environmental variable](https://superuser.com/questions/284342/what-are-path-and-other-environment-variables-and-how-can-i-set-or-use-them/284351#284351). Using [Yarn](https://yarnpkg.com/) is recommended over `npm`, but entirely optional.
+Use your preferred [Node](https://nodejs.org) package manager to install the CLI globally
 
 ```sh
-$ cd AVS-File-Decoder
+$ yarn global add webvsc || npm install --global webvsc
+```
 
-# Install Dependencies
+### Git
+
+To install manually, follow these steps
+
+```sh
+# Clone the repository and change directory
+$ git clone https://github.com/grandchild/AVS-File-Decoder.git webvsc
+$ cd webvsc
+
+# Install dependencies
 $ yarn || npm install
 
-# Build
+# Build from source code
 $ yarn build || npm run build
 
-# Sym-link webvsc.js
+# Link script
 $ yarn link || npm link
 ```
+
+## Usage
 
 ### CLI
 
@@ -54,89 +58,13 @@ $ webvsc
     -s, --silent   prints errors only
 ```
 
-Commonly, you would run `webvsc "avs/**/*.avs"` to convert a bunch of presets, or just one.
+Commonly, you would run `webvsc "avs/**/*.avs"` to convert a bunch of presets, or just one. When using wildcards, it's important to wrap the path in quotes.
+
+### Troubleshooting
 
 If you have literally thousands of presets you might run into _EMFILE_ errors. In that case use something like:
 
 `for dir in avs/*; do echo $dir; webvsc $dir/**/*.avs --silent; done`
-
-## Component Checklist:
-
-- `Effect List`
-
-### Misc
-- `AVS Trans Automation`
-- `Buffer Blend`
-- `Buffer Save`
-- `Comment`
-- `Custom BPM`
-- `Framerate Limiter`
-- `Global Variables`
-- `MIDI Trace`
-- `Set Render Mode`
-
-### Trans
-- `Blitter Feedback`
-- `Blur`
-- `Brightness`
-- `Bump`
-- `Channel Shift`
-- `Color Clip`
-- `Color Map`
-- `Color Modifier`
-- `Color Reduction`
-- `Colorfade`
-- `Convolution Filter`
-- `Dynamic Distance Modifier`
-- `Dynamic Movement`
-- `Dynamic Shift`
-- `FadeOut`
-- `Fast Brightness`
-- `Grain`
-- `Interferences`
-- `Interleave`
-- `Invert`
-- `Mirror`
-- `Mosaic`
-- `Movement`
-- `Multi Delay`
-- `Multi Filter`
-- `Multiplier`
-- `Normalize`
-- `Roto Blitter`
-- `Scatter`
-- `Unique Tone`
-- `Video Delay`
-- `Water Bump`
-- `Water`
-
-### Render
-- `AVI`
-- `Bass Spin`
-- `Clear Screen`
-- `Dot Fountain`
-- `Dot Grid`
-- `Dot Plane`
-- `Fluid`
-- `FyrewurX`
-- `Moving Particle`
-- `OnBeat Clear`
-- `Oscilliscope Star`
-- `Particle System`
-- `Picture`
-- `Picture II`
-- `Ring`
-- `Rotating Stars`
-- `Simple`
-- `Starfield`
-- `Super Scope`
-- `SVP`
-- `Texer`
-- `Texer II`
-- `Text`
-- `Timescope`
-- `Triangle`
-
 
 ## Authors
 
