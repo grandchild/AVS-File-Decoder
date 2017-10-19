@@ -34,9 +34,9 @@ const convertPreset = (presetFile: ArrayBuffer, file: string, args: Arguments): 
         preset['components'] = components;
     } catch (e) {
         // TODO
-        if (verbosity < 0) console.log(chalk.red(`Error in '${file}'`));
-        if (verbosity >= 1) console.log(chalk.red(e.stack));
-        else console.log(chalk.red(e + '\n'));
+        if (verbosity < 0) console.error(chalk.red(`Error in '${file}'`));
+        if (verbosity >= 1) console.error(chalk.red(e.stack));
+        else console.error(chalk.red(e + '\n'));
         // if(e instanceof Util.ConvertException) {
         //     console.error('Error: '+e.message);
         //     return null;
@@ -143,7 +143,7 @@ const decode_effectList = (blob: Uint8Array, offset: number, _: Object, name: st
         'output': Table['blendmodeOut'][blob[offset + 3]],
     };
     let modebit: boolean = Util.getBit(blob, offset, 7)[0] === 1; // is true in all presets I know, probably only for truly ancient versions
-    if (!modebit) { console.log(chalk.red('EL modebit is off!! If you\'re seeing this, send this .avs file in please!')); }
+    if (!modebit) { console.error(chalk.red('EL modebit is off!! If you\'re seeing this, send this .avs file in please!')); }
     let configSize: number = (modebit ? blob[offset + 4] : blob[offset]) + 1;
     if (configSize > 1) {
         comp['inAdjustBlend'] = Util.getUInt32(blob, offset + 5);
@@ -306,7 +306,7 @@ const decode_movement = (blob: Uint8Array, offset: number, _: Object, name: stri
         } else {
             if (effectIdOld > 15) {
                 if (verbosity >= 0) {
-                    console.log(chalk.red(`Movement: Unknown effect id ${effectIdOld}. This is a known bug.`));
+                    console.error(chalk.red(`Movement: Unknown effect id ${effectIdOld}. This is a known bug.`));
                     console.log(chalk.green('If you know an AVS version that will display this Movement as anything else but "None", then please send it in!'));
                 }
                 effect = Table.movementEffect[0];
