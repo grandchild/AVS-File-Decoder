@@ -1,7 +1,7 @@
 # Project
 **/_*.*
 assets/
-build/
+bin/
 
 # Global
 .Sync*

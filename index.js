@@ -1,6 +1,8 @@
 #!/usr/bin/env node
 
+const join = require('path').join;
+
 /*  The TypeScript compiler does not support she-bangs,
- *  so we need this work-around :rolleyes:
+ *  so we need this stupid workaround 🙄
  */
-require('./build/cli.js');
+const init = require(join(__dirname, 'bin/webvsc.js'));
