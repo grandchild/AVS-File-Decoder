@@ -10,35 +10,35 @@ interface Arguments {
 }
 
 interface ColorMap {
-	index: number;
-	enabled: boolean;
-	map: { color: string, position: number }[];
-	id?: number;
-	fileName?: string;
+    index: number;
+    enabled: boolean;
+    map: { color: string, position: number }[];
+    id?: number;
+    fileName?: string;
 }
 
 interface CodeSection {
-	enabled?: boolean;
-	init: string;
-	perFrame: string;
-	onBeat?: string;
-	perPoint?: string;
-	_hidden?: string[];
+    enabled?: boolean;
+    init: string;
+    perFrame: string;
+    onBeat?: string;
+    perPoint?: string;
+    _hidden?: string[];
 }
 
 interface ComponentDefinition {
-	readonly name: string;
-	readonly code: number|number[];
-	readonly group: string;
-	readonly func: string;
-	readonly fields?: any;
+    readonly name: string;
+    readonly code: number|number[];
+    readonly group: string;
+    readonly func: string;
+    readonly fields?: any;
 }
 
 export {
-	Arguments,
-	CodeSection,
-	ColorMap,
-	ComponentDefinition,
-	jsontypes,
-	uint8,
+    Arguments,
+    CodeSection,
+    ColorMap,
+    ComponentDefinition,
+    jsontypes,
+    uint8,
 };

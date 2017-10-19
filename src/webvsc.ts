@@ -14,7 +14,7 @@ import { Arguments } from './lib/types';
 program
     .version(require('../package.json').version)
     .usage('[options] <file(s)>')
-    .option('-d, --debug', 'Prints in-depth information', (d, t:number):number => { return t+1; }, 0)
+    .option('-d, --debug', 'Prints in-depth information', (d, t: number): number => { return t + 1; }, 0)
     .option('-m, --minify', 'Minify generated JSON')
     .option('-s, --silent', 'Prints errors only')
     .option('-n, --no-hidden', 'Don\'t extract hidden strings from fixed-size strings')

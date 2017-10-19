@@ -56,7 +56,7 @@ const convertComponents = (blob: Uint8Array): Object => {
     // a component takes at least two int32s of space, if there are less bytes than that left,
     // ignore them. usually fp < blob.length should suffice but some rare presets have trailing
     // bytes. found in one preset's trailing colormap so far.
-    while (fp <= blob.length - sizeInt*2) {
+    while (fp <= blob.length - sizeInt * 2) {
         let code = Util.getUInt32(blob, fp);
         let i = getComponentIndex(code, blob, fp);
         let isDll: number = (code !== 0xfffffffe && code >= Util.builtinMax) ? 1 : 0;
@@ -205,7 +205,7 @@ const decode_generic = (blob: Uint8Array, offset: number, fields: Object, name: 
             size = f;
             try {
                 value = Util.getUInt(blob, offset, size);
-            } catch(e) {
+            } catch (e) {
                 throw new Util.ConvertException('Invalid field size: ' + f + '.');
             }
             lastWasABitField = false;
@@ -232,7 +232,7 @@ const decode_generic = (blob: Uint8Array, offset: number, fields: Object, name: 
                 value = Table[tableName][tableKey];
                 size = f[1];
             } else {
-                result = Util.callFunction(f[0], blob, offset, f[1])
+                result = Util.callFunction(f[0], blob, offset, f[1]);
                 size = result[1];
                 value = result[0];
             }
@@ -252,7 +252,7 @@ const decode_generic = (blob: Uint8Array, offset: number, fields: Object, name: 
             comp[k] = value;
             if (verbosity >= 2) {
                 console.log(chalk.dim('- key: ' + k + '\n- val: ' + value));
-                if (k == 'code') Util.printTable('- code', value);
+                if (k === 'code') Util.printTable('- code', value);
                 if (verbosity >= 3) console.log(chalk.dim('- offset: ' + offset + '\n- size: ' + size));
                 console.log();
             }
@@ -270,14 +270,14 @@ const decode_versioned_generic = (blob: Uint8Array, offset: number, fields: Obje
     } else {
         let oldFields = {};
         for (let key in fields) {
-            if (key == 'new_version') continue;
-            if (key == 'code') oldFields[key] = fields['code'].replace(/Code([IFBP]+)/, '256Code$1');
+            if (key === 'new_version') continue;
+            if (key === 'code') oldFields[key] = fields['code'].replace(/Code([IFBP]+)/, '256Code$1');
             else oldFields[key] = fields[key];
         }
         if (verbosity >= 3) console.log('oldFields, code changed to:', oldFields['code']);
         return decode_generic(blob, offset, oldFields, name, group, end);
     }
-}
+};
 
 const decode_movement = (blob: Uint8Array, offset: number, _: Object, name: string, group: string, end: number): Object => {
     let comp = {
@@ -292,7 +292,7 @@ const decode_movement = (blob: Uint8Array, offset: number, _: Object, name: stri
     let hidden: string[];
     if (effectIdOld !== 0) {
         if (effectIdOld === 0x7fff) {
-            let strAndSize: [string, number]|[string, number, string[]] = ["", 0];
+            let strAndSize: [string, number]|[string, number, string[]] = ['', 0];
             if (blob[offset + sizeInt] === 1) { // new-version marker
                 strAndSize = Util.getSizeString(blob, offset + sizeInt + 1);
             } else {
@@ -316,7 +316,7 @@ const decode_movement = (blob: Uint8Array, offset: number, _: Object, name: stri
         }
     } else {
         let effectIdNew: number = 0;
-        if(offset + sizeInt * 6 < end) {
+        if (offset + sizeInt * 6 < end) {
             effectIdNew = Util.getUInt32(blob, offset + sizeInt * 6); // 1*sizeInt, because of oldId=0, and 5*sizeint because of the other settings.
         }
         effect = Table.movementEffect[effectIdNew];

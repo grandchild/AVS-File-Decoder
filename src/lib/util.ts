@@ -11,7 +11,7 @@ const presetHeaderLength: number = 25;
 const builtinMax: number = 16384;
 
 let hiddenStrings: boolean = false;
-const setHiddenStrings = (value: boolean): void => { hiddenStrings = value; }
+const setHiddenStrings = (value: boolean): void => { hiddenStrings = value; };
 
 
 class ConvertException implements Error {
@@ -46,7 +46,7 @@ const printTable = (name: string, table: any): void => {
     for (let key in table) {
         console.log(`\t${key}: ${table[key] ? table[key].replace(/\n/g, '\n\t\t') : 'undefined'}`);
     }
-}
+};
 
 function callFunction(funcName: string, blobOrValue: Uint8Array, offset?: number, extra?: any): [jsontypes, number];
 function callFunction(funcName: string, blobOrValue: Uint8Array, offset?: number, extra?: void): [jsontypes, number];
@@ -60,7 +60,7 @@ function callFunction(funcName, blobOrValue, offset?, extra?): any {
         }
     } catch (e) {
         if (e.message.search(/not a function|has no method/) >= 0) {
-            throw new ConvertException(`Method or table '${'get'+funcName}' was not found. Correct capitalization?`);
+            throw new ConvertException(`Method or table '${'get' + funcName}' was not found. Correct capitalization?`);
         } else {
             throw e;
         }
@@ -78,26 +78,26 @@ const getBit = (blob: Uint8Array, offset: number, pos: any): [number, number] =>
 };
 
 const getUInt = (blob: Uint8Array, offset: number, size: number): number => {
-    if(offset > blob.length - size) return 0;
-    switch(size) {
+    if (offset > blob.length - size) return 0;
+    switch (size) {
         case 1:
             return blob[offset];
         case sizeInt:
             return this.getUInt32(blob, offset);
-        case sizeInt*2:
+        case sizeInt * 2:
             return this.getUInt64(blob, offset);
         default:
-            throw new ConvertException(`Invalid integer size '${size}', only 1, ${sizeInt} and ${sizeInt*2} allowed.`);
+            throw new ConvertException(`Invalid integer size '${size}', only 1, ${sizeInt} and ${sizeInt * 2} allowed.`);
     }
-}
+};
 
 const getUInt32 = (blob: Uint8Array, offset: number): number => {
     if (!offset) offset = 0;
-    if(offset > blob.length - sizeInt) return 0;
+    if (offset > blob.length - sizeInt) return 0;
     let array = blob.buffer.slice(blob.byteOffset + offset, blob.byteOffset + offset + sizeInt);
-    try{
+    try {
         return new Uint32Array(array, 0, 1)[0];
-    } catch(e) {
+    } catch (e) {
         if (e instanceof RangeError) {
             console.log(chalk.red(e.stack));
             throw new ConvertException(`Invalid offset ${offset} to getUInt32.\nIs this preset very old? Send it in, so we can look at it!`);
@@ -109,11 +109,11 @@ const getUInt32 = (blob: Uint8Array, offset: number): number => {
 
 const getInt32 = (blob: Uint8Array, offset: number): [number, number] => {
     if (!offset) offset = 0;
-    if(offset > blob.length - sizeInt) return [0, sizeInt];
+    if (offset > blob.length - sizeInt) return [0, sizeInt];
     let array = blob.buffer.slice(blob.byteOffset + offset, blob.byteOffset + offset + sizeInt);
-    try{
+    try {
         return [new Int32Array(array, 0, 1)[0], sizeInt];
-    } catch(e) {
+    } catch (e) {
         if (e instanceof RangeError) {
             throw new ConvertException(`Invalid offset ${offset} to getInt32.\nIs this preset very old? Send it in, so we can look at it!`);
         } else {
@@ -124,12 +124,12 @@ const getInt32 = (blob: Uint8Array, offset: number): [number, number] => {
 
 const getUInt64 = (blob: Uint8Array, offset: number): number => {
     if (!offset) offset = 0;
-    if(offset > blob.length - sizeInt * 2) return 0;
+    if (offset > blob.length - sizeInt * 2) return 0;
     let array = blob.buffer.slice(blob.byteOffset + offset, blob.byteOffset + offset + sizeInt * 2);
     try {
         let two32 = new Uint32Array(array, 0, 2);
         return two32[0] + two32[1] * 0x100000000;
-    } catch(e) {
+    } catch (e) {
         if (e instanceof RangeError) {
             throw new ConvertException(`Invalid offset ${offset} to getUInt64.\nIs this preset very old? Send it in, so we can look at it!`);
         } else {
@@ -143,7 +143,7 @@ const getFloat = (blob: Uint8Array, offset: number): [number, number] => {
     let array = blob.buffer.slice(blob.byteOffset + offset, blob.byteOffset + offset + sizeInt);
     try {
         return [new Float32Array(array, 0, 1)[0], 4];
-    } catch(e) {
+    } catch (e) {
         if (e instanceof RangeError) {
             throw new ConvertException(`Invalid offset ${offset} to getFloat.\nIs this preset very old? Send it in, so we can look at it!`);
         } else {
@@ -182,7 +182,7 @@ const getSizeString = (blob: Uint8Array, offset: number, size?: number): [string
     if (getHidden) {
         hidden = getHiddenStrings(blob, i, end);
     }
-    if (hidden.length == 0) {
+    if (hidden.length === 0) {
         return [result, size + add];
     } else {
         return [result, size + add, hidden];
@@ -191,14 +191,14 @@ const getSizeString = (blob: Uint8Array, offset: number, size?: number): [string
 
 const getHiddenStrings = (blob: Uint8Array, i: number, end: number): string[] => {
     let nonPrintables: number[] = [
-        0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,
-        17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,
-        127,129,141,143,144,157,173];
+        0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16,
+        17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31,
+        127, 129, 141, 143, 144, 157, 173];
     let hidden: string[] = [];
     while (i < end) {
         let c = blob[i];
-        let s: string = "";
-        while(nonPrintables.indexOf(c) < 0 && i < end) {
+        let s: string = '';
+        while (nonPrintables.indexOf(c) < 0 && i < end) {
             s += String.fromCharCode(c);
             c = blob[++i];
         }
@@ -212,7 +212,7 @@ const getHiddenStrings = (blob: Uint8Array, i: number, end: number): string[] =>
         }
     }
     return hidden;
-}
+};
 
 const getNtString = (blob: Uint8Array, offset: number): [string, number] => {
     let result: string = '';
@@ -312,14 +312,14 @@ const getCodeEIF = (blob: Uint8Array, offset: number): [CodeSection, number] => 
     let map: [string, number][] = [
         ['init', 0],
         ['perFrame', 1],
-    ]
+    ];
     let code: [CodeSection, number] = getCodeSection(blob, offset, map);
     return [{
         'enabled': getBool(blob, offset, sizeInt)[0],
         'init': code[0]['init'],
         'perFrame': code[0]['perFrame'],
-    }, code[1]]
-}
+    }, code[1]];
+};
 
 // used only by 'Global Variables'
 const getNtCodeIFB = (blob: Uint8Array, offset: number): [CodeSection, number] => {
@@ -350,8 +350,8 @@ const get256CodePFBI = (blob: Uint8Array, offset: number): [CodeSection, number]
         ['onBeat', 2],
         ['perPoint', 0],
     ];
-    return getCodeSection(blob, offset, map, /*nullterminated*/false, /*string max length*/256)
-}
+    return getCodeSection(blob, offset, map, /*nullterminated*/false, /*string max length*/256);
+};
 
 const get256CodeIFB = (blob: Uint8Array, offset: number): [CodeSection, number] => {
     let map: [string, number][] = [
@@ -359,8 +359,8 @@ const get256CodeIFB = (blob: Uint8Array, offset: number): [CodeSection, number] 
         ['perFrame', 1],
         ['onBeat', 2],
     ];
-    return getCodeSection(blob, offset, map, /*nullterminated*/false, /*string max length*/256)
-}
+    return getCodeSection(blob, offset, map, /*nullterminated*/false, /*string max length*/256);
+};
 
 const getCodeSection = (blob: Uint8Array, offset: number, map: [string, number][], nt: boolean = false, fixedSize?: number): [CodeSection, number] => {
     let strings = new Array(map.length);
@@ -400,7 +400,7 @@ const getColorList = (blob: Uint8Array, offset: number): [string[], number] => {
 
 const getColorMaps = (blob: Uint8Array, offset: number): [{index: number, enabled: boolean, id?: number, fileName?: string, map: {color: string, position: number}[]}[], number] => {
     let mapOffset = offset + 480;
-    let maps:ColorMap[] = [];
+    let maps: ColorMap[] = [];
     let headerSize = 60; // 4B enabled, 4B num, 4B id, 48B filestring
     let mi = 0; // map index, might be != i when maps are skipped
     for (let i = 0; i < 8; i++) {
