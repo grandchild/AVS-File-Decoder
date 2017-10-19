@@ -196,7 +196,7 @@ var getSizeString = function (blob, offset, size) {
     if (getHidden) {
         hidden = getHiddenStrings(blob, i, end);
     }
-    if (hidden.length == 0) {
+    if (hidden.length === 0) {
         return [result, size + add];
     }
     else {
@@ -213,7 +213,7 @@ var getHiddenStrings = function (blob, i, end) {
     var hidden = [];
     while (i < end) {
         var c = blob[i];
-        var s = "";
+        var s = '';
         while (nonPrintables.indexOf(c) < 0 && i < end) {
             s += String.fromCharCode(c);
             c = blob[++i];

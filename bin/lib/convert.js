@@ -245,7 +245,7 @@ var decode_generic = function (blob, offset, fields, name, group, end) {
             comp[k] = value;
             if (verbosity >= 2) {
                 console.log(chalk.dim('- key: ' + k + '\n- val: ' + value));
-                if (k == 'code')
+                if (k === 'code')
                     Util.printTable('- code', value);
                 if (verbosity >= 3)
                     console.log(chalk.dim('- offset: ' + offset + '\n- size: ' + size));
@@ -264,9 +264,9 @@ var decode_versioned_generic = function (blob, offset, fields, name, group, end)
     else {
         var oldFields = {};
         for (var key in fields) {
-            if (key == 'new_version')
+            if (key === 'new_version')
                 continue;
-            if (key == 'code')
+            if (key === 'code')
                 oldFields[key] = fields['code'].replace(/Code([IFBP]+)/, '256Code$1');
             else
                 oldFields[key] = fields[key];
@@ -289,7 +289,7 @@ var decode_movement = function (blob, offset, _, name, group, end) {
     var hidden;
     if (effectIdOld !== 0) {
         if (effectIdOld === 0x7fff) {
-            var strAndSize = ["", 0];
+            var strAndSize = ['', 0];
             if (blob[offset + sizeInt] === 1) {
                 strAndSize = Util.getSizeString(blob, offset + sizeInt + 1);
             }
