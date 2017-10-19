@@ -31,13 +31,12 @@
     "winamp"
   ],
   "dependencies": {
-    "chalk": "^1.1.3",
+    "chalk": "^2.2.0",
     "commander": "^2.11.0",
     "glob": "^7.1.1",
     "graceful-fs": "^4.1.11"
   },
   "devDependencies": {
-    "@types/chalk": "^0.4.31",
     "@types/node": "^8.0.28",
     "ava": "^0.22.0",
     "gulp": "github:gulpjs/gulp#4.0",
