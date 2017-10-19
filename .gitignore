@@ -1,9 +1,6 @@
 # Project
 **/_*.*
-*.avs
-*.webvs
 assets/
-avs/
 build/
 
 # Global
@@ -12,8 +9,17 @@ error.log
 node_modules/
 npm-debug.log
 
-# Temporary
-bower.json
-bower_components/
-Gruntfile.js
-webpack.config.js
+# AVS specific
+*.ape
+*.avs
+*.bmp
+*.cff
+*.clm
+*.exe
+*.pimp
+*.wav
+*.webvs
+*.zip
+avs/
+etc/
+ui/
