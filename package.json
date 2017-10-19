@@ -1,6 +1,6 @@
 {
   "name": "webvsc",
-  "version": "0.0.1-alpha.0",
+  "version": "1.0.1",
   "description": "CLI tool batch-to convert Winamp AVS presets into Webvs JSON",
   "license": "MIT",
   "author": "@visbot",
@@ -38,6 +38,7 @@
     "graceful-fs": "^4.1.11"
   },
   "devDependencies": {
+    "@types/chalk": "^0.4.31",
     "@types/node": "^8.0.28",
     "ava": "^0.22.0",
     "gulp": "github:gulpjs/gulp#4.0",
@@ -48,7 +49,7 @@
   },
   "scripts": {
     "build": "tsc -p ./",
-    "postinstall": "tsc -p ./",
+    "postinstall": "npm run build",
     "test": "ava ./test/default.js --verbose --serial --fail-fast"
   }
 }
