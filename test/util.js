@@ -22,7 +22,6 @@ test('Boolify: true', t => {
 });
 
 test('Lowercase Initials', t => {
-  // Potential bug: why is "the" lowercase?
   const expected = 'camelCase';
   const actual = Util.lowerInitial("CamelCase");
 
