@@ -49,7 +49,6 @@
   },
   "scripts": {
     "build": "tsc -p ./",
-    "postinstall": "npm run build",
     "test": "ava ./test/default.js --verbose --serial --fail-fast"
   }
 }
