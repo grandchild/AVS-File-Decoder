@@ -23,8 +23,8 @@ test('Boolify: true', t => {
 
 test('Lowercase Initials', t => {
   // Potential bug: why is "the" lowercase?
-  const expected = 'the Man from U.N.C.L.E.';
-  const actual = Util.lowerInitial("The Man from U.N.C.L.E.");
+  const expected = 'camelCase';
+  const actual = Util.lowerInitial("CamelCase");
 
   t.is(actual, expected);
 });
