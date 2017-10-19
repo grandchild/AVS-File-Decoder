@@ -31,11 +31,11 @@ var convertPreset = function (presetFile, file, args) {
     catch (e) {
         // TODO
         if (verbosity < 0)
-            console.log(chalk.red("Error in '" + file + "'"));
+            console.error(chalk.red("Error in '" + file + "'"));
         if (verbosity >= 1)
-            console.log(chalk.red(e.stack));
+            console.error(chalk.red(e.stack));
         else
-            console.log(chalk.red(e + '\n'));
+            console.error(chalk.red(e + '\n'));
         // if(e instanceof Util.ConvertException) {
         //     console.error('Error: '+e.message);
         //     return null;
@@ -131,7 +131,7 @@ var decode_effectList = function (blob, offset, _, name) {
     };
     var modebit = Util.getBit(blob, offset, 7)[0] === 1; // is true in all presets I know, probably only for truly ancient versions
     if (!modebit) {
-        console.log(chalk.red('EL modebit is off!! If you\'re seeing this, send this .avs file in please!'));
+        console.error(chalk.red('EL modebit is off!! If you\'re seeing this, send this .avs file in please!'));
     }
     var configSize = (modebit ? blob[offset + 4] : blob[offset]) + 1;
     if (configSize > 1) {
@@ -305,7 +305,7 @@ var decode_movement = function (blob, offset, _, name, group, end) {
         else {
             if (effectIdOld > 15) {
                 if (verbosity >= 0) {
-                    console.log(chalk.red("Movement: Unknown effect id " + effectIdOld + ". This is a known bug."));
+                    console.error(chalk.red("Movement: Unknown effect id " + effectIdOld + ". This is a known bug."));
                     console.log(chalk.green('If you know an AVS version that will display this Movement as anything else but "None", then please send it in!'));
                 }
                 effect = Table.movementEffect[0];

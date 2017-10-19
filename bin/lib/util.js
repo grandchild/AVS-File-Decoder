@@ -100,7 +100,7 @@ var getUInt32 = function (blob, offset) {
     }
     catch (e) {
         if (e instanceof RangeError) {
-            console.log(chalk.red(e.stack));
+            console.error(chalk.red(e.stack));
             throw new ConvertException("Invalid offset " + offset + " to getUInt32.\nIs this preset very old? Send it in, so we can look at it!");
         }
         else {
