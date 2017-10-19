@@ -1,7 +1,7 @@
 # webvsc
 
-[![npm](https://img.shields.io/npm/l/webvsc.svg?style=flat-square)](https://www.npmjs.org/package/webvsc)
-[![npm](https://img.shields.io/npm/v/webvsc.svg?style=flat-square)](https://www.npmjs.org/package/webvsc)
+[![npm](https://img.shields.io/npm/l/webvsc.svg?style=flat-square)](https://www.npmjs.com/package/@visbot/webvsc)
+[![npm](https://img.shields.io/npm/v/webvsc.svg?style=flat-square)](https://www.npmjs.com/package/@visbot/webvsc)
 [![Travis CI](https://img.shields.io/travis/grandchild/AVS-File-Decoder/typescript.svg?style=flat-square)](https://travis-ci.org/grandchild/AVS-File-Decoder)
 [![David](https://img.shields.io/david/grandchild/AVS-File-Decoder.svg?style=flat-square)](https://david-dm.org/grandchild/AVS-File-Decoder)
 [![David](https://img.shields.io/david/dev/grandchild/AVS-File-Decoder.svg?style=flat-square)](https://david-dm.org/grandchild/AVS-File-Decoder?type=dev)
