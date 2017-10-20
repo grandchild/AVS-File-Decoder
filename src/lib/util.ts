@@ -44,7 +44,7 @@ const cmpBytes = (arr: Uint8Array, offset: number, test: number[]): boolean => {
 const printTable = (name: string, table: any): void => {
     console.log(`${name}:`);
     for (let key in table) {
-        console.log(`\t${key}: ${table[key] ? table[key].replace(/\n/g, '\n\t\t') : 'undefined'}`);
+        console.log(`\t${key}: ${table[key] ? (''+table[key]).replace(/\n/g, '\n\t\t') : 'undefined'}`);
     }
 };
 
