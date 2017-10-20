@@ -16,8 +16,8 @@ const componentTable: ComponentDefinition[] = Components.builtin.concat(Componen
 
 
 const convertPreset = (presetFile: ArrayBuffer, file: string, args: Arguments): Object => {
-    verbosity = args.debug;
-    verbosity = args.silent ? -1 : verbosity;
+    verbosity = args.verbose;
+    verbosity = args.quiet ? -1 : verbosity;
     Util.setVerbosity(verbosity);
     Util.setHiddenStrings(args.hidden);
 

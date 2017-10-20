@@ -14,15 +14,15 @@ import { Arguments } from './lib/types';
 program
     .version(require('../package.json').version)
     .usage('[options] <file(s)>')
-    .option('-d, --debug', 'Prints in-depth information', (d, t: number): number => { return t + 1; }, 0)
-    .option('-m, --minify', 'Minify generated JSON')
-    .option('-s, --silent', 'Prints errors only')
-    .option('-n, --no-hidden', 'Don\'t extract hidden strings from fixed-size strings')
+    .option('-v, --verbose', 'print more information, can be set multiple times to increase output', (d, t: number): number => { return t + 1; }, 0)
+    .option('-m, --minify', 'minify generated JSON')
+    .option('-q, --quiet', 'print errors only')
+    .option('-n, --no-hidden', 'don\'t extract hidden strings from fixed-size strings')
     .parse(argv);
 
 const convert = (file: string, args: Arguments): void => {
     readFile(file, (error: Object, data: ArrayBuffer) => {
-        if (args.silent !== true) console.log(`\nReading "${file}"`);
+        if (args.quiet !== true) console.log(`\nReading "${file}"`);
 
         let whitespace: number = (program.minify === true) ? 0 : 4;
         let presetObj = convertPreset(data, file, args);
@@ -31,7 +31,7 @@ const convert = (file: string, args: Arguments): void => {
         let dirName = dirname(file);
         let outFile = join(dirName, baseName + '.webvs');
 
-        if (args.silent !== true) console.log(`Writing "${outFile}"`);
+        if (args.quiet !== true) console.log(`Writing "${outFile}"`);
         try {
             writeFileSync(outFile, presetJson);
         } catch (e) {
