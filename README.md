@@ -47,7 +47,7 @@ $ yarn link || npm link
 
 Once setup, you can run `webvsc --help` to list available options. Alternatively, use `node build/cli.js`.
 
-```sh
+```
 $ webvsc
 
   Usage: webvsc [options] <file(s)>
