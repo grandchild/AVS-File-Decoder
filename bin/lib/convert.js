@@ -13,8 +13,9 @@ var sizeInt = 4;
 var verbosity = 0; // log individual key:value fields
 var componentTable = Components.builtin.concat(Components.dll);
 var convertPreset = function (presetFile, file, args) {
-    verbosity = args.debug;
-    verbosity = args.silent ? -1 : verbosity;
+    verbosity = args.verbose;
+    verbosity = args.quiet ? -1 : verbosity;
+    Util.setVerbosity(verbosity);
     Util.setHiddenStrings(args.hidden);
     var modifiedTime = fs_1.statSync(file).mtime;
     var preset = {
@@ -115,7 +116,9 @@ var decodePresetHeader = function (blob) {
     ];
     if (!Util.cmpBytes(blob, /*offset*/ 0, presetHeader0_2) &&
         !Util.cmpBytes(blob, /*offset*/ 0, presetHeader0_1)) {
-        throw new Util.ConvertException('Invalid preset header.');
+        throw new Util.ConvertException('Invalid preset header.\n' +
+            '  This does not seem to be an AVS preset file.\n' +
+            '  If it does load with Winamp\'s AVS please send the file in so we can look at it.');
     }
     return blob[Util.presetHeaderLength - 1] === 1; // 'Clear Every Frame'
 };

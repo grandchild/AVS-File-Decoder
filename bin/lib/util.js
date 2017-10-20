@@ -12,6 +12,9 @@ exports.builtinMax = builtinMax;
 var hiddenStrings = false;
 var setHiddenStrings = function (value) { hiddenStrings = value; };
 exports.setHiddenStrings = setHiddenStrings;
+var verbosity = 0;
+var setVerbosity = function (value) { verbosity = value; };
+exports.setVerbosity = setVerbosity;
 var ConvertException = /** @class */ (function () {
     function ConvertException(msg) {
         this.msg = msg;
@@ -39,7 +42,7 @@ exports.cmpBytes = cmpBytes;
 var printTable = function (name, table) {
     console.log(name + ":");
     for (var key in table) {
-        console.log("\t" + key + ": " + (table[key] ? table[key].replace(/\n/g, '\n\t\t') : 'undefined'));
+        console.log("\t" + key + ": " + (table[key] ? ('' + table[key]).replace(/\n/g, '\n\t\t') : 'undefined'));
     }
 };
 exports.printTable = printTable;
@@ -75,8 +78,11 @@ var getBit = function (blob, offset, pos) {
 };
 exports.getBit = getBit;
 var getUInt = function (blob, offset, size) {
-    if (offset > blob.length - size)
+    if (offset > blob.length - size) {
+        if (verbosity >= 1)
+            console.log(chalk.green('WARNING: getUInt: offset overflow', offset, '>', blob.length - size));
         return 0;
+    }
     switch (size) {
         case 1:
             return blob[offset];
@@ -92,8 +98,11 @@ exports.getUInt = getUInt;
 var getUInt32 = function (blob, offset) {
     if (!offset)
         offset = 0;
-    if (offset > blob.length - sizeInt)
+    if (offset > blob.length - sizeInt) {
+        if (verbosity >= 1)
+            console.log(chalk.green('WARNING: getUInt32: offset overflow', offset, '>', blob.length - sizeInt));
         return 0;
+    }
     var array = blob.buffer.slice(blob.byteOffset + offset, blob.byteOffset + offset + sizeInt);
     try {
         return new Uint32Array(array, 0, 1)[0];
@@ -112,8 +121,11 @@ exports.getUInt32 = getUInt32;
 var getInt32 = function (blob, offset) {
     if (!offset)
         offset = 0;
-    if (offset > blob.length - sizeInt)
+    if (offset > blob.length - sizeInt) {
+        if (verbosity >= 1)
+            console.log(chalk.green('WARNING: getInt32: offset overflow', offset, '>', blob.length - sizeInt));
         return [0, sizeInt];
+    }
     var array = blob.buffer.slice(blob.byteOffset + offset, blob.byteOffset + offset + sizeInt);
     try {
         return [new Int32Array(array, 0, 1)[0], sizeInt];
@@ -131,8 +143,11 @@ exports.getInt32 = getInt32;
 var getUInt64 = function (blob, offset) {
     if (!offset)
         offset = 0;
-    if (offset > blob.length - sizeInt * 2)
+    if (offset > blob.length - sizeInt * 2) {
+        if (verbosity >= 1)
+            console.log(chalk.green('WARNING: getUInt64: offset overflow', offset, '>', blob.length - sizeInt * 2));
         return 0;
+    }
     var array = blob.buffer.slice(blob.byteOffset + offset, blob.byteOffset + offset + sizeInt * 2);
     try {
         var two32 = new Uint32Array(array, 0, 2);
@@ -223,7 +238,6 @@ var getHiddenStrings = function (blob, i, end) {
         // weed out a lot of random uninteresting strings.
         // TODO: more sophisticated filter
         if (s.length > 4 && s.indexOf('=') >= 0) {
-            // console.log("found hidden string:", s);
             hidden.push(s);
         }
     }

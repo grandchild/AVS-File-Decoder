@@ -11,14 +11,14 @@ var convert_1 = require("./lib/convert");
 program
     .version(require('../package.json').version)
     .usage('[options] <file(s)>')
-    .option('-d, --debug', 'Prints in-depth information', function (d, t) { return t + 1; }, 0)
-    .option('-m, --minify', 'Minify generated JSON')
-    .option('-s, --silent', 'Prints errors only')
-    .option('-n, --no-hidden', 'Don\'t extract hidden strings from fixed-size strings')
+    .option('-v, --verbose', 'print more information, can be set multiple times to increase output', function (d, t) { return t + 1; }, 0)
+    .option('-m, --minify', 'minify generated JSON')
+    .option('-q, --quiet', 'print errors only')
+    .option('-n, --no-hidden', 'don\'t extract hidden strings from fixed-size strings')
     .parse(process_1.argv);
 var convert = function (file, args) {
     graceful_fs_1.readFile(file, function (error, data) {
-        if (args.silent !== true)
+        if (args.quiet !== true)
             console.log("\nReading \"" + file + "\"");
         var whitespace = (program.minify === true) ? 0 : 4;
         var presetObj = convert_1.convertPreset(data, file, args);
@@ -26,7 +26,7 @@ var convert = function (file, args) {
         var baseName = path_1.basename(file, '.avs');
         var dirName = path_1.dirname(file);
         var outFile = path_1.join(dirName, baseName + '.webvs');
-        if (args.silent !== true)
+        if (args.quiet !== true)
             console.log("Writing \"" + outFile + "\"");
         try {
             graceful_fs_1.writeFileSync(outFile, presetJson);
