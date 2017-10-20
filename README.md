@@ -19,7 +19,7 @@ CLI tool to batch-convert [Winamp AVS presets](https://www.wikiwand.com/en/Advan
 Use your preferred [Node](https://nodejs.org) package manager to install the CLI globally
 
 ```sh
-$ yarn global add @visbot/webvsc || npm install --global @visbot/webvsc
+yarn global add @visbot/webvsc || npm install --global @visbot/webvsc
 ```
 
 ### Git
@@ -28,17 +28,17 @@ To install manually, follow these steps
 
 ```sh
 # Clone the repository and change directory
-$ git clone https://github.com/grandchild/AVS-File-Decoder.git webvsc
-$ cd webvsc
+git clone https://github.com/grandchild/AVS-File-Decoder.git webvsc
+cd webvsc
 
 # Install dependencies
-$ yarn || npm install
+yarn || npm install
 
 # Build from source code
-$ yarn build || npm run build
+yarn build || npm run build
 
 # Link script
-$ yarn link || npm link
+yarn link || npm link
 ```
 
 ## Usage
@@ -68,7 +68,9 @@ Commonly, you would run `webvsc "avs/**/*.avs"` to convert a bunch of presets, o
 
 If you have literally thousands of presets you might run into _EMFILE_ errors. In that case use something like:
 
-`for dir in avs/*; do echo $dir; webvsc "$dir/**/*.avs" --silent; done`
+```sh
+for dir in avs/*; do echo $dir; webvsc "$dir/**/*.avs" --silent; done
+```
 
 ## Authors
 
