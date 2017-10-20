@@ -18,6 +18,7 @@ const componentTable: ComponentDefinition[] = Components.builtin.concat(Componen
 const convertPreset = (presetFile: ArrayBuffer, file: string, args: Arguments): Object => {
     verbosity = args.debug;
     verbosity = args.silent ? -1 : verbosity;
+    Util.setVerbosity(verbosity);
     Util.setHiddenStrings(args.hidden);
 
     let modifiedTime = statSync(file).mtime;
@@ -88,7 +89,7 @@ const getComponentIndex = (code: number, blob: Uint8Array, offset: number): numb
     if (code < Util.builtinMax || code === 0xfffffffe) {
         for (let i = 0; i < componentTable.length; i++) {
             if (code === componentTable[i].code) {
-                if (verbosity >= 1)  console.log(chalk.dim(`Found component: ${componentTable[i].name} (${code})`));
+                if (verbosity >= 1) console.log(chalk.dim(`Found component: ${componentTable[i].name} (${code})`));
 
                 return i;
             }

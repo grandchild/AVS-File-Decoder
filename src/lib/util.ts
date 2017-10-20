@@ -12,6 +12,8 @@ const builtinMax: number = 16384;
 
 let hiddenStrings: boolean = false;
 const setHiddenStrings = (value: boolean): void => { hiddenStrings = value; };
+let verbosity: number = 0;
+const setVerbosity = (value: number): void => { verbosity = value; };
 
 
 class ConvertException implements Error {
@@ -78,7 +80,10 @@ const getBit = (blob: Uint8Array, offset: number, pos: any): [number, number] =>
 };
 
 const getUInt = (blob: Uint8Array, offset: number, size: number): number => {
-    if (offset > blob.length - size) return 0;
+    if (offset > blob.length - size) {
+        if (verbosity >= 1) console.log(chalk.green('WARNING: getUInt: offset overflow', offset, '>', blob.length - size));
+        return 0;
+    }
     switch (size) {
         case 1:
             return blob[offset];
@@ -93,7 +98,10 @@ const getUInt = (blob: Uint8Array, offset: number, size: number): number => {
 
 const getUInt32 = (blob: Uint8Array, offset: number): number => {
     if (!offset) offset = 0;
-    if (offset > blob.length - sizeInt) return 0;
+    if (offset > blob.length - sizeInt) {
+        if (verbosity >= 1) console.log(chalk.green('WARNING: getUInt32: offset overflow', offset, '>', blob.length - sizeInt));
+        return 0;
+    }
     let array = blob.buffer.slice(blob.byteOffset + offset, blob.byteOffset + offset + sizeInt);
     try {
         return new Uint32Array(array, 0, 1)[0];
@@ -109,7 +117,10 @@ const getUInt32 = (blob: Uint8Array, offset: number): number => {
 
 const getInt32 = (blob: Uint8Array, offset: number): [number, number] => {
     if (!offset) offset = 0;
-    if (offset > blob.length - sizeInt) return [0, sizeInt];
+    if (offset > blob.length - sizeInt) {
+        if (verbosity >= 1) console.log(chalk.green('WARNING: getInt32: offset overflow', offset, '>', blob.length - sizeInt));
+        return [0, sizeInt];
+    }
     let array = blob.buffer.slice(blob.byteOffset + offset, blob.byteOffset + offset + sizeInt);
     try {
         return [new Int32Array(array, 0, 1)[0], sizeInt];
@@ -124,7 +135,10 @@ const getInt32 = (blob: Uint8Array, offset: number): [number, number] => {
 
 const getUInt64 = (blob: Uint8Array, offset: number): number => {
     if (!offset) offset = 0;
-    if (offset > blob.length - sizeInt * 2) return 0;
+    if (offset > blob.length - sizeInt * 2) {
+        if (verbosity >= 1) console.log(chalk.green('WARNING: getUInt64: offset overflow', offset, '>', blob.length - sizeInt * 2));
+        return 0;
+    }
     let array = blob.buffer.slice(blob.byteOffset + offset, blob.byteOffset + offset + sizeInt * 2);
     try {
         let two32 = new Uint32Array(array, 0, 2);
@@ -207,7 +221,6 @@ const getHiddenStrings = (blob: Uint8Array, i: number, end: number): string[] =>
         // weed out a lot of random uninteresting strings.
         // TODO: more sophisticated filter
         if (s.length > 4 && s.indexOf('=') >= 0) {
-            // console.log("found hidden string:", s);
             hidden.push(s);
         }
     }
@@ -525,4 +538,5 @@ export {
     printTable,
     removeSpaces,
     setHiddenStrings,
+    setVerbosity,
 };
