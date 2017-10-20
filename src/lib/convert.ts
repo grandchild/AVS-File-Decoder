@@ -126,7 +126,11 @@ const decodePresetHeader = (blob: Uint8Array): boolean => {
     ];
     if (!Util.cmpBytes(blob, /*offset*/ 0, presetHeader0_2) &&
         !Util.cmpBytes(blob, /*offset*/ 0, presetHeader0_1)) { // 0.1 only if 0.2 failed because it's far rarer.
-        throw new Util.ConvertException('Invalid preset header.');
+        throw new Util.ConvertException(
+            'Invalid preset header.\n' +
+            '  This does not seem to be an AVS preset file.\n' +
+            '  If it does load with Winamp\'s AVS please send the file in so we can look at it.'
+        );
     }
 
     return blob[Util.presetHeaderLength - 1] === 1; // 'Clear Every Frame'
