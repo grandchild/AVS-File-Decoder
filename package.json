@@ -8,10 +8,6 @@
     "idleberg"
   ],
   "homepage": "https://github.com/grandchild/AVS-File-Decoder#readme",
-  "main": "index.js",
-  "bin": {
-    "webvsc": "./index.js"
-  },
   "directories": {
     "doc": "doc",
     "test": "test"
@@ -31,10 +27,7 @@
     "winamp"
   ],
   "dependencies": {
-    "chalk": "2.1.0",
-    "commander": "^2.11.0",
-    "glob": "^7.1.1",
-    "graceful-fs": "^4.1.11"
+    "chalk": "2.1.0"
   },
   "devDependencies": {
     "@types/node": "^8.0.28",
