@@ -1,7 +1,7 @@
 {
   "name": "@visbot/webvsc",
   "version": "1.1.0",
-  "description": "A library convert Winamp AVS presets into Webvs JSON",
+  "description": "A library to convert Winamp AVS presets into Webvs JSON",
   "license": "MIT",
   "contributors": [
     "grandchild",
@@ -32,9 +32,6 @@
   "devDependencies": {
     "@types/node": "^8.0.28",
     "ava": "^0.22.0",
-    "gulp": "github:gulpjs/gulp#4.0",
-    "gulp-debug": "^3.1.0",
-    "gulp-jsonmin": "^1.1.0",
     "tslint": "^5.7.0",
     "typescript": "^2.5.2"
   },

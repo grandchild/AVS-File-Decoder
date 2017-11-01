@@ -8,13 +8,13 @@
 
 ## Description
 
-CLI tool to batch-convert [Winamp AVS presets](https://www.wikiwand.com/en/Advanced_Visualization_Studio) into native [Webvs](https://github.com/azeem/webvs) JSON format. Take a look at the [supported components](doc/components.md).
+Library to to batch-convert [Winamp AVS presets](https://www.wikiwand.com/en/Advanced_Visualization_Studio) into native [Webvs](https://github.com/azeem/webvs) JSON format. Take a look at the [supported components](doc/components.md).
 
 [Live Demo](http://grandchild.github.io/AVS-File-Decoder/) (uses an older version)
 
 ## Installation
 
-Use your preferred [Node](https://nodejs.org) package manager to install the CLI globally
+Use your preferred [Node](https://nodejs.org) package manager to install the package:
 
 ```sh
 yarn add @visbot/webvsc || npm install  @visbot/webvsc
@@ -35,6 +35,8 @@ readFile(file, (error, data) => {
     console.log(presetJson);
 });
 ```
+
+**Note:** The previously contained CLI tool has been detached and is now available as the separate [webvsc-cli](https://www.npmjs.com/package/@visbot/webvsc-cli) package!
 
 ## Authors
 
