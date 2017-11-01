@@ -53,7 +53,7 @@ const convertComponents = (blob: Uint8Array): Object => {
     let fp: number = 0;
     let components: any[] = [];
     let res;
-    // read file as long as there are compontents left.
+    // read file as long as there are components left.
     // a component takes at least two int32s of space, if there are less bytes than that left,
     // ignore them. usually fp < blob.length should suffice but some rare presets have trailing
     // bytes. found in one preset's trailing colormap so far.
