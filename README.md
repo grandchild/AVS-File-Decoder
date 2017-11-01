@@ -17,38 +17,21 @@ CLI tool to batch-convert [Winamp AVS presets](https://www.wikiwand.com/en/Advan
 Use your preferred [Node](https://nodejs.org) package manager to install the CLI globally
 
 ```sh
-yarn global add @visbot/webvsc || npm install --global @visbot/webvsc
+yarn add @visbot/webvsc || npm install  @visbot/webvsc
 ```
 
 ## Usage
 
-### CLI
+```js
+import convertPreset from '@visbot/webvsc/lib/convert';
 
-Once setup, you can run `webvsc --help` to list available options. Alternatively, use `node build/cli.js`.
+readFile('path/to/preset.avs', (error, data) => {
+    let presetObj = convertPreset(data, file, args);
+    let presetJson = JSON.stringify(presetObj, null, 0);
 
-```
-$ webvsc
-
-  Usage: webvsc [options] <file(s)>
-
-  Options:
-
-    -V, --version    output the version number
-    -v, --verbose    print more information, can be set multiple times to increase output
-    -m, --minify     minify generated JSON
-    -q, --quiet      print errors only
-    -n, --no-hidden  don't extract hidden strings from fixed-size strings
-    -h, --help       output usage information
-```
-
-Commonly, you would run `webvsc "avs/**/*.avs"` to convert a bunch of presets, or just one. When using wildcards, it's important to wrap the path in quotes.
-
-### Troubleshooting
-
-If you have literally thousands of presets you might run into _EMFILE_ errors. In that case use something like:
-
-```sh
-for dir in avs/*; do echo $dir; webvsc "$dir/**/*.avs" --silent; done
+    // Print result
+    console.log(presetJson);
+});
 ```
 
 ## Authors

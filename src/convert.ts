@@ -400,5 +400,6 @@ const decode_simple = (blob: Uint8Array, offset: number): Object => {
 };
 
 export {
-    convertPreset,
+    convertComponents,
+    convertPreset
 };
