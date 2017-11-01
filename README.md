@@ -14,31 +14,10 @@ CLI tool to batch-convert [Winamp AVS presets](https://www.wikiwand.com/en/Advan
 
 ## Installation
 
-### npm
-
 Use your preferred [Node](https://nodejs.org) package manager to install the CLI globally
 
 ```sh
 yarn global add @visbot/webvsc || npm install --global @visbot/webvsc
-```
-
-### Git
-
-To install manually, follow these steps
-
-```sh
-# Clone the repository and change directory
-git clone https://github.com/grandchild/AVS-File-Decoder.git webvsc
-cd webvsc
-
-# Install dependencies
-yarn || npm install
-
-# Build from source code
-yarn build || npm run build
-
-# Link script
-yarn link || npm link
 ```
 
 ## Usage
