@@ -1,5 +1,5 @@
 // Modules
-import * as Util from '../bin/lib/util';
+import * as Util from '../lib/util';
 
 // Dependencies
 import { spawnSync } from 'child_process';
