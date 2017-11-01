@@ -23,7 +23,7 @@ yarn add @visbot/webvsc || npm install  @visbot/webvsc
 ## Usage
 
 ```js
-import convertPreset from '@visbot/webvsc/lib/convert';
+import { convertPreset } from '@visbot/webvsc/lib/convert';
 
 readFile('path/to/preset.avs', (error, data) => {
     let presetObj = convertPreset(data, file, args);
