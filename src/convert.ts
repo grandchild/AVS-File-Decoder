@@ -5,9 +5,10 @@ import * as Table from './tables';
 import { Arguments, ComponentDefinition, jsontypes } from './types';
 
 // Dependencies
-import { basename, extname } from 'path';
-import { statSync } from 'fs';
 import * as chalk from 'chalk';
+import { basename, extname } from 'path';
+import { readFile } from 'graceful-fs';
+import { statSync } from 'fs';
 
 // Constants
 const sizeInt = 4;
@@ -15,38 +16,44 @@ let verbosity = 0; // log individual key:value fields
 const componentTable: ComponentDefinition[] = Components.builtin.concat(Components.dll);
 
 
-const convertPreset = (presetFile: ArrayBuffer, file: string, args: Arguments): Object => {
+const convertPreset = (file: string, args: Arguments): Object|void => {
     verbosity = args.verbose ? args.verbose : 0;
     verbosity = args.quiet ? -1 : verbosity;
     Util.setVerbosity(verbosity);
     Util.setHiddenStrings(args.hidden);
 
-    let modifiedTime = statSync(file).mtime;
-    let preset = {
-        'name': basename(file, extname(file)),
-        'date': modifiedTime.toISOString(),
-        // 'author': '',
-    };
-    let blob8 = new Uint8Array(presetFile);
-    try {
-        let clearFrame = decodePresetHeader(blob8.subarray(0, Util.presetHeaderLength));
-        preset['clearFrame'] = clearFrame;
-        let components = convertComponents(blob8.subarray(Util.presetHeaderLength));
-        preset['components'] = components;
-    } catch (e) {
-        // TODO
-        if (verbosity < 0) console.error(chalk.red(`Error in '${file}'`));
-        if (verbosity >= 1) console.error(chalk.red(e.stack));
-        else console.error(chalk.red(e + '\n'));
-        // if(e instanceof Util.ConvertException) {
-        //     console.error('Error: '+e.message);
-        //     return null;
-        // } else {
-        //     throw e;
-        // }
-    }
+    readFile(file, (error: Object, data: ArrayBuffer) => {
+        if (error) {
+            console.error(error);
+        }
 
-    return preset;
+        let modifiedTime = statSync(file).mtime;
+        let preset = {
+            'name': basename(file, extname(file)),
+            'date': modifiedTime.toISOString(),
+            // 'author': '',
+        };
+        let blob8 = new Uint8Array(data);
+        try {
+            let clearFrame = decodePresetHeader(blob8.subarray(0, Util.presetHeaderLength));
+            preset['clearFrame'] = clearFrame;
+            let components = convertComponents(blob8.subarray(Util.presetHeaderLength));
+            preset['components'] = components;
+        } catch (e) {
+            // TODO
+            if (verbosity < 0) console.error(chalk.red(`Error in '${file}'`));
+            if (verbosity >= 1) console.error(chalk.red(e.stack));
+            else console.error(chalk.red(e + '\n'));
+            // if(e instanceof Util.ConvertException) {
+            //     console.error('Error: '+e.message);
+            //     return null;
+            // } else {
+            //     throw e;
+            // }
+        }
+
+        return preset;
+    });
 };
 
 const convertComponents = (blob: Uint8Array): Object => {
