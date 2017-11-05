@@ -17,8 +17,12 @@ const componentTable: ComponentDefinition[] = Components.builtin.concat(Componen
 
 
 const convertPreset = (file: string, args: Arguments): Object|void => {
+    // TODO: globally manage default options
+    args || (args = { verbose: 0});
+
     verbosity = args.verbose ? args.verbose : 0;
     verbosity = args.quiet ? -1 : verbosity;
+
     Util.setVerbosity(verbosity);
     Util.setHiddenStrings(args.hidden);
 
