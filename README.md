@@ -10,7 +10,7 @@
 
 Library to to batch-convert [Winamp AVS presets](https://www.wikiwand.com/en/Advanced_Visualization_Studio) into native [Webvs](https://github.com/azeem/webvs) JSON format. Take a look at the [supported components](doc/components.md).
 
-[Live Demo](http://grandchild.github.io/AVS-File-Decoder/) (uses an older version)
+[Live Demo](https://idleberg.github.io/webvsc-ui/)
 
 ## Installation
 
