@@ -27,8 +27,7 @@
     "winamp"
   ],
   "dependencies": {
-    "chalk": "2.1.0",
-    "graceful-fs": "^4.1.11"
+    "chalk": "2.1.0"
   },
   "devDependencies": {
     "@types/node": "^8.0.28",
