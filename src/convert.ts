@@ -9,17 +9,15 @@ const sizeInt = 4;
 let verbosity = 0; // log individual key:value fields
 const componentTable: ComponentDefinition[] = Components.builtin.concat(Components.dll);
 
-const args = {
+const args: Arguments = {
     verbose: 0,
-    quiet: false
+    quiet: false,
+    preset: {}
 };
 
 const convertPreset = (data: ArrayBuffer, customArgs: Arguments): Object|void => {
-    // TODO: globally manage default options
-    // args || (args = { verbose: 0});
     (<any>Object).assign(args, customArgs);
 
-    // verbosity = args.verbose ? args.verbose : 0;
     verbosity = args.quiet ? -1 : verbosity;
 
     Util.setVerbosity(verbosity);
