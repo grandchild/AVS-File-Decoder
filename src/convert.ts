@@ -12,10 +12,10 @@ const componentTable: ComponentDefinition[] = Components.builtin.concat(Componen
 const args: Arguments = {
     verbose: 0,
     quiet: false,
-    preset: {}
+    hidden: false
 };
 
-const convertPreset = (data: ArrayBuffer, customArgs: Arguments): Object|void => {
+const convertPreset = (data: ArrayBuffer, presetName: string, presetDate: string, customArgs: Arguments): Object|void => {
     (<any>Object).assign(args, customArgs);
 
     verbosity = args.quiet ? -1 : verbosity;
@@ -23,7 +23,10 @@ const convertPreset = (data: ArrayBuffer, customArgs: Arguments): Object|void =>
     Util.setVerbosity(verbosity);
     Util.setHiddenStrings(args.hidden);
 
-    let preset = (<any>Object).assign({}, args.preset);
+    let preset = {
+        'name': presetName,
+        'date': presetDate
+    };
     let blob8 = new Uint8Array(data);
     try {
         let clearFrame = decodePresetHeader(blob8.subarray(0, Util.presetHeaderLength));
