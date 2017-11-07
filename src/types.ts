@@ -7,10 +7,6 @@ interface Arguments {
     quiet?: boolean;
     minify?: boolean;
     hidden?: boolean;
-    preset: {
-        name?: string,
-        modifiedTime?: string
-    };
 }
 
 interface ColorMap {
