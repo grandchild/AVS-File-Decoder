@@ -1,7 +1,6 @@
 // Modules
 import * as Table from './tables';
 import * as chalk from 'chalk';
-import isNode from 'detect-node';
 import { CodeSection, ColorMap, jsontypes } from './types';
 
 // Constants
