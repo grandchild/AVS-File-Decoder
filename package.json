@@ -27,7 +27,8 @@
     "winamp"
   ],
   "dependencies": {
-    "chalk": "2.1.0"
+    "chalk": "2.1.0",
+    "detect-node": "^2.0.3"
   },
   "devDependencies": {
     "@types/node": "^8.0.28",
