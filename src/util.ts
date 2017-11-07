@@ -1,8 +1,8 @@
 // Modules
 import * as Table from './tables';
-import { CodeSection, ColorMap, jsontypes } from './types';
-
 import * as chalk from 'chalk';
+import isNode from 'detect-node';
+import { CodeSection, ColorMap, jsontypes } from './types';
 
 // Constants
 const sizeInt: number = 4;
@@ -44,9 +44,9 @@ const cmpBytes = (arr: Uint8Array, offset: number, test: number[]): boolean => {
 
 
 const printTable = (name: string, table: any): void => {
-    console.log(`${name}:`);
+    dim(`${name}:`);
     for (let key in table) {
-        console.log(`\t${key}: ${table[key] ? (''+table[key]).replace(/\n/g, '\n\t\t') : 'undefined'}`);
+        dim(`\t${key}: ${table[key] ? ('' + table[key]).replace(/\n/g, '\n\t\t') : 'undefined'}`);
     }
 };
 
@@ -81,16 +81,16 @@ const getBit = (blob: Uint8Array, offset: number, pos: any): [number, number] =>
 
 const getUInt = (blob: Uint8Array, offset: number, size: number): number => {
     if (offset > blob.length - size) {
-        if (verbosity >= 1) console.log(chalk.green('WARNING: getUInt: offset overflow', offset, '>', blob.length - size));
+        if (verbosity >= 1) warn('WARNING: getUInt: offset overflow', offset, '>', blob.length - size);
         return 0;
     }
     switch (size) {
         case 1:
             return blob[offset];
         case sizeInt:
-            return this.getUInt32(blob, offset);
+            return getUInt32(blob, offset);
         case sizeInt * 2:
-            return this.getUInt64(blob, offset);
+            return getUInt64(blob, offset);
         default:
             throw new ConvertException(`Invalid integer size '${size}', only 1, ${sizeInt} and ${sizeInt * 2} allowed.`);
     }
@@ -99,7 +99,7 @@ const getUInt = (blob: Uint8Array, offset: number, size: number): number => {
 const getUInt32 = (blob: Uint8Array, offset: number): number => {
     if (!offset) offset = 0;
     if (offset > blob.length - sizeInt) {
-        if (verbosity >= 1) console.log(chalk.green('WARNING: getUInt32: offset overflow', offset, '>', blob.length - sizeInt));
+        if (verbosity >= 1) warn('WARNING: getUInt32: offset overflow', offset, '>', blob.length - sizeInt);
         return 0;
     }
     let array = blob.buffer.slice(blob.byteOffset + offset, blob.byteOffset + offset + sizeInt);
@@ -107,7 +107,7 @@ const getUInt32 = (blob: Uint8Array, offset: number): number => {
         return new Uint32Array(array, 0, 1)[0];
     } catch (e) {
         if (e instanceof RangeError) {
-            console.error(chalk.red(e.stack));
+            error(e.stack);
             throw new ConvertException(`Invalid offset ${offset} to getUInt32.\nIs this preset very old? Send it in, so we can look at it!`);
         } else {
             throw e;
@@ -118,7 +118,7 @@ const getUInt32 = (blob: Uint8Array, offset: number): number => {
 const getInt32 = (blob: Uint8Array, offset: number): [number, number] => {
     if (!offset) offset = 0;
     if (offset > blob.length - sizeInt) {
-        if (verbosity >= 1) console.log(chalk.green('WARNING: getInt32: offset overflow', offset, '>', blob.length - sizeInt));
+        if (verbosity >= 1) warn('WARNING: getInt32: offset overflow', offset, '>', blob.length - sizeInt);
         return [0, sizeInt];
     }
     let array = blob.buffer.slice(blob.byteOffset + offset, blob.byteOffset + offset + sizeInt);
@@ -136,7 +136,7 @@ const getInt32 = (blob: Uint8Array, offset: number): [number, number] => {
 const getUInt64 = (blob: Uint8Array, offset: number): number => {
     if (!offset) offset = 0;
     if (offset > blob.length - sizeInt * 2) {
-        if (verbosity >= 1) console.log(chalk.green('WARNING: getUInt64: offset overflow', offset, '>', blob.length - sizeInt * 2));
+        if (verbosity >= 1) warn('WARNING: getUInt64: offset overflow', offset, '>', blob.length - sizeInt * 2);
         return 0;
     }
     let array = blob.buffer.slice(blob.byteOffset + offset, blob.byteOffset + offset + sizeInt * 2);
@@ -167,7 +167,7 @@ const getFloat = (blob: Uint8Array, offset: number): [number, number] => {
 };
 
 const getBool = (blob: Uint8Array, offset: number, size: number): [boolean, number] => {
-    let val = size === 1 ? blob[offset] : this.getUInt32(blob, offset);
+    let val = size === 1 ? blob[offset] : getUInt32(blob, offset);
     return [val !== 0, size];
 };
 
@@ -180,7 +180,7 @@ const getSizeString = (blob: Uint8Array, offset: number, size?: number): [string
     let result = '';
     let getHidden: boolean = false;
     if (!size) {
-        size = this.getUInt32(blob, offset);
+        size = getUInt32(blob, offset);
         add = sizeInt;
     } else {
         getHidden = hiddenStrings;
@@ -496,12 +496,27 @@ const getBufferNum = (code: number): Object => {
     return code;
 };
 
+const dim = (...message: any[]): void => {
+    console.log((isNode) ? chalk.dim(message) : message);
+};
+
+const error = (...message: any[]): void => {
+    console.error((isNode) ? chalk.red(message) : message);
+};
+
+const warn = (...message: any[]): void => {
+    console.warn((isNode) ? chalk.yellow(message) : message);
+};
+
+const isNode = new Function('try {return this===global;}catch(e){return false;}');
 
 export {
     builtinMax,
     callFunction,
     cmpBytes,
     ConvertException,
+    dim,
+    error,
     get256CodePFBI,
     getBit,
     getBool,
@@ -539,4 +554,5 @@ export {
     removeSpaces,
     setHiddenStrings,
     setVerbosity,
+    warn,
 };

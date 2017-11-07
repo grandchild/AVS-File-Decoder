@@ -4,60 +4,48 @@ import * as Util from './util';
 import * as Table from './tables';
 import { Arguments, ComponentDefinition, jsontypes } from './types';
 
-// Dependencies
-import * as chalk from 'chalk';
-import { basename, extname } from 'path';
-import { readFile } from 'graceful-fs';
-import { statSync } from 'fs';
-
 // Constants
 const sizeInt = 4;
 let verbosity = 0; // log individual key:value fields
 const componentTable: ComponentDefinition[] = Components.builtin.concat(Components.dll);
 
+const args = {
+    verbose: 0,
+    quiet: false
+};
 
-const convertPreset = (file: string, args: Arguments): Object|void => {
+const convertPreset = (data: ArrayBuffer, customArgs: Arguments): Object|void => {
     // TODO: globally manage default options
-    args || (args = { verbose: 0});
+    // args || (args = { verbose: 0});
+    (<any>Object).assign(args, customArgs);
 
-    verbosity = args.verbose ? args.verbose : 0;
+    // verbosity = args.verbose ? args.verbose : 0;
     verbosity = args.quiet ? -1 : verbosity;
 
     Util.setVerbosity(verbosity);
     Util.setHiddenStrings(args.hidden);
 
-    readFile(file, (error: Object, data: ArrayBuffer) => {
-        if (error) {
-            console.error(error);
-        }
+    let preset = (<any>Object).assign({}, args.preset);
+    let blob8 = new Uint8Array(data);
+    try {
+        let clearFrame = decodePresetHeader(blob8.subarray(0, Util.presetHeaderLength));
+        preset['clearFrame'] = clearFrame;
+        let components = convertComponents(blob8.subarray(Util.presetHeaderLength));
+        preset['components'] = components;
+    } catch (e) {
+        // TODO
+        // if (verbosity < 0) Util.error(`Error in '${file}'`);
+        if (verbosity >= 1) Util.error(e.stack);
+        else Util.error(e);
+        // if(e instanceof Util.ConvertException) {
+        //     Util.error('Error: '+e.message);
+        //     return null;
+        // } else {
+        //     throw e;
+        // }
+    }
 
-        let modifiedTime = statSync(file).mtime;
-        let preset = {
-            'name': basename(file, extname(file)),
-            'date': modifiedTime.toISOString(),
-            // 'author': '',
-        };
-        let blob8 = new Uint8Array(data);
-        try {
-            let clearFrame = decodePresetHeader(blob8.subarray(0, Util.presetHeaderLength));
-            preset['clearFrame'] = clearFrame;
-            let components = convertComponents(blob8.subarray(Util.presetHeaderLength));
-            preset['components'] = components;
-        } catch (e) {
-            // TODO
-            if (verbosity < 0) console.error(chalk.red(`Error in '${file}'`));
-            if (verbosity >= 1) console.error(chalk.red(e.stack));
-            else console.error(chalk.red(e + '\n'));
-            // if(e instanceof Util.ConvertException) {
-            //     console.error('Error: '+e.message);
-            //     return null;
-            // } else {
-            //     throw e;
-            // }
-        }
-
-        return preset;
-    });
+    return preset;
 };
 
 const convertComponents = (blob: Uint8Array): Object => {
@@ -100,7 +88,7 @@ const getComponentIndex = (code: number, blob: Uint8Array, offset: number): numb
     if (code < Util.builtinMax || code === 0xfffffffe) {
         for (let i = 0; i < componentTable.length; i++) {
             if (code === componentTable[i].code) {
-                if (verbosity >= 1) console.log(chalk.dim(`Found component: ${componentTable[i].name} (${code})`));
+                if (verbosity >= 1) Util.dim(`Found component: ${componentTable[i].name} (${code})`);
 
                 return i;
             }
@@ -109,14 +97,14 @@ const getComponentIndex = (code: number, blob: Uint8Array, offset: number): numb
         for (let i = Components.builtin.length; i < componentTable.length; i++) {
             if (componentTable[i].code instanceof Array &&
                 Util.cmpBytes(blob, offset + sizeInt, <number[]>componentTable[i].code)) {
-                if (verbosity >= 1) console.log(chalk.dim(`Found component: ${componentTable[i].name}`));
+                if (verbosity >= 1) Util.dim(`Found component: ${componentTable[i].name}`);
 
                 return i;
             }
         }
     }
 
-    if (verbosity >= 1) console.log(chalk.dim(`Found unknown component (code: ${code})`));
+    if (verbosity >= 1) Util.dim(`Found unknown component (code: ${code})`);
 
     return -code;
 };
@@ -159,7 +147,9 @@ const decode_effectList = (blob: Uint8Array, offset: number, _: Object, name: st
         'output': Table['blendmodeOut'][blob[offset + 3]],
     };
     let modebit: boolean = Util.getBit(blob, offset, 7)[0] === 1; // is true in all presets I know, probably only for truly ancient versions
-    if (!modebit) { console.error(chalk.red('EL modebit is off!! If you\'re seeing this, send this .avs file in please!')); }
+    if (!modebit) {
+        Util.error('EL modebit is off!! If you\'re seeing this, send this .avs file in please!');
+    }
     let configSize: number = (modebit ? blob[offset + 4] : blob[offset]) + 1;
     if (configSize > 1) {
         comp['inAdjustBlend'] = Util.getUInt32(blob, offset + 5);
@@ -204,7 +194,7 @@ const decode_generic = (blob: Uint8Array, offset: number, fields: Object, name: 
         }
         let k = keys[i];
         let f = fields[k];
-        // console.log(chalk.yellow(`key: ${k}, field: ${f}`));
+        // console.log(`key: ${k}, field: ${f}`);
         if (k.match(/^null[_0-9]*$/)) {
             offset += f;
             // 'null_: 0' resets bitfield continuity to allow several consecutive bitfields
@@ -227,7 +217,7 @@ const decode_generic = (blob: Uint8Array, offset: number, fields: Object, name: 
             lastWasABitField = false;
         } else if (other) {
             let func = 'get' + f;
-            // console.log(chalk.yellow(`get: ${f}`));
+            // console.log(`get: ${f}`);
             result = Util.callFunction(f, blob, offset);
             value = result[0];
             size = result[1];
@@ -241,7 +231,7 @@ const decode_generic = (blob: Uint8Array, offset: number, fields: Object, name: 
             } else {
                 lastWasABitField = false;
             }
-            // console.log(chalk.yellow(`get: ${f[0]} ${f[1]} ${typeof f[1]}`));
+            // console.log(`get: ${f[0]} ${f[1]} ${typeof f[1]}`);
             let tableName: string = Util.lowerInitial(f[0]);
             if (tableName in Table) {
                 let tableKey: number = Util.getUInt(blob, offset, f[1]);
@@ -253,7 +243,7 @@ const decode_generic = (blob: Uint8Array, offset: number, fields: Object, name: 
                 value = result[0];
             }
             if (f[2]) { // further processing if wanted
-                // console.log(chalk.yellow('get' + f[2]));
+                // console.log('get' + f[2]);
                 tableName = Util.lowerInitial(f[2]);
                 if (tableName in Table) {
                     value = Table[tableName][<number>value];
@@ -267,10 +257,10 @@ const decode_generic = (blob: Uint8Array, offset: number, fields: Object, name: 
         if (k !== 'new_version') { // but don't save new_version marker, if present
             comp[k] = value;
             if (verbosity >= 2) {
-                console.log(chalk.dim('- key: ' + k + '\n- val: ' + value));
+                Util.dim('- key: ' + k + '\n- val: ' + value);
                 if (k === 'code') Util.printTable('- code', value);
-                if (verbosity >= 3) console.log(chalk.dim('- offset: ' + offset + '\n- size: ' + size));
-                console.log();
+                if (verbosity >= 3) Util.dim('- offset: ' + offset + '\n- size: ' + size);
+                // console.log();
             }
         }
         offset += size;
@@ -322,8 +312,8 @@ const decode_movement = (blob: Uint8Array, offset: number, _: Object, name: stri
         } else {
             if (effectIdOld > 15) {
                 if (verbosity >= 0) {
-                    console.error(chalk.red(`Movement: Unknown effect id ${effectIdOld}. This is a known bug.`));
-                    console.log(chalk.green('If you know an AVS version that will display this Movement as anything else but "None", then please send it in!'));
+                    Util.error(`Movement: Unknown effect id ${effectIdOld}. This is a known bug.`);
+                    console.log('If you know an AVS version that will display this Movement as anything else but "None", then please send it in!');
                 }
                 effect = Table.movementEffect[0];
             } else {
