@@ -23,25 +23,19 @@ yarn add @visbot/webvsc || npm install  @visbot/webvsc
 ## Usage
 
 ```js
-import { convertPreset } from '@visbot/webvsc/lib/convert';
-import { Arguments } from '@visbot/webvsc/lib/types';
-
-let options: Arguments = {
-    verbose: 0,
-    quiet: false
-}
+import { convertPreset } from '@visbot/webvsc';
 
 let file = 'path/to/preset.avs';
 
-readFile(file, (error: Object, data: ArrayBuffer) => {
+readFile(file, (error, data) => {
     // Get preset's name and date
     let presetName = basename(file, extname(file));
     let presetDate = statSync(file).mtime.toISOString();
-    
+
     // Convert
-    let presetObj = convertPreset(data, presetName, presetDate, options);
+    let presetObj = convertPreset(data, presetName, presetDate);
     let presetJson = JSON.stringify(presetObj, null, 4);
-    
+
     // Print result
     console.log(presetJson);
 });
