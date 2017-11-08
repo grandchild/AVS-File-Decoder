@@ -8,6 +8,7 @@
     "idleberg"
   ],
   "homepage": "https://github.com/grandchild/AVS-File-Decoder#readme",
+  "main": "index.js",
   "directories": {
     "doc": "doc",
     "test": "test"
@@ -37,6 +38,7 @@
   },
   "scripts": {
     "build": "tsc -p ./",
+    "postinstall": "tsc -p ./",
     "test": "ava ./test/ --verbose"
   }
 }
