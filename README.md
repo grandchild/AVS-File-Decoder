@@ -43,6 +43,36 @@ readFile(file, (error, data) => {
 
 **Note:** The previously contained CLI tool has been detached and is now available as the separate [webvsc-cli](https://www.npmjs.com/package/@visbot/webvsc-cli) package!
 
+## Options
+
+### hidden
+
+Type: `boolean`  
+Default: `false`  
+
+Don't extract hidden strings from fixed-size strings
+
+### minify
+
+Type: `boolean`  
+Default: `false`  
+
+Minify generated JSON
+
+### quiet
+
+Type: `boolean`  
+Default: `false`  
+
+Prints errors only
+
+### verbose
+
+Type: `number`  
+Default: `0`  
+
+Control the amount of output displayed
+
 ## Authors
 
 * [grandchild](https://github.com/grandchild)
