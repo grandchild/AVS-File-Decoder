@@ -15,7 +15,7 @@ var args = {
 };
 var convertPreset = function (data, presetName, presetDate, customArgs) {
     Object.assign(args, customArgs);
-    verbosity = args.quiet ? -1 : verbosity;
+    verbosity = args.quiet ? -1 : args.verbose;
     Util.setVerbosity(verbosity);
     Util.setHiddenStrings(args.hidden);
     var preset = {
