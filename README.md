@@ -24,12 +24,27 @@ yarn add @visbot/webvsc || npm install  @visbot/webvsc
 
 ```js
 import { convertPreset } from '@visbot/webvsc/lib/convert';
+import { Arguments } from '@visbot/webvsc/lib/types';
 
-let presetObj = convertPreset('path/to/preset.avs', options);
-let presetJson = JSON.stringify(presetObj, null, 4);
+let options: Arguments = {
+    verbose: 0,
+    quiet: false
+}
 
-// Print result
-console.log(presetJson);
+let file = 'path/to/preset.avs';
+
+readFile(file, (error: Object, data: ArrayBuffer) => {
+    // Get preset's name and date
+    let presetName = basename(file, extname(file));
+    let presetDate = statSync(file).mtime.toISOString();
+    
+    // Convert
+    let presetObj = convertPreset(data, presetName, presetDate, options);
+    let presetJson = JSON.stringify(presetObj, null, 4);
+    
+    // Print result
+    console.log(presetJson);
+});
 ```
 
 **Note:** The previously contained CLI tool has been detached and is now available as the separate [webvsc-cli](https://www.npmjs.com/package/@visbot/webvsc-cli) package!
