@@ -75,7 +75,11 @@ Prints errors only
 Type: `number`  
 Default: `0`  
 
-Control the amount of output displayed
+Control the amount of output displayed:
+
+* `0` Display name of operation (read/write)
+* `1` List detected components
+* `2` List component details
 
 ## Authors
 
