@@ -22,6 +22,10 @@ yarn add @visbot/webvsc || npm install  @visbot/webvsc
 
 ## Usage
 
+`convertPreset(data, presetName, presetDate, [options])`
+
+**Example:**
+
 ```js
 import { convertPreset } from '@visbot/webvsc';
 
