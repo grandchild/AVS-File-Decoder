@@ -32,7 +32,7 @@
   },
   "devDependencies": {
     "@types/node": "^8.0.28",
-    "ava": "^0.23.0",
+    "ava": "^0.24.0",
     "tslint": "^5.7.0",
     "typescript": "^2.5.2"
   },
