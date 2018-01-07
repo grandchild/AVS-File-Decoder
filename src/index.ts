@@ -15,7 +15,7 @@ const args: Arguments = {
     hidden: false
 };
 
-const convertPreset = (data: ArrayBuffer, presetName: string, presetDate: string, customArgs: Arguments): Object|void => {
+const convertPreset = (data: ArrayBuffer, presetName: string, presetDate: string = '2000-03-03T00:00:00.000Z', customArgs?: Arguments): Object|void => {
     (<any>Object).assign(args, customArgs);
 
     verbosity = args.quiet ? -1 : args.verbose;
