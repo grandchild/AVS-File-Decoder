@@ -14,6 +14,7 @@ var args = {
     hidden: false
 };
 var convertPreset = function (data, presetName, presetDate, customArgs) {
+    if (presetDate === void 0) { presetDate = '2000-03-03T00:00:00.000Z'; }
     Object.assign(args, customArgs);
     verbosity = args.quiet ? -1 : args.verbose;
     Util.setVerbosity(verbosity);
