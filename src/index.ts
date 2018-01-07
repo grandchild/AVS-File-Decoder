@@ -2,7 +2,6 @@
 import * as Components from './lib/components';
 import * as Util from './lib/util';
 import * as Table from './lib/tables';
-import { Arguments, ComponentDefinition, jsontypes } from './lib/types';
 
 // Constants
 const sizeInt = 4;

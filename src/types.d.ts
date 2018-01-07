@@ -33,12 +33,3 @@ interface ComponentDefinition {
     readonly func: string;
     readonly fields?: any;
 }
-
-export {
-    Arguments,
-    CodeSection,
-    ColorMap,
-    ComponentDefinition,
-    jsontypes,
-    uint8,
-};

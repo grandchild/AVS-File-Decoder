@@ -1,5 +1,3 @@
-import { ComponentDefinition } from './types';
-
 // Constants
 const sizeInt = 4;
 
