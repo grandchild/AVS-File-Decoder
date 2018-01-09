@@ -11,7 +11,7 @@ const componentTable: ComponentDefinition[] = Components.builtin.concat(Componen
 const args: Arguments = {
     verbose: 0,
     quiet: false,
-    hidden: false
+    hidden: true
 };
 
 const convertPreset = (data: ArrayBuffer, presetName: string, presetDate: string, customArgs?: Arguments): Object|void => {

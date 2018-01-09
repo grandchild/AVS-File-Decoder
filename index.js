@@ -11,7 +11,7 @@ var componentTable = Components.builtin.concat(Components.dll);
 var args = {
     verbose: 0,
     quiet: false,
-    hidden: false
+    hidden: true
 };
 var convertPreset = function (data, presetName, presetDate, customArgs) {
     Object.assign(args, customArgs);
