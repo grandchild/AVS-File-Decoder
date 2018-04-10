@@ -62,7 +62,7 @@ const builtin: ComponentDefinition[] = [
         'fields': {
             'zoom': sizeInt, // [position]: [factor] -> 0x00: 2, 0x20: 1, 0xA0: 0.5, 0x100: ~1/3
             'onBeatZoom': sizeInt,
-            'output': ['Map4', { 0: 'Replace', 1: '50/50' }],
+            'blendMode': ['Map4', { 0: 'Replace', 1: '50/50' }],
             'onBeat': ['Bool', sizeInt],
             'bilinear': ['Bool', sizeInt],
         }
@@ -74,7 +74,7 @@ const builtin: ComponentDefinition[] = [
         'func': 'generic',
         'fields': {
             'color': 'Color',
-            'output': ['Map4', { 0: 'Replace', 1: '50/50' }],
+            'blendMode': ['Map4', { 0: 'Replace', 1: '50/50' }],
             'clearBeats': sizeInt,
         }
     },
@@ -112,10 +112,10 @@ const builtin: ComponentDefinition[] = [
             'onBeatSizeChange': ['Bit', 1, 'Boolified'],
             null0: sizeInt - 1, // fill up bitfield
             'color': 'Color',
-            'range': sizeInt, // 1-20: min(h/2,w*(3/8))*range/32.0
-            'size': sizeInt,
-            'onBeatSize': sizeInt,
-            'output': ['Map4', { 0: 'Replace', 1: 'Additive', 2: '50/50', 3: 'Default' }],
+            'distance': sizeInt, // 1-20: min(h/2,w*(3/8))*range/32.0
+            'particleSize': sizeInt,
+            'onBeatParticleSize': sizeInt,
+            'blendMode': ['Map4', { 0: 'Replace', 1: 'Additive', 2: '50/50', 3: 'Default' }],
         }
     },
     {
@@ -126,7 +126,7 @@ const builtin: ComponentDefinition[] = [
         'fields': {
             'zoom': sizeInt,
             'rotate': sizeInt,
-            'output': ['Map4', { '0': 'Replace', '1': '50/50' }],
+            'blendMode': ['Map4', { '0': 'Replace', '1': '50/50' }],
             'onBeatReverse': ['Bool', sizeInt],
             'reversalSpeed': sizeInt, // inverted - 0: fastest, 8: slowest
             'onBeatZoom': sizeInt,
@@ -168,9 +168,9 @@ const builtin: ComponentDefinition[] = [
         'func': 'generic',
         'fields': {
             'mode': ['Map4', { 0: 'Off', 1: 'Below', 2: 'Above', 3: 'Near' }],
-            'colorFrom': 'Color',
-            'colorTo': 'Color',
-            'colorDistance': sizeInt,
+            'color': 'Color',
+            'outColor': 'Color',
+            'level': sizeInt,
         }
     },
     {
@@ -221,7 +221,7 @@ const builtin: ComponentDefinition[] = [
             'spacing': sizeInt,
             'speedX': 'Int32', // -512 to 544
             'speedY': 'Int32',
-            'output': ['Map4', { 0: 'Replace', 1: 'Additive', 2: '50/50', 3: 'Default' }],
+            'blendMode': ['Map4', { 0: 'Replace', 1: 'Additive', 2: '50/50', 3: 'Default' }],
         }
     },
     {
@@ -230,9 +230,9 @@ const builtin: ComponentDefinition[] = [
         'group': 'Misc',
         'func': 'generic',
         'fields': {
-            'mode': ['BufferMode', sizeInt],
-            'buffer': ['BufferNum', sizeInt],
-            'blend': ['BlendmodeBuffer', sizeInt],
+            'action': ['BufferMode', sizeInt],
+            'bufferId': ['BufferNum', sizeInt],
+            'blendMode': ['BlendmodeBuffer', sizeInt],
             'adjustBlend': sizeInt,
         }
     },
@@ -277,7 +277,7 @@ const builtin: ComponentDefinition[] = [
         'func': 'generic',
         'fields': {
             'enabled': ['Bool', sizeInt],
-            'output': ['Map8', { 0: 'Replace', 1: 'Additive', 0x100000000: '50/50' }],
+            'blendMode': ['Map8', { 0: 'Replace', 1: 'Additive', 0x100000000: '50/50' }],
             'red': 'Int32', // \
             'green': 'Int32', //  > -4096 to 4096
             'blue': 'Int32', // /
@@ -297,7 +297,7 @@ const builtin: ComponentDefinition[] = [
             'x': sizeInt,
             'y': sizeInt,
             'color': 'Color',
-            'output': ['Map8', { 0: 'Replace', 1: 'Additive', 0x100000000: '50/50' }],
+            'blendMode': ['Map8', { 0: 'Replace', 1: 'Additive', 0x100000000: '50/50' }],
             'onbeat': ['Bool', sizeInt],
             'x2': sizeInt,
             'y2': sizeInt,
@@ -311,7 +311,7 @@ const builtin: ComponentDefinition[] = [
         'func': 'generic',
         'fields': {
             'enabled': ['Bool', sizeInt],
-            'output': ['Map8', { 0: 'Replace', 1: 'Additive', 0x100000000: '50/50' }],
+            'blendMode': ['Map8', { 0: 'Replace', 1: 'Additive', 0x100000000: '50/50' }],
             'amount': sizeInt, // 0-100
             'static': ['Bool', sizeInt],
         }
@@ -324,7 +324,7 @@ const builtin: ComponentDefinition[] = [
         'fields': {
             'enabled': ['Bool', sizeInt],
             'color': 'Color',
-            'output': ['Map8', { 0: 'Replace', 1: 'Additive', 0x100000000: '50/50', 2: 'Default' }],
+            'blendMode': ['Map8', { 0: 'Replace', 1: 'Additive', 0x100000000: '50/50', 2: 'Default' }],
             'onlyFirst': ['Bool', sizeInt],
         }
     },
@@ -340,8 +340,8 @@ const builtin: ComponentDefinition[] = [
             'leftToRight': ['Bit', 2, 'Boolified'],
             'rightToLeft': ['Bit', 3, 'Boolified'],
             null0: sizeInt - 1, // fill up bitfield space
-            'onBeat': ['Bool', sizeInt],
-            'smooth': ['Bool', sizeInt],
+            'onBeatRandom': ['Bool', sizeInt],
+            'smoothTransition': ['Bool', sizeInt],
             'speed': sizeInt,
         }
     },
@@ -353,7 +353,7 @@ const builtin: ComponentDefinition[] = [
         'fields': {
             'enabled': sizeInt,
             'color': 'Color',
-            'output': ['Map8', { 0: 'Replace', 1: 'Additive', 0x100000000: '50/50' }],
+            'blendMode': ['Map8', { 0: 'Replace', 1: 'Additive', 0x100000000: '50/50' }],
             'WarpSpeed': 'Float',
             'MaxStars_set': sizeInt,
             'onbeat': sizeInt,
@@ -369,7 +369,7 @@ const builtin: ComponentDefinition[] = [
         'fields': {
             'enabled': ['Bool', sizeInt],
             'color': 'Color',
-            'output': ['Map8', { 0: 'Replace', 1: 'Additive', 0x100000000: '50/50' }],
+            'blendMode': ['Map8', { 0: 'Replace', 1: 'Additive', 0x100000000: '50/50' }],
             'onBeat': ['Bool', sizeInt],
             'insertBlanks': ['Bool', sizeInt],
             'randomPosition': ['Bool', sizeInt],
@@ -415,7 +415,7 @@ const builtin: ComponentDefinition[] = [
             'duration': sizeInt, // 0-100
             'depth': sizeInt, // 0-100
             'onBeatDepth': sizeInt, // 0-100
-            'output': ['Map8', { 0: 'Replace', 1: 'Additive', 0x100000000: '50/50' }],
+            'blendMode': ['Map8', { 0: 'Replace', 1: 'Additive', 0x100000000: '50/50' }],
             'code': 'CodeFBI',
             'showDot': ['Bool', sizeInt],
             'invertDepth': ['Bool', sizeInt],
@@ -430,11 +430,11 @@ const builtin: ComponentDefinition[] = [
         'func': 'generic',
         'fields': {
             'enabled': ['Bool', sizeInt],
-            'size': sizeInt,
-            'onBeatSize': sizeInt,
-            'output': ['Map8', { 0: 'Replace', 1: 'Additive', 0x100000000: '50/50' }],
-            'onbeat': ['Bool', sizeInt],
-            'durFrames': sizeInt,
+            'squareSize': sizeInt,
+            'onBeatSquareSize': sizeInt,
+            'blendMode': ['Map8', { 0: 'Replace', 1: 'Additive', 0x100000000: '50/50' }],
+            'onBeatSizeChange': ['Bool', sizeInt],
+            'onBeatSizeDuration': sizeInt,
         }
     },
     {
@@ -479,7 +479,7 @@ const builtin: ComponentDefinition[] = [
         'func': 'generic',
         'fields': {
             'enabled': ['Bool', sizeInt],
-            'output': ['Map8', { 0: 'Replace', 1: 'Additive', 0x100000000: '50/50' }],
+            'blendMode': ['Map8', { 0: 'Replace', 1: 'Additive', 0x100000000: '50/50' }],
             'adapt': sizeInt,
             'onBeatPersist': sizeInt, // 0 to 32
             'file': 'NtString',
@@ -495,7 +495,7 @@ const builtin: ComponentDefinition[] = [
         'fields': {
             'new_version': ['Bool', 1],
             'code': 'CodePFBI',
-            'output': ['Map4', { 0: 'Replace', 1: '50/50' }],
+            'blendMode': ['Map4', { 0: 'Replace', 1: '50/50' }],
             'bilinear': ['Bool', sizeInt],
         }
     },
@@ -511,7 +511,7 @@ const builtin: ComponentDefinition[] = [
             'audioSource': ['Bit', 2, 'AudioSource'],
             null0: 3, // padding, bitfield before is actually 32 bit
             'colors': 'ColorList',
-            'lineType': ['DrawMode', sizeInt],
+            'drawMode': ['DrawMode', sizeInt],
         }
     },
     {
@@ -531,7 +531,7 @@ const builtin: ComponentDefinition[] = [
         'fields': {
             'enabled': ['Bool', sizeInt],
             'color': 'Color',
-            'output': ['Map8', { 0: 'Replace', 1: 'Additive', 0x100000000: '50/50' }],
+            'blendMode': ['Map8', { 0: 'Replace', 1: 'Additive', 0x100000000: '50/50' }],
             'invert': ['Bool', sizeInt],
         }
     },
@@ -543,7 +543,7 @@ const builtin: ComponentDefinition[] = [
         'fields': {
             'enabled': ['Bool', sizeInt],
             'color': 'Color',
-            'output': ['Map8', { 0: 'Replace', 1: 'Additive', 0x100000000: '50/50', 2: 'Default' }],
+            'blendMode': ['Map8', { 0: 'Replace', 1: 'Additive', 0x100000000: '50/50', 2: 'Default' }],
             'audioChannel': ['UInt32', sizeInt, 'AudioChannel'],
             'bands': sizeInt,
         }
@@ -572,7 +572,7 @@ const builtin: ComponentDefinition[] = [
             'distance': sizeInt, // 1 to 64
             'alpha': sizeInt, // 1 to 255
             'rotation': 'Int32', // 32 to -32 (ui has inverted range)
-            'output': ['Map8', { 0: 'Replace', 1: 'Additive', 0x100000000: '50/50' }],
+            'blendMode': ['Map8', { 0: 'Replace', 1: 'Additive', 0x100000000: '50/50' }],
             'onBeatDistance': sizeInt,
             'onBeatAlpha': sizeInt,
             'onBeatRotation': sizeInt,
@@ -589,7 +589,7 @@ const builtin: ComponentDefinition[] = [
         'fields': {
             'new_version': ['Bool', 1],
             'code': 'CodeIFB',
-            'output': ['Map4', { 0: 'Replace', 1: '50/50' }],
+            'blendMode': ['Map4', { 0: 'Replace', 1: '50/50' }],
             'bilinear': ['Bool', sizeInt],
         }
     },
@@ -601,11 +601,11 @@ const builtin: ComponentDefinition[] = [
         'fields': {
             'new_version': ['Bool', 1],
             'code': 'CodePFBI',
-            'bilinear': ['Bool', sizeInt],
+            'bFilter': ['Bool', sizeInt],
             'coordinates': ['Coordinates', sizeInt],
             'gridW': sizeInt,
             'gridH': sizeInt,
-            'alpha': ['Bool', sizeInt],
+            'blend': ['Bool', sizeInt],
             'wrap': ['Bool', sizeInt],
             'buffer': ['BufferNum', sizeInt],
             'alphaOnly': ['Bool', sizeInt],
@@ -659,7 +659,7 @@ const dll: ComponentDefinition[] = [
             null0: sizeInt * 4,
             'image': ['SizeString', 260],
             'input': ['Bit', 0, 'BlendmodeIn'],
-            'output': ['Bit', 2, 'BlendmodeTexer'],
+            'blendMode': ['Bit', 2, 'BlendmodeTexer'],
             null1: 3, // fill up bitfield
             'particles': sizeInt,
             null2: 4
@@ -673,10 +673,10 @@ const dll: ComponentDefinition[] = [
         'func': 'generic',
         'fields': {
             null0: sizeInt,
-            'image': ['SizeString', 260],
+            'imageSrc': ['SizeString', 260],
             'resizing': ['Bool', sizeInt],
-            'wrap': ['Bool', sizeInt],
-            'coloring': ['Bool', sizeInt],
+            'wrapAround': ['Bool', sizeInt],
+            'colorFiltering': ['Bool', sizeInt],
             null1: sizeInt,
             'code': 'CodeIFBP',
         }
@@ -689,8 +689,8 @@ const dll: ComponentDefinition[] = [
         'func': 'generic',
         'fields': {
             'key': ['ColorMapKey', sizeInt],
-            'output': ['BlendmodeColorMap', sizeInt],
-            'mapCycling': ['ColorMapCycleMode', sizeInt],
+            'blendMode': ['BlendmodeColorMap', sizeInt],
+            'mapCycleMode': ['ColorMapCycleMode', sizeInt],
             'adjustBlend': 1,
             null0: 1,
             'dontSkipFastBeats': ['Bool', 1],
@@ -719,10 +719,10 @@ const dll: ComponentDefinition[] = [
             'enabled': ['Bool', sizeInt],
             'wrap': ['Bool', sizeInt], // note that wrap and absolute are mutually exclusive.
             'absolute': ['Bool', sizeInt], // they can however both be false/zero
-            '2-pass': ['Bool', sizeInt],
+            'twoPass': ['Bool', sizeInt],
             'kernel': ['ConvoFilter', [7, 7]],
             'bias': 'Int32',
-            'scaling': 'Int32',
+            'scale': 'Int32',
         }
     },
     {
@@ -907,7 +907,7 @@ const dll: ComponentDefinition[] = [
         'func': 'generic',
         'fields': {
             'image': ['NtString', 260],
-            'output': ['BlendmodePicture2', sizeInt],
+            'blendMode': ['BlendmodePicture2', sizeInt],
             'onBeatOutput': ['BlendmodePicture2', sizeInt],
             'bilinear': ['Bool', sizeInt],
             'onBeatBilinear': ['Bool', sizeInt],

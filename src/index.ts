@@ -159,7 +159,7 @@ const decode_effectList = (blob: Uint8Array, offset: number, _: Object, name: st
         comp['inBufferInvert'] = Util.getUInt32(blob, offset + 21) === 1;
         comp['outBufferInvert'] = Util.getUInt32(blob, offset + 25) === 1;
         comp['enableOnBeat'] = Util.getUInt32(blob, offset + 29) === 1;
-        comp['onBeatFrames'] = Util.getUInt32(blob, offset + 33);
+        comp['enableOnBeatFor'] = Util.getUInt32(blob, offset + 33);
     }
     let effectList28plusHeader = [ // reads: hex(builtinMax) + 'AVS 2.8+ Effect List Config....'
         0x00, 0x40, 0x00, 0x00, 0x41, 0x56, 0x53, 0x20,
