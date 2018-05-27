@@ -126,7 +126,7 @@ var decodePresetHeader = function (blob) {
 var decode_effectList = function (blob, offset, _, name) {
     var size = Util.getUInt32(blob, offset - sizeInt);
     var comp = {
-        'type': name,
+        'type': Util.removeSpaces(name),
         'enabled': Util.getBit(blob, offset, 1)[0] !== 1,
         'clearFrame': Util.getBit(blob, offset, 0)[0] === 1,
         'input': Table['blendmodeIn'][blob[offset + 2]],
@@ -145,7 +145,7 @@ var decode_effectList = function (blob, offset, _, name) {
         comp['inBufferInvert'] = Util.getUInt32(blob, offset + 21) === 1;
         comp['outBufferInvert'] = Util.getUInt32(blob, offset + 25) === 1;
         comp['enableOnBeat'] = Util.getUInt32(blob, offset + 29) === 1;
-        comp['onBeatFrames'] = Util.getUInt32(blob, offset + 33);
+        comp['enableOnBeatFor'] = Util.getUInt32(blob, offset + 33);
     }
     var effectList28plusHeader = [
         0x00, 0x40, 0x00, 0x00, 0x41, 0x56, 0x53, 0x20,
