@@ -67,7 +67,7 @@ var convertComponents = function (blob) {
             var offset = fp + sizeInt * 2 + isDll * 32;
             res = eval('decode_' + componentTable[i].func)(blob, offset, componentTable[i].fields, componentTable[i].name, componentTable[i].group, offset + size);
         }
-        if (!res || typeof res !== 'object') {
+        if (!res || typeof res !== 'object') { // should not happen, decode functions should throw their own.
             throw new Util.ConvertException('Unknown convert error');
         }
         components.push(res);
@@ -115,7 +115,7 @@ var decodePresetHeader = function (blob) {
         0x73, 0x65, 0x74, 0x20, 0x30, 0x2E, 0x32, 0x1A,
     ];
     if (!Util.cmpBytes(blob, /*offset*/ 0, presetHeader0_2) &&
-        !Util.cmpBytes(blob, /*offset*/ 0, presetHeader0_1)) {
+        !Util.cmpBytes(blob, /*offset*/ 0, presetHeader0_1)) { // 0.1 only if 0.2 failed because it's far rarer.
         throw new Util.ConvertException('Invalid preset header.\n' +
             '  This does not seem to be an AVS preset file.\n' +
             '  If it does load with Winamp\'s AVS please send the file in so we can look at it.');
@@ -232,7 +232,7 @@ var decode_generic = function (blob, offset, fields, name, group, end) {
                 size = result[1];
                 value = result[0];
             }
-            if (f[2]) {
+            if (f[2]) { // further processing if wanted
                 // console.log('get' + f[2]);
                 tableName = Util.lowerInitial(f[2]);
                 if (tableName in Table) {
@@ -244,7 +244,7 @@ var decode_generic = function (blob, offset, fields, name, group, end) {
             }
         }
         // save value or function result of value in field
-        if (k !== 'new_version') {
+        if (k !== 'new_version') { // but don't save new_version marker, if present
             comp[k] = value;
             if (verbosity >= 2) {
                 Util.dim('- key: ' + k + '\n- val: ' + value);
@@ -293,7 +293,7 @@ var decode_movement = function (blob, offset, _, name, group, end) {
     if (effectIdOld !== 0) {
         if (effectIdOld === 0x7fff) {
             var strAndSize = ['', 0];
-            if (blob[offset + sizeInt] === 1) {
+            if (blob[offset + sizeInt] === 1) { // new-version marker
                 strAndSize = Util.getSizeString(blob, offset + sizeInt + 1);
             }
             else {
@@ -333,7 +333,7 @@ var decode_movement = function (blob, offset, _, name, group, end) {
     comp['coordinates'] = Table.coordinates[Util.getUInt32(blob, offset + sizeInt * 3)];
     comp['bilinear'] = Util.getBool(blob, offset + sizeInt * 4, sizeInt)[0];
     comp['wrap'] = Util.getBool(blob, offset + sizeInt * 5, sizeInt)[0];
-    if (effect && effect.length && effectIdOld !== 1 && effectIdOld !== 7) {
+    if (effect && effect.length && effectIdOld !== 1 && effectIdOld !== 7) { // 'slight fuzzify' and 'blocky partial out' have no script representation.
         code = effect[1];
         comp['coordinates'] = effect[2]; // overwrite
     }
@@ -374,19 +374,19 @@ var decode_simple = function (blob, offset) {
     }
     else {
         switch (effect & 3) {
-            case 0:// solid analyzer
+            case 0: // solid analyzer
                 comp['audioSource'] = 'Spectrum';
                 comp['renderType'] = 'Solid';
                 break;
-            case 1:// line analyzer
+            case 1: // line analyzer
                 comp['audioSource'] = 'Spectrum';
                 comp['renderType'] = 'Lines';
                 break;
-            case 2:// line scope
+            case 2: // line scope
                 comp['audioSource'] = 'Waveform';
                 comp['renderType'] = 'Lines';
                 break;
-            case 3:// solid scope
+            case 3: // solid scope
                 comp['audioSource'] = 'Waveform';
                 comp['renderType'] = 'Solid';
                 break;
