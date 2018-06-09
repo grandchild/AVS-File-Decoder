@@ -1,6 +1,6 @@
 // Modules
 import * as Table from './tables';
-import * as chalk from 'chalk';
+import chalk from 'chalk';
 
 // Constants
 const sizeInt: number = 4;
