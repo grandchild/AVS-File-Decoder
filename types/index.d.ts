@@ -12,7 +12,7 @@ interface Arguments {
 interface ColorMap {
     index: number;
     enabled: boolean;
-    map: { color: string, position: number }[];
+    colors: { color: string, position: number }[];
     id?: number;
     fileName?: string;
 }

@@ -1,197 +1,202 @@
 const blendmodeIn = {
-     '0': 'Ignore',
-     '1': 'Replace',
-     '2': '50/50',
-     '3': 'Maximum',
-     '4': 'Additive',
-     '5': 'Dest-Src',
-     '6': 'Src-Dest',
-     '7': 'EveryOtherLine',
-     '8': 'EveryOtherPixel',
+     '0': 'IGNORE',
+     '1': 'REPLACE',
+     '2': 'FIFTY_FIFTY',
+     '3': 'MAXIMUM',
+     '4': 'ADDITIVE',
+     '5': 'SUB_DEST_SRC',
+     '6': 'SUB_SRC_DEST',
+     '7': 'EVERY_OTHER_LINE',
+     '8': 'EVERY_OTHER_PIXEL',
      '9': 'XOR',
-    '10': 'Adjustable',
-    '11': 'Multiply',
-    '12': 'Buffer',
+    '10': 'ADJUSTABLE',
+    '11': 'MULTIPLY',
+    '12': 'BUFFER',
 };
 
 const blendmodeOut = {
-     '0': 'Replace',
-     '1': 'Ignore',
-     '2': 'Maximum',
-     '3': '50/50',
-     '4': 'Dest-Src',
-     '5': 'Additive',
-     '6': 'EveryOtherLine',
-     '7': 'Src-Dest',
+     '0': 'REPLACE',
+     '1': 'IGNORE',
+     '2': 'MAXIMUM',
+     '3': 'FIFTY_FIFTY',
+     '4': 'SUB_DEST_SRC',
+     '5': 'ADDITIVE',
+     '6': 'EVERY_OTHER_LINE',
+     '7': 'SUB_SRC_DEST',
      '8': 'XOR',
-     '9': 'EveryOtherPixel',
-    '10': 'Multiply',
-    '11': 'Adjustable',
+     '9': 'EVERY_OTHER_PIXEL',
+    '10': 'MULTIPLY',
+    '11': 'ADJUSTABLE',
     // don't ask me....
-    '13': 'Buffer',
+    '13': 'BUFFER',
 };
 
 const blendmodeBuffer = {
-     '0': 'Replace',
-     '1': '50/50',
-     '2': 'Additive',
-     '3': 'EveryOtherPixel',
-     '4': 'Dest-Src',
-     '5': 'EveryOtherLine',
+     '0': 'REPLACE',
+     '1': 'FIFTY_FIFTY',
+     '2': 'ADDITIVE',
+     '3': 'EVERY_OTHER_PIXEL',
+     '4': 'SUB_DEST_SRC',
+     '5': 'EVERY_OTHER_LINE',
      '6': 'XOR',
-     '7': 'Maximum',
-     '8': 'Minimum',
-     '9': 'Src-Dest',
-    '10': 'Multiply',
-    '11': 'Adjustable',
+     '7': 'MAXIMUM',
+     '8': 'MINIMUM',
+     '9': 'SUB_SRC_DEST',
+    '10': 'MULTIPLY',
+    '11': 'ADJUSTABLE',
 };
 
 const blendmodeRender = {
-    '0': 'Replace',
-    '1': 'Additive',
-    '2': 'Maximum',
-    '3': '50/50',
-    '4': 'Dest-Src',
-    '5': 'Src-Dest',
-    '6': 'Multiply',
-    '7': 'Adjustable',
+    '0': 'REPLACE',
+    '1': 'ADDITIVE',
+    '2': 'MAXIMUM',
+    '3': 'FIFTY_FIFTY',
+    '4': 'SUB_DEST_SRC',
+    '5': 'SUB_SRC_DEST',
+    '6': 'MULTIPLY',
+    '7': 'ADJUSTABLE',
     '8': 'XOR',
 };
 
 const blendmodePicture2 = {
-     '0': 'Replace',
-     '1': 'Additive',
-     '2': 'Maximum',
-     '3': 'Minimum',
-     '4': '50/50',
-     '5': 'Dest-Src',
-     '6': 'Src-Dest',
-     '7': 'Multiply',
+     '0': 'REPLACE',
+     '1': 'ADDITIVE',
+     '2': 'MAXIMUM',
+     '3': 'MINIMUM',
+     '4': 'FIFTY_FIFTY',
+     '5': 'SUB_DEST_SRC',
+     '6': 'SUB_SRC_DEST',
+     '7': 'MULTIPLY',
      '8': 'XOR',
-     '9': 'Adjustable',
-    '10': 'Ignore',
+     '9': 'ADJUSTABLE',
+    '10': 'IGNORE',
 };
 
 const blendmodeColorMap = {
-    '0': 'Replace',
-    '1': 'Additive',
-    '2': 'Maximum',
-    '3': 'Minimum',
-    '4': '50/50',
-    '5': 'Dest-Src',
-    '6': 'Src-Dest',
-    '7': 'Multiply',
+    '0': 'REPLACE',
+    '1': 'ADDITIVE',
+    '2': 'MAXIMUM',
+    '3': 'MINIMUM',
+    '4': 'FIFTY_FIFTY',
+    '5': 'SUB_DEST_SRC',
+    '6': 'SUB_SRC_DEST',
+    '7': 'MULTIPLY',
     '8': 'XOR',
-    '9': 'Adjustable',
+    '9': 'ADJUSTABLE',
 };
 
 const blendmodeTexer = {
-    '0': 'Texture',
-    '1': 'Masked Texture'
+    '0': 'TEXTURE',
+    '1': 'MASKED_TEXTURE'
 };
 
 const colorMapKey = {
-    '0': 'Red',
-    '1': 'Green',
-    '2': 'Blue',
-    '3': '(R+G+B)/2',
-    '4': 'MaxChannel',
-    '5': '(R+G+B)/3',
+    '0': 'RED',
+    '1': 'GREEN',
+    '2': 'BLUE',
+    '3': 'CHANNEL_SUM_HALF',
+    '4': 'MAX',
+    '5': 'CHANNEL_AVERAGE',
 };
 
 const colorMapCycleMode = {
-    '0': 'None (Map 1)',
-    '1': 'OnBeat Random',
-    '2': 'OnBeat Sequential',
+    '0': 'SINGLE',
+    '1': 'ONBEAT_RANDOM',
+    '2': 'ONBEAT_SEQUENTIAL',
 };
 
 const bufferMode = {
-    '0': 'Save',
-    '1': 'Restore',
-    '2': 'AlternateSaveRestore',
-    '3': 'AlternateRestoreSave',
+    '0': 'SAVE',
+    '1': 'RESTORE',
+    '2': 'ALTERNATE_SAVE_RESTORE',
+    '3': 'ALTERNATE_RESTORE_SAVE',
 };
 
 const coordinates = {
-    '0': 'Polar',
-    '1': 'Cartesian',
+    '0': 'POLAR',
+    '1': 'CARTESIAN',
 };
 
 const drawMode = {
-    '0': 'Dots',
-    '1': 'Lines',
+    '0': 'DOTS',
+    '1': 'LINES',
 };
 
 const audioChannel = {
-    '0': 'Left',
-    '1': 'Right',
-    '2': 'Center',
+    '0': 'LEFT',
+    '1': 'RIGHT',
+    '2': 'CENTER',
 };
 
 const audioSource = {
-    '0': 'Waveform',
-    '1': 'Spectrum',
+    '0': 'WAVEFORM',
+    '1': 'SPECTRUM',
 };
 
 const positionX = {
-    '0': 'Left',
-    '1': 'Right',
-    '2': 'Center',
+    '0': 'LEFT',
+    '1': 'RIGHT',
+    '2': 'CENTER',
 };
 
 const positionY = {
-    '0': 'Top',
-    '1': 'Bottom',
-    '2': 'Center',
+    '0': 'TOP',
+    '1': 'BOTTOM',
+    '2': 'CENTER',
+};
+
+const convolutionEdgeMode = {
+    '0': 'EXTEND',
+    '1': 'WRAP',
 };
 
 const multiFilterEffect = {
-    '0': 'Chrome',
-    '1': 'Double Chrome',
-    '2': 'Triple Chrome',
-    '3': 'Infinite Root Multiplier + Small Border Convolution'
+    '0': 'CHROME',
+    '1': 'DOUBLE_CHROME',
+    '2': 'TRIPLE_CHROME',
+    '3': 'INFINITE_ROOT_MULTIPLIER_AND_SMALL_BORDER_CONVOLUTION',
 };
 
 const bufferBlendMode = {
-     '0': 'a=b (Replace)',
-     '1': 'a=a+b (Additive)',
-     '2': 'a=max(a,b) (Maximum)',
-     '3': 'a=(a+b)/2 (50/50)',
-     '4': 'a=a-b (Subtractive 1)',
-     '5': 'a=b-a (Subtractive 2)',
-     '6': 'a=a*b (Multiply)',
-     '7': 'a=a*x+b*(1-x) (Adjustable)',
-     '8': 'a=a xor b (XOR)',
-     '9': 'a=min(a,b) (Minimum)',
-    '10': 'a=|a-b| (Absolute difference)'
+     '0': 'REPLACE',
+     '1': 'ADDITIVE',
+     '2': 'MAXIMUM',
+     '3': 'FIFTY_FIFTY',
+     '4': 'SUB_DEST_SRC',
+     '5': 'SUB_SRC_DEST',
+     '6': 'MULTIPLY',
+     '7': 'ADJUSTABLE',
+     '8': 'XOR',
+     '9': 'MINIMUM',
+    '10': 'ABSOLUTE_DIFFERENCE',
 };
 
 const bufferBlendBuffer = {
-    '0': 0,
-    '1': 1,
-    '2': 2,
-    '3': 3,
-    '4': 4,
-    '5': 5,
-    '6': 6,
-    '7': 7,
-    '8': 'Current'
+    '0': 'buffer1',
+    '1': 'buffer2',
+    '2': 'buffer3',
+    '3': 'buffer4',
+    '4': 'buffer5',
+    '5': 'buffer6',
+    '6': 'buffer7',
+    '7': 'buffer8',
+    '8': 'CURRENT',
 };
 
 const particleSystemAccelerationType = {
-    '0': 'Constant',
-    '1': 'Fade out by 0.9',
-    '2': 'Fade out by 0.6',
-    '3': 'Cosine',
-    '4': 'Squared Cosine'
+    '0': 'CONSTANT',
+    '1': 'FADE_OUT_BY_0_9',
+    '2': 'FADE_OUT_BY_0_6',
+    '3': 'COSINE',
+    '4': 'SQUARED_COSINE',
 };
 
 const particleSystemColorBounce = {
-    '0': 'Stop',
-    '1': 'Wrap each',
-    '2': 'Wave each',
-    '3': 'Wrap all',
-    '4': 'Wave all'
+    '0': 'STOP',
+    '1': 'WRAP_EACH',
+    '2': 'WAVE_EACH',
+    '3': 'WRAP_ALL',
+    '4': 'WAVE_ALL',
 };
 
 

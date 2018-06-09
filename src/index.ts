@@ -140,7 +140,7 @@ const decodePresetHeader = (blob: Uint8Array): boolean => {
 const decode_effectList = (blob: Uint8Array, offset: number, _: Object, name: string): Object => {
     let size: number = Util.getUInt32(blob, offset - sizeInt);
     let comp = {
-        'type': name,
+        'type': Util.removeSpaces(name),
         'enabled': Util.getBit(blob, offset, 1)[0] !== 1,
         'clearFrame': Util.getBit(blob, offset, 0)[0] === 1,
         'input': Table['blendmodeIn'][blob[offset + 2]],

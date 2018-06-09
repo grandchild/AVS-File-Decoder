@@ -409,7 +409,7 @@ const getColorList = (blob: Uint8Array, offset: number): [string[], number] => {
     return [colors, size];
 };
 
-const getColorMaps = (blob: Uint8Array, offset: number): [{index: number, enabled: boolean, id?: number, fileName?: string, map: {color: string, position: number}[]}[], number] => {
+const getColorMaps = (blob: Uint8Array, offset: number): [{index: number, enabled: boolean, id?: number, fileName?: string, colors: {color: string, position: number}[]}[], number] => {
     let mapOffset = offset + 480;
     let maps: ColorMap[] = [];
     let headerSize = 60; // 4B enabled, 4B num, 4B id, 48B filestring
@@ -425,7 +425,7 @@ const getColorMaps = (blob: Uint8Array, offset: number): [{index: number, enable
             maps[mi] = {
                 'index': i,
                 'enabled': enabled,
-                'map': map,
+                'colors': map,
             };
             if (allFields) {
                 let id = getUInt32(blob, offset + headerSize * i + sizeInt * 2); // id of the map - not really needed.
@@ -495,15 +495,15 @@ const getBufferNum = (code: number): Object => {
 };
 
 const dim = (...message: any[]): void => {
-    console.log((isNode) ? chalk.dim(message) : message);
+    console.log((isNode) ? /*chalk.dim(*/message : message);
 };
 
 const error = (...message: any[]): void => {
-    console.error((isNode) ? chalk.red(message) : message);
+    console.error((isNode) ? /*chalk.red(*/message : message);
 };
 
 const warn = (...message: any[]): void => {
-    console.warn((isNode) ? chalk.yellow(message) : message);
+    console.warn((isNode) ? /*chalk.yellow(*/message : message);
 };
 
 const isNode = new Function('try {return this===global;}catch(e){return false;}');
