@@ -964,7 +964,7 @@ const dll: ComponentDefinition[] = [
     /*
     {
         'name': '',
-        'code': // 
+        'code': //
             [],
         'group': '',
         'func': 'generic',
