@@ -495,15 +495,15 @@ const getBufferNum = (code: number): Object => {
 };
 
 const dim = (...message: any[]): void => {
-    console.log((isNode) ? /*chalk.dim(*/message : message);
+    console.log((isNode) ? chalk.dim(message) : message);
 };
 
 const error = (...message: any[]): void => {
-    console.error((isNode) ? /*chalk.red(*/message : message);
+    console.error((isNode) ? chalk.red(message) : message);
 };
 
 const warn = (...message: any[]): void => {
-    console.warn((isNode) ? /*chalk.yellow(*/message : message);
+    console.warn((isNode) ? chalk.yellow(message) : message);
 };
 
 const isNode = new Function('try {return this===global;}catch(e){return false;}');
