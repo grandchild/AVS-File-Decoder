@@ -24,7 +24,7 @@ const convertFile = async (file: string, customArgs?: Arguments): Promise<any> =
 
     return Util.readFileP(file)
     .then( (presetBlob: any) => {
-        const presetName = (typeof args.outName !== 'undefined' && args.outName.trim().length > 0) ? args.outName : basename(file, extname(file));
+        const presetName = (typeof args.name !== 'undefined' && args.name.trim().length > 0) ? args.name : basename(file, extname(file));
         const presetDate = args.noDate ? defaultDate : statSync(file).mtime.toISOString();
         const presetObj = convertBlob(presetBlob, presetName, presetDate, args);
         const whitespace: number = (args.minify === true) ? 0 : 4;
@@ -43,7 +43,7 @@ const convertFileSync = (file: string, customArgs?: Arguments): Object => {
 
     try {
         presetBlob = readFileSync(file);
-        presetName = (typeof args.outName !== 'undefined' && args.outName.trim().length > 0) ? args.outName : basename(file, extname(file));
+        presetName = (typeof args.name !== 'undefined' && args.name.trim().length > 0) ? args.name : basename(file, extname(file));
         presetDate = args.noDate ? defaultDate : statSync(file).mtime.toISOString();
         presetObj = convertBlob(presetBlob, presetName, presetDate, args);
     } catch (error) {

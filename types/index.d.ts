@@ -6,8 +6,8 @@ interface Arguments {
     verbose?: number;
     quiet?: boolean;
     minify?: boolean;
+    name?: string;
     noDate?: boolean;
-    outName?: string;
     hidden?: boolean;
 }
 
