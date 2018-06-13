@@ -2,11 +2,15 @@
 import * as Util from '../dist/lib/util';
 
 // Dependencies
+import { join } from 'path';
 import { spawnSync } from 'child_process';
+import { statSync, readFileSync } from 'fs';
 import { test } from 'ava';
 
-// Tests
+// Variables
+const fixturesDir = join(__dirname, 'fixtures');
 
+// Tests
 test('Boolify: false', t => {
   const expected = false;
   const actual = Util.getBoolified(0);
@@ -40,4 +44,21 @@ test('Split semicolons', t => {
   const actual = Util.getSemiColSplit("a;b;c");
 
   t.deepEqual(actual, expected);
+});
+
+test('Get ISO time', async t => {
+  const actual = await Util.getISOTime(__filename);
+  const expected = statSync(__filename).mtime.toISOString();
+
+  t.deepEqual(actual, expected);
+});
+
+test('Read preset', async t => {
+  return Promise.resolve(Util.readPreset(`${fixturesDir}/superscope.avs`))
+  .then(async actual => {
+    const expected = readFileSync(`${fixturesDir}/superscope.avs`, 'utf-8');
+
+    t.is(actual.toString(), expected.toString());
+  })
+  .catch();
 });
