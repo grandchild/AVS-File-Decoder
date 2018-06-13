@@ -1,8 +1,8 @@
 // Modules
-import { convertPreset } from '../dist';
+import { convertFile } from '../dist';
 
 // Dependencies
-import { readFile, statSync } from 'fs';
+import { readFile } from 'fs';
 import { join } from 'path';
 import { test } from 'ava';
 import { promisify } from 'util';
@@ -14,46 +14,39 @@ const expectedDir = join(__dirname, 'expected');
 
 // Converter Settings
 const options = {
-  minify: true
+  minify: true,
+  noDate: true
 };
 
 // Tests
 test('Convert: comment.avs', async t => {
   const file = 'comment';
-  const preset = await readFileAsync(`${fixturesDir}/${file}.avs`);
+  const actual = await convertFile(`${fixturesDir}/${file}.avs`, options);
+  const expected = (await readFileAsync(`${expectedDir}/${file}.webvs`, 'utf-8')).toString();
 
-  const expected = await readFileAsync(`${expectedDir}/${file}.webvs`);
-  const actual = convertPreset(preset, file,  '2000-03-03T00:00:00.000Z', options);
-
-  t.is(expected.toString(), JSON.stringify(actual, null, 0));
+  t.is(expected, actual);
 });
 
 test('Convert: empty.avs', async t => {
   const file = 'empty';
-  const preset = await readFileAsync(`${fixturesDir}/${file}.avs`);
+  const actual = await convertFile(`${fixturesDir}/${file}.avs`, options);
+  const expected = (await readFileAsync(`${expectedDir}/${file}.webvs`, 'utf-8')).toString();
 
-  const expected = await readFileAsync(`${expectedDir}/${file}.webvs`);
-  const actual = convertPreset(preset, file, '2000-03-03T00:00:00.000Z', options);
-
-  t.is(expected.toString(), JSON.stringify(actual, null, 0));
+  t.is(expected, actual);
 });
 
 test('Convert: invert.avs', async t => {
   const file = 'invert';
-  const preset = await readFileAsync(`${fixturesDir}/${file}.avs`);
+  const actual = await convertFile(`${fixturesDir}/${file}.avs`, options);
+  const expected = (await readFileAsync(`${expectedDir}/${file}.webvs`, 'utf-8')).toString();
 
-  const expected = await readFileAsync(`${expectedDir}/${file}.webvs`);
-  const actual = convertPreset(preset, file, '2000-03-03T00:00:00.000Z', options);
-
-  t.is(expected.toString(), JSON.stringify(actual, null, 0));
+  t.is(expected, actual);
 });
 
 test('Convert: superscope.avs', async t => {
   const file = 'superscope';
-  const preset = await readFileAsync(`${fixturesDir}/${file}.avs`);
+  const actual = await convertFile(`${fixturesDir}/${file}.avs`, options);
+  const expected = (await readFileAsync(`${expectedDir}/${file}.webvs`, 'utf-8')).toString();
 
-  const expected = await readFileAsync(`${expectedDir}/${file}.webvs`);
-  const actual = convertPreset(preset, file, '2000-03-03T00:00:00.000Z', options);
-
-  t.is(expected.toString(), JSON.stringify(actual, null, 0));
+  t.is(expected, actual);
 });
