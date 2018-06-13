@@ -58,7 +58,7 @@ var convertFile = function (file, customArgs) { return __awaiter(_this, void 0, 
         Object.assign(args, customArgs);
         return [2 /*return*/, Util.readFileP(file)
                 .then(function (presetBlob) {
-                var presetName = (typeof args.outName !== 'undefined' && args.outName.trim().length > 0) ? args.outName : path_1.basename(file, path_1.extname(file));
+                var presetName = (typeof args.name !== 'undefined' && args.name.trim().length > 0) ? args.name : path_1.basename(file, path_1.extname(file));
                 var presetDate = args.noDate ? defaultDate : fs_1.statSync(file).mtime.toISOString();
                 var presetObj = convertBlob(presetBlob, presetName, presetDate, args);
                 var whitespace = (args.minify === true) ? 0 : 4;
@@ -75,7 +75,7 @@ var convertFileSync = function (file, customArgs) {
     var presetBlob, presetDate, presetName, presetObj;
     try {
         presetBlob = fs_1.readFileSync(file);
-        presetName = (typeof args.outName !== 'undefined' && args.outName.trim().length > 0) ? args.outName : path_1.basename(file, path_1.extname(file));
+        presetName = (typeof args.name !== 'undefined' && args.name.trim().length > 0) ? args.name : path_1.basename(file, path_1.extname(file));
         presetDate = args.noDate ? defaultDate : fs_1.statSync(file).mtime.toISOString();
         presetObj = convertBlob(presetBlob, presetName, presetDate, args);
     }
@@ -87,7 +87,6 @@ var convertFileSync = function (file, customArgs) {
 };
 exports.convertFileSync = convertFileSync;
 var convertBlob = function (data, presetName, presetDate, customArgs) {
-    if (presetDate === void 0) { presetDate = defaultDate; }
     Object.assign(args, customArgs);
     verbosity = args.quiet ? -1 : args.verbose;
     Util.setVerbosity(verbosity);

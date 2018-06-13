@@ -55,7 +55,7 @@ const convertFileSync = (file: string, customArgs?: Arguments): Object => {
     return JSON.stringify(presetObj, null, whitespace);
 };
 
-const convertBlob = (data: Buffer|ArrayBuffer, presetName: string, presetDate: string = defaultDate, customArgs?: Arguments): Object|void => {
+const convertBlob = (data: Buffer|ArrayBuffer, presetName: string, presetDate: string, customArgs?: Arguments): Object|void => {
     (<any>Object).assign(args, customArgs);
 
     verbosity = args.quiet ? -1 : args.verbose;
