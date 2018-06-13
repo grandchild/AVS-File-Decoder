@@ -46,11 +46,25 @@ test('Split semicolons', t => {
   t.deepEqual(actual, expected);
 });
 
+test('Buffer number: 0', async t => {
+  const actual = Util.getBufferNum(0);
+  const expected = 'Current';
+
+  t.is(actual, expected);
+});
+
+test('Buffer number: not 0', async t => {
+  const actual = Util.getBufferNum(1337);
+  const expected = 1337;
+
+  t.is(actual, expected);
+});
+
 test('Get ISO time', async t => {
   const actual = await Util.getISOTime(__filename);
   const expected = statSync(__filename).mtime.toISOString();
 
-  t.deepEqual(actual, expected);
+  t.is(actual, expected);
 });
 
 test('Read preset', async t => {
