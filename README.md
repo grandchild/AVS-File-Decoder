@@ -43,10 +43,10 @@ let jsonString;
 
 // Synchronous
 try {
-        jsonString = convertFileSync(file);
-    } catch (err) {
-        console.error(err);
-    }
+    jsonString = convertFileSync(file);
+} catch (err) {
+    console.error(err);
+}
 ```
 
 **Note:** The previously contained CLI tool has been detached and is now available as the separate [webvsc-cli](https://www.npmjs.com/package/@visbot/webvsc-cli) package!
