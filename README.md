@@ -22,7 +22,7 @@ yarn add @visbot/webvsc || npm install  @visbot/webvsc
 
 ## Usage
 
-`convertPreset(data, presetName, presetDate, [options])`
+`convertFile(file, [options])`
 
 **Example:**
 
