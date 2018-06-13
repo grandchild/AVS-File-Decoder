@@ -32,7 +32,7 @@ import { convertFile, convertFileSync } from '@visbot/webvsc';
 let file = 'path/to/preset.avs';
 let jsonString;
 
-// Async
+// Asynchronous
 (async () => {
     try {
         jsonString = await convertFile(file);
@@ -41,7 +41,7 @@ let jsonString;
     }
 })();
 
-// Sync
+// Synchronous
 try {
         jsonString = convertFileSync(file);
     } catch (err) {
