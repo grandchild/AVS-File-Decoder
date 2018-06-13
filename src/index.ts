@@ -4,6 +4,8 @@ import * as Util from './lib/util';
 import * as Table from './lib/tables';
 import { readFileSync, statSync } from 'fs';
 import { basename, extname } from 'path';
+import { promisify } from 'util';
+
 
 // Constants
 const sizeInt = 4;
@@ -22,10 +24,10 @@ const defaultDate = '2000-03-03T00:00:00.000Z';
 const convertFile = async (file: string, customArgs?: Arguments): Promise<any> => {
     (<any>Object).assign(args, customArgs);
 
-    return Util.readFileP(file)
-    .then( (presetBlob: any) => {
+    return Util.readPreset(file)
+    .then( async (presetBlob: any) => {
         const presetName = (typeof args.name !== 'undefined' && args.name.trim().length > 0) ? args.name : basename(file, extname(file));
-        const presetDate = args.noDate ? defaultDate : statSync(file).mtime.toISOString();
+        const presetDate = args.noDate ? defaultDate : await Util.getISOTime(file);
         const presetObj = convertBlob(presetBlob, presetName, presetDate, args);
         const whitespace: number = (args.minify === true) ? 0 : 4;
 

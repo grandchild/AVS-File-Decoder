@@ -509,14 +509,22 @@ var getBufferNum = function (code) {
     return code;
 };
 exports.getBufferNum = getBufferNum;
-var readFileP = function (file) {
+var getISOTime = function (file) {
+    return new Promise(function (resolve, reject) {
+        fs_1.stat(file, function (err, time) {
+            err ? reject(err) : resolve(time.mtime.toISOString());
+        });
+    });
+};
+exports.getISOTime = getISOTime;
+var readPreset = function (file) {
     return new Promise(function (resolve, reject) {
         fs_1.readFile(file, function (err, data) {
             err ? reject(err) : resolve(data);
         });
     });
 };
-exports.readFileP = readFileP;
+exports.readPreset = readPreset;
 var dim = function (message) {
     console.log((isNode) ? chalk_1.default.dim(message) : message);
 };

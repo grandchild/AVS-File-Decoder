@@ -54,16 +54,31 @@ var args = {
 };
 var defaultDate = '2000-03-03T00:00:00.000Z';
 var convertFile = function (file, customArgs) { return __awaiter(_this, void 0, void 0, function () {
+    var _this = this;
     return __generator(this, function (_a) {
         Object.assign(args, customArgs);
-        return [2 /*return*/, Util.readFileP(file)
-                .then(function (presetBlob) {
-                var presetName = (typeof args.name !== 'undefined' && args.name.trim().length > 0) ? args.name : path_1.basename(file, path_1.extname(file));
-                var presetDate = args.noDate ? defaultDate : fs_1.statSync(file).mtime.toISOString();
-                var presetObj = convertBlob(presetBlob, presetName, presetDate, args);
-                var whitespace = (args.minify === true) ? 0 : 4;
-                return JSON.stringify(presetObj, null, whitespace);
-            })
+        return [2 /*return*/, Util.readPreset(file)
+                .then(function (presetBlob) { return __awaiter(_this, void 0, void 0, function () {
+                var presetName, presetDate, _a, presetObj, whitespace;
+                return __generator(this, function (_b) {
+                    switch (_b.label) {
+                        case 0:
+                            presetName = (typeof args.name !== 'undefined' && args.name.trim().length > 0) ? args.name : path_1.basename(file, path_1.extname(file));
+                            if (!args.noDate) return [3 /*break*/, 1];
+                            _a = defaultDate;
+                            return [3 /*break*/, 3];
+                        case 1: return [4 /*yield*/, Util.getISOTime(file)];
+                        case 2:
+                            _a = _b.sent();
+                            _b.label = 3;
+                        case 3:
+                            presetDate = _a;
+                            presetObj = convertBlob(presetBlob, presetName, presetDate, args);
+                            whitespace = (args.minify === true) ? 0 : 4;
+                            return [2 /*return*/, JSON.stringify(presetObj, null, whitespace)];
+                    }
+                });
+            }); })
                 .catch(function (error) {
                 Util.error(error);
             })];

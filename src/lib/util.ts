@@ -1,7 +1,7 @@
 // Modules
 import * as Table from './tables';
 import chalk from 'chalk';
-import { readFile } from 'fs';
+import { readFile, stat } from 'fs';
 
 // Constants
 const sizeInt: number = 4;
@@ -495,7 +495,15 @@ const getBufferNum = (code: number): Object => {
     return code;
 };
 
-const readFileP = (file: string) => {
+const getISOTime = (file: string): any => {
+    return new Promise( (resolve, reject) => {
+        stat(file, (err, time) => {
+           err ? reject(err) : resolve(time.mtime.toISOString());
+        });
+    });
+};
+
+const readPreset = (file: string): any => {
     return new Promise( (resolve, reject) => {
         readFile(file, (err, data) => {
             err ? reject(err) : resolve(data);
@@ -542,6 +550,7 @@ export {
     getConvoFilter,
     getFloat,
     getInt32,
+    getISOTime,
     getMap1,
     getMap4,
     getMap8,
@@ -558,7 +567,7 @@ export {
     lowerInitial,
     presetHeaderLength,
     printTable,
-    readFileP,
+    readPreset,
     removeSpaces,
     setHiddenStrings,
     setVerbosity,
