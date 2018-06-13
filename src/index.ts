@@ -4,8 +4,6 @@ import * as Util from './lib/util';
 import * as Table from './lib/tables';
 import { readFileSync, statSync } from 'fs';
 import { basename, extname } from 'path';
-import { promisify } from 'util';
-
 
 // Constants
 const sizeInt = 4;
