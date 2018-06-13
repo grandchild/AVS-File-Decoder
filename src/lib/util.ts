@@ -1,6 +1,7 @@
 // Modules
 import * as Table from './tables';
 import chalk from 'chalk';
+import { readFile } from 'fs';
 
 // Constants
 const sizeInt: number = 4;
@@ -494,6 +495,14 @@ const getBufferNum = (code: number): Object => {
     return code;
 };
 
+const readFileP = (file: string) => {
+    return new Promise( (resolve, reject) => {
+        readFile(file, (err, data) => {
+            err ? reject(err) : resolve(data);
+        });
+    });
+};
+
 const dim = (message: string): void => {
     console.log((isNode) ? chalk.dim(message) : message);
 };
@@ -549,6 +558,7 @@ export {
     lowerInitial,
     presetHeaderLength,
     printTable,
+    readFileP,
     removeSpaces,
     setHiddenStrings,
     setVerbosity,

@@ -2,6 +2,7 @@
 var _this = this;
 Object.defineProperty(exports, "__esModule", { value: true });
 var chalk_1 = require("chalk");
+var fs_1 = require("fs");
 // Constants
 var sizeInt = 4;
 var allFields = true;
@@ -508,6 +509,14 @@ var getBufferNum = function (code) {
     return code;
 };
 exports.getBufferNum = getBufferNum;
+var readFileP = function (file) {
+    return new Promise(function (resolve, reject) {
+        fs_1.readFile(file, function (err, data) {
+            err ? reject(err) : resolve(data);
+        });
+    });
+};
+exports.readFileP = readFileP;
 var dim = function (message) {
     console.log((isNode) ? chalk_1.default.dim(message) : message);
 };

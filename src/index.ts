@@ -2,6 +2,8 @@
 import * as Components from './lib/components';
 import * as Util from './lib/util';
 import * as Table from './lib/tables';
+import { readFileSync, statSync } from 'fs';
+import { basename, extname } from 'path';
 
 // Constants
 const sizeInt = 4;
@@ -9,12 +11,51 @@ let verbosity = 0; // log individual key:value fields
 const componentTable: ComponentDefinition[] = Components.builtin.concat(Components.dll);
 
 const args: Arguments = {
-    verbose: 0,
+    hidden: true,
+    minify: false,
     quiet: false,
-    hidden: true
+    verbose: 0
 };
 
-const convertPreset = (data: ArrayBuffer, presetName: string, presetDate: string, customArgs?: Arguments): Object|void => {
+const defaultDate = '2000-03-03T00:00:00.000Z';
+
+const convertFile = async (file: string, customArgs?: Arguments): Promise<any> => {
+    (<any>Object).assign(args, customArgs);
+
+    return Util.readFileP(file)
+    .then( (presetBlob: any) => {
+        const presetName = (typeof args.outName !== 'undefined' && args.outName.trim().length > 0) ? args.outName : basename(file, extname(file));
+        const presetDate = args.noDate ? defaultDate : statSync(file).mtime.toISOString();
+        const presetObj = convertBlob(presetBlob, presetName, presetDate, args);
+        const whitespace: number = (args.minify === true) ? 0 : 4;
+
+        return JSON.stringify(presetObj, null, whitespace);
+    })
+    .catch( error => {
+        Util.error(error);
+    });
+};
+
+const convertFileSync = (file: string, customArgs?: Arguments): Object => {
+    (<any>Object).assign(args, customArgs);
+
+    let presetBlob, presetDate, presetName, presetObj;
+
+    try {
+        presetBlob = readFileSync(file);
+        presetName = (typeof args.outName !== 'undefined' && args.outName.trim().length > 0) ? args.outName : basename(file, extname(file));
+        presetDate = args.noDate ? defaultDate : statSync(file).mtime.toISOString();
+        presetObj = convertBlob(presetBlob, presetName, presetDate, args);
+    } catch (error) {
+        Util.error(error);
+    }
+
+    const whitespace: number = (args.minify === true) ? 0 : 4;
+
+    return JSON.stringify(presetObj, null, whitespace);
+};
+
+const convertBlob = (data: Buffer|ArrayBuffer, presetName: string, presetDate: string = defaultDate, customArgs?: Arguments): Object|void => {
     (<any>Object).assign(args, customArgs);
 
     verbosity = args.quiet ? -1 : args.verbose;
@@ -22,15 +63,15 @@ const convertPreset = (data: ArrayBuffer, presetName: string, presetDate: string
     Util.setVerbosity(verbosity);
     Util.setHiddenStrings(args.hidden);
 
-    let preset = {
+    const preset = {
         'name': presetName,
         'date': presetDate
     };
-    let blob8 = new Uint8Array(data);
+    const blob8 = new Uint8Array(data);
     try {
-        let clearFrame = decodePresetHeader(blob8.subarray(0, Util.presetHeaderLength));
+        const clearFrame = decodePresetHeader(blob8.subarray(0, Util.presetHeaderLength));
         preset['clearFrame'] = clearFrame;
-        let components = convertComponents(blob8.subarray(Util.presetHeaderLength));
+        const components = convertComponents(blob8.subarray(Util.presetHeaderLength));
         preset['components'] = components;
     } catch (e) {
         // TODO
@@ -401,6 +442,8 @@ const decode_simple = (blob: Uint8Array, offset: number): Object => {
 };
 
 export {
+    convertBlob,
     convertComponents,
-    convertPreset
+    convertFile,
+    convertFileSync
 };
