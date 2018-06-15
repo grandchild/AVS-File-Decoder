@@ -17,15 +17,13 @@ const args: Arguments = {
     verbose: 0
 };
 
-const defaultDate = '2000-03-03T00:00:00.000Z';
-
 const convertFile = async (file: string, customArgs?: Arguments): Promise<any> => {
     (<any>Object).assign(args, customArgs);
 
     return Util.readPreset(file)
     .then( async (presetBlob: any) => {
         const presetName = (typeof args.name !== 'undefined' && args.name.trim().length > 0) ? args.name : basename(file, extname(file));
-        const presetDate = args.noDate ? defaultDate : await Util.getISOTime(file);
+        const presetDate = args.noDate ? undefined : await Util.getISOTime(file);
         const presetObj = convertBlob(presetBlob, presetName, presetDate, args);
         const whitespace: number = (args.minify === true) ? 0 : 4;
 
@@ -44,7 +42,7 @@ const convertFileSync = (file: string, customArgs?: Arguments): Object => {
     try {
         presetBlob = readFileSync(file);
         presetName = (typeof args.name !== 'undefined' && args.name.trim().length > 0) ? args.name : basename(file, extname(file));
-        presetDate = args.noDate ? defaultDate : statSync(file).mtime.toISOString();
+        presetDate = args.noDate ? undefined : statSync(file).mtime.toISOString();
         presetObj = convertBlob(presetBlob, presetName, presetDate, args);
     } catch (error) {
         Util.error(error);
@@ -55,7 +53,7 @@ const convertFileSync = (file: string, customArgs?: Arguments): Object => {
     return JSON.stringify(presetObj, null, whitespace);
 };
 
-const convertBlob = (data: Buffer|ArrayBuffer, presetName: string, presetDate: string, customArgs?: Arguments): Object|void => {
+const convertBlob = (data: Buffer|ArrayBuffer, presetName: string, presetDate?: string, customArgs?: Arguments): Object|void => {
     (<any>Object).assign(args, customArgs);
 
     verbosity = args.quiet ? -1 : args.verbose;
@@ -65,8 +63,10 @@ const convertBlob = (data: Buffer|ArrayBuffer, presetName: string, presetDate: s
 
     const preset = {
         'name': presetName,
-        'date': presetDate
     };
+    if(presetDate) {
+        preset['date'] = presetDate;
+    }
     const blob8 = new Uint8Array(data);
     try {
         const clearFrame = decodePresetHeader(blob8.subarray(0, Util.presetHeaderLength));

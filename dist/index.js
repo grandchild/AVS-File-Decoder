@@ -52,7 +52,6 @@ var args = {
     quiet: false,
     verbose: 0
 };
-var defaultDate = '2000-03-03T00:00:00.000Z';
 var convertFile = function (file, customArgs) { return __awaiter(_this, void 0, void 0, function () {
     var _this = this;
     return __generator(this, function (_a) {
@@ -65,7 +64,7 @@ var convertFile = function (file, customArgs) { return __awaiter(_this, void 0, 
                         case 0:
                             presetName = (typeof args.name !== 'undefined' && args.name.trim().length > 0) ? args.name : path_1.basename(file, path_1.extname(file));
                             if (!args.noDate) return [3 /*break*/, 1];
-                            _a = defaultDate;
+                            _a = undefined;
                             return [3 /*break*/, 3];
                         case 1: return [4 /*yield*/, Util.getISOTime(file)];
                         case 2:
@@ -91,7 +90,7 @@ var convertFileSync = function (file, customArgs) {
     try {
         presetBlob = fs_1.readFileSync(file);
         presetName = (typeof args.name !== 'undefined' && args.name.trim().length > 0) ? args.name : path_1.basename(file, path_1.extname(file));
-        presetDate = args.noDate ? defaultDate : fs_1.statSync(file).mtime.toISOString();
+        presetDate = args.noDate ? undefined : fs_1.statSync(file).mtime.toISOString();
         presetObj = convertBlob(presetBlob, presetName, presetDate, args);
     }
     catch (error) {
@@ -108,8 +107,10 @@ var convertBlob = function (data, presetName, presetDate, customArgs) {
     Util.setHiddenStrings(args.hidden);
     var preset = {
         'name': presetName,
-        'date': presetDate
     };
+    if (presetDate) {
+        preset['date'] = presetDate;
+    }
     var blob8 = new Uint8Array(data);
     try {
         var clearFrame = decodePresetHeader(blob8.subarray(0, Util.presetHeaderLength));
@@ -155,7 +156,7 @@ var convertComponents = function (blob) {
             var offset = fp + sizeInt * 2 + isDll * 32;
             res = eval('decode_' + componentTable[i].func)(blob, offset, componentTable[i].fields, componentTable[i].name, componentTable[i].group, offset + size);
         }
-        if (!res || typeof res !== 'object') { // should not happen, decode functions should throw their own.
+        if (!res || typeof res !== 'object') {
             throw new Util.ConvertException('Unknown convert error');
         }
         components.push(res);
@@ -168,8 +169,9 @@ var getComponentIndex = function (code, blob, offset) {
     if (code < Util.builtinMax || code === 0xfffffffe) {
         for (var i = 0; i < componentTable.length; i++) {
             if (code === componentTable[i].code) {
-                if (verbosity >= 1)
+                if (verbosity >= 1) {
                     Util.dim("Found component: " + componentTable[i].name + " (" + code + ")");
+                }
                 return i;
             }
         }
@@ -178,8 +180,9 @@ var getComponentIndex = function (code, blob, offset) {
         for (var i = Components.builtin.length; i < componentTable.length; i++) {
             if (componentTable[i].code instanceof Array &&
                 Util.cmpBytes(blob, offset + sizeInt, componentTable[i].code)) {
-                if (verbosity >= 1)
+                if (verbosity >= 1) {
                     Util.dim("Found component: " + componentTable[i].name);
+                }
                 return i;
             }
         }
@@ -203,7 +206,7 @@ var decodePresetHeader = function (blob) {
         0x73, 0x65, 0x74, 0x20, 0x30, 0x2E, 0x32, 0x1A,
     ];
     if (!Util.cmpBytes(blob, /*offset*/ 0, presetHeader0_2) &&
-        !Util.cmpBytes(blob, /*offset*/ 0, presetHeader0_1)) { // 0.1 only if 0.2 failed because it's far rarer.
+        !Util.cmpBytes(blob, /*offset*/ 0, presetHeader0_1)) {
         throw new Util.ConvertException('Invalid preset header.\n' +
             '  This does not seem to be an AVS preset file.\n' +
             '  If it does load with Winamp\'s AVS please send the file in so we can look at it.');
@@ -320,7 +323,7 @@ var decode_generic = function (blob, offset, fields, name, group, end) {
                 size = result[1];
                 value = result[0];
             }
-            if (f[2]) { // further processing if wanted
+            if (f[2]) {
                 // console.log('get' + f[2]);
                 tableName = Util.lowerInitial(f[2]);
                 if (tableName in Table) {
@@ -332,7 +335,7 @@ var decode_generic = function (blob, offset, fields, name, group, end) {
             }
         }
         // save value or function result of value in field
-        if (k !== 'new_version') { // but don't save new_version marker, if present
+        if (k !== 'new_version') {
             comp[k] = value;
             if (verbosity >= 2) {
                 Util.dim('- key: ' + k + '\n- val: ' + value);
@@ -381,7 +384,7 @@ var decode_movement = function (blob, offset, _, name, group, end) {
     if (effectIdOld !== 0) {
         if (effectIdOld === 0x7fff) {
             var strAndSize = ['', 0];
-            if (blob[offset + sizeInt] === 1) { // new-version marker
+            if (blob[offset + sizeInt] === 1) {
                 strAndSize = Util.getSizeString(blob, offset + sizeInt + 1);
             }
             else {
@@ -421,7 +424,7 @@ var decode_movement = function (blob, offset, _, name, group, end) {
     comp['coordinates'] = Table.coordinates[Util.getUInt32(blob, offset + sizeInt * 3)];
     comp['bilinear'] = Util.getBool(blob, offset + sizeInt * 4, sizeInt)[0];
     comp['wrap'] = Util.getBool(blob, offset + sizeInt * 5, sizeInt)[0];
-    if (effect && effect.length && effectIdOld !== 1 && effectIdOld !== 7) { // 'slight fuzzify' and 'blocky partial out' have no script representation.
+    if (effect && effect.length && effectIdOld !== 1 && effectIdOld !== 7) {
         code = effect[1];
         comp['coordinates'] = effect[2]; // overwrite
     }
@@ -462,19 +465,19 @@ var decode_simple = function (blob, offset) {
     }
     else {
         switch (effect & 3) {
-            case 0: // solid analyzer
+            case 0:// solid analyzer
                 comp['audioSource'] = 'Spectrum';
                 comp['renderType'] = 'Solid';
                 break;
-            case 1: // line analyzer
+            case 1:// line analyzer
                 comp['audioSource'] = 'Spectrum';
                 comp['renderType'] = 'Lines';
                 break;
-            case 2: // line scope
+            case 2:// line scope
                 comp['audioSource'] = 'Waveform';
                 comp['renderType'] = 'Lines';
                 break;
-            case 3: // solid scope
+            case 3:// solid scope
                 comp['audioSource'] = 'Waveform';
                 comp['renderType'] = 'Solid';
                 break;

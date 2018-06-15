@@ -279,7 +279,7 @@ var getRadioButton = function (blob, offset, map) {
     var key = 0;
     for (var i = 0; i < map.length; i++) {
         var on = getUInt32(blob, offset + sizeInt * i) !== 0 ? 1 : 0;
-        if (on) { // in case of (erroneous) multiple selections, the last one selected wins
+        if (on) {
             key = on * (i + 1);
         }
     }
