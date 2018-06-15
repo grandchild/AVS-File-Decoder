@@ -18,11 +18,11 @@ const setVerbosity = (value: number): void => { verbosity = value; };
 class ConvertException implements Error {
     name: string = 'ConvertException';
     message: string;
-
+    
     constructor(public msg: string) {
         this.message = msg;
     }
-
+    
     toString(): string {
         return `${this.name} : ${this.message}`;
     }
@@ -37,7 +37,7 @@ const cmpBytes = (arr: Uint8Array, offset: number, test: number[]): boolean => {
             return false;
         }
     }
-
+    
     return true;
 };
 
@@ -266,7 +266,7 @@ const getRadioButton = (blob: Uint8Array, offset: number, map: any[]): [string, 
             key = on * (i + 1);
         }
     }
-
+    
     return [getMapping(map, key), sizeInt * map.length];
 };
 
@@ -406,7 +406,7 @@ const getColorList = (blob: Uint8Array, offset: number): [string[], number] => {
         colors.push(getColor(blob, offset)[0]);
         num--;
     }
-
+    
     return [colors, size];
 };
 
@@ -438,7 +438,7 @@ const getColorMaps = (blob: Uint8Array, offset: number): [{index: number, enable
         }
         mapOffset += num * sizeInt * 3;
     }
-
+    
     return [maps, mapOffset - offset];
 };
 
@@ -450,7 +450,7 @@ const getColorMap = (blob: Uint8Array, offset: number, num: number): Array<{colo
         offset += sizeInt * 3; // there's a 4byte id (presumably) following each color.
         colorMap[i] = { 'color': color, 'position': pos };
     }
-
+    
     return colorMap;
 };
 
@@ -463,7 +463,7 @@ const getColor = (blob: Uint8Array, offset: number): [string, number] => {
     for (let i = color.length; i < 6; i++) {
         padding += '0';
     }
-
+    
     return ['#' + padding + color, sizeInt];
 };
 
@@ -474,7 +474,7 @@ const getConvoFilter = (blob: Uint8Array, offset: number, dimensions: number[]):
         data[i] = getInt32(blob, offset)[0];
     }
     let matrix = { 'width': dimensions[0], 'height': dimensions[1], 'data': data };
-
+    
     return [matrix, size * sizeInt];
 };
 
