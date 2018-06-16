@@ -64,7 +64,7 @@ const convertBlob = (data: Buffer|ArrayBuffer, presetName: string, presetDate?: 
     const preset = {
         'name': presetName,
     };
-    if(presetDate) {
+    if (presetDate) {
         preset['date'] = presetDate;
     }
     const blob8 = new Uint8Array(data);
