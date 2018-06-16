@@ -26,7 +26,7 @@ const convertFile = async (file: string, customArgs?: Arguments): Promise<any> =
         const presetDate = args.noDate ? undefined : await Util.getISOTime(file);
         const presetObj = convertBlob(presetBlob, presetName, presetDate, args);
         const whitespace: number = (args.minify === true) ? 0 : 4;
-        
+
         return JSON.stringify(presetObj, null, whitespace);
     })
     .catch( error => {
@@ -36,9 +36,9 @@ const convertFile = async (file: string, customArgs?: Arguments): Promise<any> =
 
 const convertFileSync = (file: string, customArgs?: Arguments): Object => {
     (<any>Object).assign(args, customArgs);
-    
+
     let presetBlob, presetDate, presetName, presetObj;
-    
+
     try {
         presetBlob = readFileSync(file);
         presetName = (typeof args.name !== 'undefined' && args.name.trim().length > 0) ? args.name : basename(file, extname(file));
@@ -47,20 +47,20 @@ const convertFileSync = (file: string, customArgs?: Arguments): Object => {
     } catch (error) {
         Util.error(error);
     }
-    
+
     const whitespace: number = (args.minify === true) ? 0 : 4;
-    
+
     return JSON.stringify(presetObj, null, whitespace);
 };
 
 const convertBlob = (data: Buffer|ArrayBuffer, presetName: string, presetDate?: string, customArgs?: Arguments): Object|void => {
     (<any>Object).assign(args, customArgs);
-    
+
     verbosity = args.quiet ? -1 : args.verbose;
-    
+
     Util.setVerbosity(verbosity);
     Util.setHiddenStrings(args.hidden);
-    
+
     const preset = {
         'name': presetName,
     };
@@ -121,7 +121,7 @@ const convertComponents = (blob: Uint8Array): Object => {
         components.push(res);
         fp += size + sizeInt * 2 + isDll * 32;
     }
-    
+
     return components;
 };
 
@@ -146,9 +146,9 @@ const getComponentIndex = (code: number, blob: Uint8Array, offset: number): numb
             }
         }
     }
-    
+
     if (verbosity >= 1) Util.dim(`Found unknown component (code: ${code})`);
-    
+
     return -code;
 };
 
@@ -308,7 +308,7 @@ const decode_generic = (blob: Uint8Array, offset: number, fields: Object, name: 
         }
         offset += size;
     }
-    
+
     return comp;
 };
 
@@ -404,7 +404,7 @@ const decode_avi = (blob: Uint8Array, offset: number): Object => {
     }
     comp['onBeatAdd'] = beatAdd;
     comp['persist'] = Util.getUInt32(blob, offset + sizeInt * 4 + strAndSize[1]); // 0-32
-    
+
     return comp;
 };
 
