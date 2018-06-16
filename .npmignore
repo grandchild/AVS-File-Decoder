@@ -1,6 +1,8 @@
+.circleci
 .editorconfig
 .gitignore
 .travis.yml
+doc/
 src/
 test/
 types/
