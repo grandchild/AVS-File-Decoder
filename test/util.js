@@ -1,5 +1,6 @@
 // Modules
 import * as Util from '../dist/lib/util';
+import { getISOTime, readPreset} from '../dist/lib/util-node';
 
 // Dependencies
 import { join } from 'path';
@@ -61,14 +62,14 @@ test('Buffer number: not 0', async t => {
 });
 
 test('Get ISO time', async t => {
-  const actual = await Util.getISOTime(__filename);
+  const actual = await getISOTime(__filename);
   const expected = statSync(__filename).mtime.toISOString();
 
   t.is(actual, expected);
 });
 
 test('Read preset', async t => {
-  return Promise.resolve(Util.readPreset(`${fixturesDir}/superscope.avs`))
+  return Promise.resolve(readPreset(`${fixturesDir}/superscope.avs`))
   .then(async actual => {
     const expected = readFileSync(`${fixturesDir}/superscope.avs`, 'utf-8');
 

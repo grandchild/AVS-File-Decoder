@@ -1,47 +1,10 @@
 "use strict";
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-var __generator = (this && this.__generator) || function (thisArg, body) {
-    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g;
-    return g = { next: verb(0), "throw": verb(1), "return": verb(2) }, typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;
-    function verb(n) { return function (v) { return step([n, v]); }; }
-    function step(op) {
-        if (f) throw new TypeError("Generator is already executing.");
-        while (_) try {
-            if (f = 1, y && (t = y[op[0] & 2 ? "return" : op[0] ? "throw" : "next"]) && !(t = t.call(y, op[1])).done) return t;
-            if (y = 0, t) op = [0, t.value];
-            switch (op[0]) {
-                case 0: case 1: t = op; break;
-                case 4: _.label++; return { value: op[1], done: false };
-                case 5: _.label++; y = op[1]; op = [0]; continue;
-                case 7: op = _.ops.pop(); _.trys.pop(); continue;
-                default:
-                    if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) { _ = 0; continue; }
-                    if (op[0] === 3 && (!t || (op[1] > t[0] && op[1] < t[3]))) { _.label = op[1]; break; }
-                    if (op[0] === 6 && _.label < t[1]) { _.label = t[1]; t = op; break; }
-                    if (t && _.label < t[2]) { _.label = t[2]; _.ops.push(op); break; }
-                    if (t[2]) _.ops.pop();
-                    _.trys.pop(); continue;
-            }
-            op = body.call(thisArg, _);
-        } catch (e) { op = [6, e]; y = 0; } finally { f = t = 0; }
-        if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
-    }
-};
-var _this = this;
 Object.defineProperty(exports, "__esModule", { value: true });
 // Modules
 var Components = require("./lib/components");
-var Util = require("./lib/util");
+var Log = require("./lib/log");
 var Table = require("./lib/tables");
-var fs_1 = require("fs");
-var path_1 = require("path");
+var Util = require("./lib/util");
 // Constants
 var sizeInt = 4;
 var verbosity = 0; // log individual key:value fields
@@ -52,54 +15,6 @@ var args = {
     quiet: false,
     verbose: 0
 };
-var convertFile = function (file, customArgs) { return __awaiter(_this, void 0, void 0, function () {
-    var _this = this;
-    return __generator(this, function (_a) {
-        Object.assign(args, customArgs);
-        return [2 /*return*/, Util.readPreset(file)
-                .then(function (presetBlob) { return __awaiter(_this, void 0, void 0, function () {
-                var presetName, presetDate, _a, presetObj, whitespace;
-                return __generator(this, function (_b) {
-                    switch (_b.label) {
-                        case 0:
-                            presetName = (typeof args.name !== 'undefined' && args.name.trim().length > 0) ? args.name : path_1.basename(file, path_1.extname(file));
-                            if (!args.noDate) return [3 /*break*/, 1];
-                            _a = undefined;
-                            return [3 /*break*/, 3];
-                        case 1: return [4 /*yield*/, Util.getISOTime(file)];
-                        case 2:
-                            _a = _b.sent();
-                            _b.label = 3;
-                        case 3:
-                            presetDate = _a;
-                            presetObj = convertBlob(presetBlob, presetName, presetDate, args);
-                            whitespace = (args.minify === true) ? 0 : 4;
-                            return [2 /*return*/, JSON.stringify(presetObj, null, whitespace)];
-                    }
-                });
-            }); })
-                .catch(function (error) {
-                Util.error(error);
-            })];
-    });
-}); };
-exports.convertFile = convertFile;
-var convertFileSync = function (file, customArgs) {
-    Object.assign(args, customArgs);
-    var presetBlob, presetDate, presetName, presetObj;
-    try {
-        presetBlob = fs_1.readFileSync(file);
-        presetName = (typeof args.name !== 'undefined' && args.name.trim().length > 0) ? args.name : path_1.basename(file, path_1.extname(file));
-        presetDate = args.noDate ? undefined : fs_1.statSync(file).mtime.toISOString();
-        presetObj = convertBlob(presetBlob, presetName, presetDate, args);
-    }
-    catch (error) {
-        Util.error(error);
-    }
-    var whitespace = (args.minify === true) ? 0 : 4;
-    return JSON.stringify(presetObj, null, whitespace);
-};
-exports.convertFileSync = convertFileSync;
 var convertBlob = function (data, presetName, presetDate, customArgs) {
     Object.assign(args, customArgs);
     verbosity = args.quiet ? -1 : args.verbose;
@@ -120,13 +35,13 @@ var convertBlob = function (data, presetName, presetDate, customArgs) {
     }
     catch (e) {
         // TODO
-        // if (verbosity < 0) Util.error(`Error in '${file}'`);
+        // if (verbosity < 0) Log.error(`Error in '${file}'`);
         if (verbosity >= 1)
-            Util.error(e.stack);
+            Log.error(e.stack);
         else
-            Util.error(e);
+            Log.error(e);
         // if(e instanceof Util.ConvertException) {
-        //     Util.error('Error: '+e.message);
+        //     Log.error('Error: '+e.message);
         //     return null;
         // } else {
         //     throw e;
@@ -156,7 +71,7 @@ var convertComponents = function (blob) {
             var offset = fp + sizeInt * 2 + isDll * 32;
             res = eval('decode_' + componentTable[i].func)(blob, offset, componentTable[i].fields, componentTable[i].name, componentTable[i].group, offset + size);
         }
-        if (!res || typeof res !== 'object') {
+        if (!res || typeof res !== 'object') { // should not happen, decode functions should throw their own.
             throw new Util.ConvertException('Unknown convert error');
         }
         components.push(res);
@@ -170,7 +85,7 @@ var getComponentIndex = function (code, blob, offset) {
         for (var i = 0; i < componentTable.length; i++) {
             if (code === componentTable[i].code) {
                 if (verbosity >= 1) {
-                    Util.dim("Found component: " + componentTable[i].name + " (" + code + ")");
+                    Log.dim("Found component: " + componentTable[i].name + " (" + code + ")");
                 }
                 return i;
             }
@@ -181,14 +96,14 @@ var getComponentIndex = function (code, blob, offset) {
             if (componentTable[i].code instanceof Array &&
                 Util.cmpBytes(blob, offset + sizeInt, componentTable[i].code)) {
                 if (verbosity >= 1) {
-                    Util.dim("Found component: " + componentTable[i].name);
+                    Log.dim("Found component: " + componentTable[i].name);
                 }
                 return i;
             }
         }
     }
     if (verbosity >= 1)
-        Util.dim("Found unknown component (code: " + code + ")");
+        Log.dim("Found unknown component (code: " + code + ")");
     return -code;
 };
 var getComponentSize = function (blob, offset) {
@@ -206,7 +121,7 @@ var decodePresetHeader = function (blob) {
         0x73, 0x65, 0x74, 0x20, 0x30, 0x2E, 0x32, 0x1A,
     ];
     if (!Util.cmpBytes(blob, /*offset*/ 0, presetHeader0_2) &&
-        !Util.cmpBytes(blob, /*offset*/ 0, presetHeader0_1)) {
+        !Util.cmpBytes(blob, /*offset*/ 0, presetHeader0_1)) { // 0.1 only if 0.2 failed because it's far rarer.
         throw new Util.ConvertException('Invalid preset header.\n' +
             '  This does not seem to be an AVS preset file.\n' +
             '  If it does load with Winamp\'s AVS please send the file in so we can look at it.');
@@ -225,7 +140,7 @@ var decode_effectList = function (blob, offset, _, name) {
     };
     var modebit = Util.getBit(blob, offset, 7)[0] === 1; // is true in all presets I know, probably only for truly ancient versions
     if (!modebit) {
-        Util.error('EL modebit is off!! If you\'re seeing this, send this .avs file in please!');
+        Log.error('EL modebit is off!! If you\'re seeing this, send this .avs file in please!');
     }
     var configSize = (modebit ? blob[offset + 4] : blob[offset]) + 1;
     if (configSize > 1) {
@@ -323,7 +238,7 @@ var decode_generic = function (blob, offset, fields, name, group, end) {
                 size = result[1];
                 value = result[0];
             }
-            if (f[2]) {
+            if (f[2]) { // further processing if wanted
                 // console.log('get' + f[2]);
                 tableName = Util.lowerInitial(f[2]);
                 if (tableName in Table) {
@@ -335,14 +250,14 @@ var decode_generic = function (blob, offset, fields, name, group, end) {
             }
         }
         // save value or function result of value in field
-        if (k !== 'new_version') {
+        if (k !== 'new_version') { // but don't save new_version marker, if present
             comp[k] = value;
             if (verbosity >= 2) {
-                Util.dim('- key: ' + k + '\n- val: ' + value);
+                Log.dim('- key: ' + k + '\n- val: ' + value);
                 if (k === 'code')
                     Util.printTable('- code', value);
                 if (verbosity >= 3)
-                    Util.dim('- offset: ' + offset + '\n- size: ' + size);
+                    Log.dim('- offset: ' + offset + '\n- size: ' + size);
                 // console.log();
             }
         }
@@ -384,7 +299,7 @@ var decode_movement = function (blob, offset, _, name, group, end) {
     if (effectIdOld !== 0) {
         if (effectIdOld === 0x7fff) {
             var strAndSize = ['', 0];
-            if (blob[offset + sizeInt] === 1) {
+            if (blob[offset + sizeInt] === 1) { // new-version marker
                 strAndSize = Util.getSizeString(blob, offset + sizeInt + 1);
             }
             else {
@@ -399,7 +314,7 @@ var decode_movement = function (blob, offset, _, name, group, end) {
         else {
             if (effectIdOld > 15) {
                 if (verbosity >= 0) {
-                    Util.error("Movement: Unknown effect id " + effectIdOld + ". This is a known bug.");
+                    Log.error("Movement: Unknown effect id " + effectIdOld + ". This is a known bug.");
                     console.log('If you know an AVS version that will display this Movement as anything else but "None", then please send it in!');
                 }
                 effect = Table.movementEffect[0];
@@ -424,7 +339,7 @@ var decode_movement = function (blob, offset, _, name, group, end) {
     comp['coordinates'] = Table.coordinates[Util.getUInt32(blob, offset + sizeInt * 3)];
     comp['bilinear'] = Util.getBool(blob, offset + sizeInt * 4, sizeInt)[0];
     comp['wrap'] = Util.getBool(blob, offset + sizeInt * 5, sizeInt)[0];
-    if (effect && effect.length && effectIdOld !== 1 && effectIdOld !== 7) {
+    if (effect && effect.length && effectIdOld !== 1 && effectIdOld !== 7) { // 'slight fuzzify' and 'blocky partial out' have no script representation.
         code = effect[1];
         comp['coordinates'] = effect[2]; // overwrite
     }
@@ -465,19 +380,19 @@ var decode_simple = function (blob, offset) {
     }
     else {
         switch (effect & 3) {
-            case 0:// solid analyzer
+            case 0: // solid analyzer
                 comp['audioSource'] = 'Spectrum';
                 comp['renderType'] = 'Solid';
                 break;
-            case 1:// line analyzer
+            case 1: // line analyzer
                 comp['audioSource'] = 'Spectrum';
                 comp['renderType'] = 'Lines';
                 break;
-            case 2:// line scope
+            case 2: // line scope
                 comp['audioSource'] = 'Waveform';
                 comp['renderType'] = 'Lines';
                 break;
-            case 3:// solid scope
+            case 3: // solid scope
                 comp['audioSource'] = 'Waveform';
                 comp['renderType'] = 'Solid';
                 break;

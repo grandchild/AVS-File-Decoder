@@ -1,8 +1,8 @@
 "use strict";
 var _this = this;
 Object.defineProperty(exports, "__esModule", { value: true });
-var chalk_1 = require("chalk");
-var fs_1 = require("fs");
+// Modules
+var Log = require("./log");
 // Constants
 var sizeInt = 4;
 var allFields = true;
@@ -41,9 +41,9 @@ var cmpBytes = function (arr, offset, test) {
 };
 exports.cmpBytes = cmpBytes;
 var printTable = function (name, table) {
-    dim(name + ":");
+    Log.dim(name + ":");
     for (var key in table) {
-        dim("\t" + key + ": " + (table[key] ? ('' + table[key]).replace(/\n/g, '\n\t\t') : 'undefined'));
+        Log.dim("\t" + key + ": " + (table[key] ? ('' + table[key]).replace(/\n/g, '\n\t\t') : 'undefined'));
     }
 };
 exports.printTable = printTable;
@@ -81,7 +81,7 @@ exports.getBit = getBit;
 var getUInt = function (blob, offset, size) {
     if (offset > blob.length - size) {
         if (verbosity >= 1)
-            warn("WARNING: getUInt: offset overflow " + offset + " > " + (blob.length - size));
+            Log.warn("WARNING: getUInt: offset overflow " + offset + " > " + (blob.length - size));
         return 0;
     }
     switch (size) {
@@ -101,7 +101,7 @@ var getUInt32 = function (blob, offset) {
         offset = 0;
     if (offset > blob.length - sizeInt) {
         if (verbosity >= 1)
-            warn("WARNING: getUInt32: offset overflow " + offset + " > " + (blob.length - sizeInt));
+            Log.warn("WARNING: getUInt32: offset overflow " + offset + " > " + (blob.length - sizeInt));
         return 0;
     }
     var array = blob.buffer.slice(blob.byteOffset + offset, blob.byteOffset + offset + sizeInt);
@@ -110,7 +110,7 @@ var getUInt32 = function (blob, offset) {
     }
     catch (e) {
         if (e instanceof RangeError) {
-            error(e.stack);
+            Log.error(e.stack);
             throw new ConvertException("Invalid offset " + offset + " to getUInt32.\nIs this preset very old? Send it in, so we can look at it!");
         }
         else {
@@ -124,7 +124,7 @@ var getInt32 = function (blob, offset) {
         offset = 0;
     if (offset > blob.length - sizeInt) {
         if (verbosity >= 1)
-            warn("WARNING: getInt32: offset overflow " + offset + " > " + (blob.length - sizeInt));
+            Log.warn("WARNING: getInt32: offset overflow " + offset + " > " + (blob.length - sizeInt));
         return [0, sizeInt];
     }
     var array = blob.buffer.slice(blob.byteOffset + offset, blob.byteOffset + offset + sizeInt);
@@ -146,7 +146,7 @@ var getUInt64 = function (blob, offset) {
         offset = 0;
     if (offset > blob.length - sizeInt * 2) {
         if (verbosity >= 1)
-            warn("WARNING: getUInt64: offset overflow " + offset + " > " + (blob.length - sizeInt * 2));
+            Log.warn("WARNING: getUInt64: offset overflow " + offset + " > " + (blob.length - sizeInt * 2));
         return 0;
     }
     var array = blob.buffer.slice(blob.byteOffset + offset, blob.byteOffset + offset + sizeInt * 2);
@@ -279,7 +279,7 @@ var getRadioButton = function (blob, offset, map) {
     var key = 0;
     for (var i = 0; i < map.length; i++) {
         var on = getUInt32(blob, offset + sizeInt * i) !== 0 ? 1 : 0;
-        if (on) {
+        if (on) { // in case of (erroneous) multiple selections, the last one selected wins
             key = on * (i + 1);
         }
     }
@@ -509,33 +509,4 @@ var getBufferNum = function (code) {
     return code;
 };
 exports.getBufferNum = getBufferNum;
-var getISOTime = function (file) {
-    return new Promise(function (resolve, reject) {
-        fs_1.stat(file, function (err, time) {
-            err ? reject(err) : resolve(time.mtime.toISOString());
-        });
-    });
-};
-exports.getISOTime = getISOTime;
-var readPreset = function (file) {
-    return new Promise(function (resolve, reject) {
-        fs_1.readFile(file, function (err, data) {
-            err ? reject(err) : resolve(data);
-        });
-    });
-};
-exports.readPreset = readPreset;
-var dim = function (message) {
-    console.log((isNode) ? chalk_1.default.dim(message) : message);
-};
-exports.dim = dim;
-var error = function (message) {
-    console.error((isNode) ? chalk_1.default.red(message) : message);
-};
-exports.error = error;
-var warn = function (message) {
-    console.warn((isNode) ? chalk_1.default.yellow(message) : message);
-};
-exports.warn = warn;
-var isNode = new Function('try {return this===global;}catch(e){return false;}');
 //# sourceMappingURL=util.js.map

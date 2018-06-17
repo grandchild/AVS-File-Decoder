@@ -1,9 +1,10 @@
 // Modules
 import * as Components from './lib/components';
-import * as Util from './lib/util';
+import * as Log from './lib/log';
 import * as Table from './lib/tables';
-import { readFileSync, statSync } from 'fs';
+import * as Util from './lib/util';
 import { basename, extname } from 'path';
+import { readFileSync, statSync } from 'fs';
 
 // Constants
 const sizeInt = 4;
@@ -15,42 +16,6 @@ const args: Arguments = {
     minify: false,
     quiet: false,
     verbose: 0
-};
-
-const convertFile = async (file: string, customArgs?: Arguments): Promise<any> => {
-    (<any>Object).assign(args, customArgs);
-
-    return Util.readPreset(file)
-    .then( async (presetBlob: any) => {
-        const presetName = (typeof args.name !== 'undefined' && args.name.trim().length > 0) ? args.name : basename(file, extname(file));
-        const presetDate = args.noDate ? undefined : await Util.getISOTime(file);
-        const presetObj = convertBlob(presetBlob, presetName, presetDate, args);
-        const whitespace: number = (args.minify === true) ? 0 : 4;
-
-        return JSON.stringify(presetObj, null, whitespace);
-    })
-    .catch( error => {
-        Util.error(error);
-    });
-};
-
-const convertFileSync = (file: string, customArgs?: Arguments): Object => {
-    (<any>Object).assign(args, customArgs);
-
-    let presetBlob, presetDate, presetName, presetObj;
-
-    try {
-        presetBlob = readFileSync(file);
-        presetName = (typeof args.name !== 'undefined' && args.name.trim().length > 0) ? args.name : basename(file, extname(file));
-        presetDate = args.noDate ? undefined : statSync(file).mtime.toISOString();
-        presetObj = convertBlob(presetBlob, presetName, presetDate, args);
-    } catch (error) {
-        Util.error(error);
-    }
-
-    const whitespace: number = (args.minify === true) ? 0 : 4;
-
-    return JSON.stringify(presetObj, null, whitespace);
 };
 
 const convertBlob = (data: Buffer|ArrayBuffer, presetName: string, presetDate?: string, customArgs?: Arguments): Object|void => {
@@ -75,11 +40,11 @@ const convertBlob = (data: Buffer|ArrayBuffer, presetName: string, presetDate?: 
         preset['components'] = components;
     } catch (e) {
         // TODO
-        // if (verbosity < 0) Util.error(`Error in '${file}'`);
-        if (verbosity >= 1) Util.error(e.stack);
-        else Util.error(e);
+        // if (verbosity < 0) Log.error(`Error in '${file}'`);
+        if (verbosity >= 1) Log.error(e.stack);
+        else Log.error(e);
         // if(e instanceof Util.ConvertException) {
-        //     Util.error('Error: '+e.message);
+        //     Log.error('Error: '+e.message);
         //     return null;
         // } else {
         //     throw e;
@@ -130,7 +95,7 @@ const getComponentIndex = (code: number, blob: Uint8Array, offset: number): numb
         for (let i = 0; i < componentTable.length; i++) {
             if (code === componentTable[i].code) {
                 if (verbosity >= 1) {
-                    Util.dim(`Found component: ${componentTable[i].name} (${code})`);
+                    Log.dim(`Found component: ${componentTable[i].name} (${code})`);
                 }
                 return i;
             }
@@ -140,14 +105,14 @@ const getComponentIndex = (code: number, blob: Uint8Array, offset: number): numb
             if (componentTable[i].code instanceof Array &&
                 Util.cmpBytes(blob, offset + sizeInt, <number[]>componentTable[i].code)) {
                 if (verbosity >= 1) {
-                    Util.dim(`Found component: ${componentTable[i].name}`);
+                    Log.dim(`Found component: ${componentTable[i].name}`);
                 }
                 return i;
             }
         }
     }
 
-    if (verbosity >= 1) Util.dim(`Found unknown component (code: ${code})`);
+    if (verbosity >= 1) Log.dim(`Found unknown component (code: ${code})`);
 
     return -code;
 };
@@ -191,7 +156,7 @@ const decode_effectList = (blob: Uint8Array, offset: number, _: Object, name: st
     };
     let modebit: boolean = Util.getBit(blob, offset, 7)[0] === 1; // is true in all presets I know, probably only for truly ancient versions
     if (!modebit) {
-        Util.error('EL modebit is off!! If you\'re seeing this, send this .avs file in please!');
+        Log.error('EL modebit is off!! If you\'re seeing this, send this .avs file in please!');
     }
     let configSize: number = (modebit ? blob[offset + 4] : blob[offset]) + 1;
     if (configSize > 1) {
@@ -300,9 +265,9 @@ const decode_generic = (blob: Uint8Array, offset: number, fields: Object, name: 
         if (k !== 'new_version') { // but don't save new_version marker, if present
             comp[k] = value;
             if (verbosity >= 2) {
-                Util.dim('- key: ' + k + '\n- val: ' + value);
+                Log.dim('- key: ' + k + '\n- val: ' + value);
                 if (k === 'code') Util.printTable('- code', value);
-                if (verbosity >= 3) Util.dim('- offset: ' + offset + '\n- size: ' + size);
+                if (verbosity >= 3) Log.dim('- offset: ' + offset + '\n- size: ' + size);
                 // console.log();
             }
         }
@@ -355,7 +320,7 @@ const decode_movement = (blob: Uint8Array, offset: number, _: Object, name: stri
         } else {
             if (effectIdOld > 15) {
                 if (verbosity >= 0) {
-                    Util.error(`Movement: Unknown effect id ${effectIdOld}. This is a known bug.`);
+                    Log.error(`Movement: Unknown effect id ${effectIdOld}. This is a known bug.`);
                     console.log('If you know an AVS version that will display this Movement as anything else but "None", then please send it in!');
                 }
                 effect = Table.movementEffect[0];
@@ -445,7 +410,5 @@ const decode_simple = (blob: Uint8Array, offset: number): Object => {
 
 export {
     convertBlob,
-    convertComponents,
-    convertFile,
-    convertFileSync
+    convertComponents
 };

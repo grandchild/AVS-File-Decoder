@@ -1,5 +1,5 @@
 // Modules
-import { convertFileSync } from '../dist';
+import { convertFileSync } from '../dist/node';
 
 // Dependencies
 import { readFileSync, statSync } from 'fs';
