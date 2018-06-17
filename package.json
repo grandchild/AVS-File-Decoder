@@ -8,7 +8,7 @@
     "idleberg"
   ],
   "homepage": "https://github.com/grandchild/AVS-File-Decoder#readme",
-  "main": "dist/node.js",
+  "main": "node.js",
   "directories": {
     "doc": "doc",
     "test": "test"
