@@ -1,5 +1,5 @@
 // Modules
-import { convertFile } from '../dist/node';
+import { convertFile } from '../node';
 
 // Dependencies
 import { readFile } from 'fs';

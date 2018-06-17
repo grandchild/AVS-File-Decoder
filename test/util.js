@@ -1,6 +1,6 @@
 // Modules
-import * as Util from '../dist/lib/util';
-import { getISOTime, readPreset} from '../dist/lib/util-node';
+import * as Util from '../lib/util';
+import { getISOTime, readPreset} from '../lib/util-node';
 
 // Dependencies
 import { join } from 'path';
