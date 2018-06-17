@@ -6,9 +6,6 @@ jobs:
       - image: circleci/node:latest
     steps:
       - checkout
-      - run:
-          name: Installing NSIS
-          command: 'sudo apt-get update; sudo apt-get install nsis'
       - restore_cache:
           key: dependency-cache-{{ checksum "package.json" }}
       - run:
