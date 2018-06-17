@@ -1,3 +1,5 @@
+*.avs
+*.webvs
 .circleci
 .editorconfig
 .gitignore
@@ -5,6 +7,6 @@
 doc/
 src/
 test/
-types/
 tsconfig.json
 tslint.json
+types/
