@@ -403,4 +403,4 @@ var decode_simple = function (blob, offset) {
     comp['colors'] = Util.getColorList(blob, offset + sizeInt)[0];
     return comp;
 };
-//# sourceMappingURL=index.js.map
+//# sourceMappingURL=browser.js.map

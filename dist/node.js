@@ -39,7 +39,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 // Modules
 var Log = require("./lib/log");
 var Util = require("./lib/util-node");
-var _1 = require("./");
+var browser_1 = require("./browser");
 var fs_1 = require("fs");
 var path_1 = require("path");
 var args = {
@@ -68,7 +68,7 @@ var convertFile = function (file, customArgs) { return __awaiter(_this, void 0, 
                             _b.label = 3;
                         case 3:
                             presetDate = _a;
-                            presetObj = _1.convertBlob(presetBlob, presetName, presetDate, args);
+                            presetObj = browser_1.convertBlob(presetBlob, presetName, presetDate, args);
                             whitespace = (args.minify === true) ? 0 : 4;
                             return [2 /*return*/, JSON.stringify(presetObj, null, whitespace)];
                     }
@@ -87,7 +87,7 @@ var convertFileSync = function (file, customArgs) {
         presetBlob = fs_1.readFileSync(file);
         presetName = (typeof args.name !== 'undefined' && args.name.trim().length > 0) ? args.name : path_1.basename(file, path_1.extname(file));
         presetDate = args.noDate ? undefined : fs_1.statSync(file).mtime.toISOString();
-        presetObj = _1.convertBlob(presetBlob, presetName, presetDate, args);
+        presetObj = browser_1.convertBlob(presetBlob, presetName, presetDate, args);
     }
     catch (error) {
         Log.error(error);
