@@ -55,6 +55,15 @@ try {
 
 `convertBlob(fileBuffer, fileName, fileDate, [options])`
 
+```js
+import { convertFile, convertFileSync } from '@visbot/webvsc/browser';
+
+const baseName = 'my preset';
+const modifiedDate = new Date(Date.now()).toISOString();
+
+const webvs = convertBlob(avsBuffer, baseName, modifiedDate);
+```
+
 ## Options
 
 ### hidden
