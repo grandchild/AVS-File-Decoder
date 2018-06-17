@@ -22,12 +22,14 @@ yarn add @visbot/webvsc || npm install  @visbot/webvsc
 
 ## Usage
 
+## Node
+
 `convertFile(file, [options])`
 
 **Example:**
 
 ```js
-import { convertFile, convertFileSync } from '@visbot/webvsc';
+import { convertFile, convertFileSync } from '@visbot/webvsc/node';
 
 let file = 'path/to/preset.avs';
 let jsonString;
@@ -49,7 +51,9 @@ try {
 }
 ```
 
-**Note:** The previously contained CLI tool has been detached and is now available as the separate [webvsc-cli](https://www.npmjs.com/package/@visbot/webvsc-cli) package!
+## Browser
+
+`convertBlob(fileBuffer, fileName, fileDate, [options])`
 
 ## Options
 
