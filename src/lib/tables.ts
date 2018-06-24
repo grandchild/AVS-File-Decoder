@@ -244,6 +244,7 @@ export {
     bufferMode,
     colorMapKey,
     colorMapCycleMode,
+    convolutionEdgeMode,
     coordinates,
     drawMode,
     movementEffect,

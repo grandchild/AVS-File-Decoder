@@ -717,7 +717,7 @@ const dll: ComponentDefinition[] = [
         'func': 'generic',
         'fields': {
             'enabled': ['Bool', sizeInt],
-            'edgeMode': ['UInt32', sizeInt, 'convolutionEdgeMode'], // note that edgeMode==WRAP and absolute are mutually exclusive.
+            'edgeMode': ['ConvolutionEdgeMode', sizeInt], // note that edgeMode==WRAP and absolute are mutually exclusive.
             'absolute': ['Bool', sizeInt], // they can however both be false/zero
             'twoPass': ['Bool', sizeInt],
             'kernel': ['ConvoFilter', [7, 7]],
