@@ -1,6 +1,6 @@
 {
   "name": "@visbot/webvsc",
-  "version": "2.2.0",
+  "version": "2.2.1",
   "description": "A library to convert Winamp AVS presets into Webvs JSON",
   "license": "MIT",
   "contributors": [
