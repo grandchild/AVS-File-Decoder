@@ -4,7 +4,7 @@ import { convertFileSync } from '../node';
 // Dependencies
 import { readFileSync, statSync } from 'fs';
 import { join } from 'path';
-import { test } from 'ava';
+import test from 'ava';
 
 // Variables
 const fixturesDir = join(__dirname, 'fixtures');

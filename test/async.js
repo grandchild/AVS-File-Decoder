@@ -4,7 +4,7 @@ import { convertFile } from '../node';
 // Dependencies
 import { readFile } from 'fs';
 import { join } from 'path';
-import { test } from 'ava';
+import test from 'ava';
 import { promisify } from 'util';
 
 // Variables

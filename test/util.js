@@ -6,7 +6,7 @@ import { getISOTime, readPreset} from '../lib/util-node';
 import { join } from 'path';
 import { spawnSync } from 'child_process';
 import { statSync, readFileSync } from 'fs';
-import { test } from 'ava';
+import test from 'ava';
 
 // Variables
 const fixturesDir = join(__dirname, 'fixtures');
