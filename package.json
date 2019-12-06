@@ -8,10 +8,12 @@
     "idleberg"
   ],
   "scripts": {
-    "build": "npm run clean && tsc --project ./",
+    "build": "npm run clean && tsc --pretty --project ./",
     "clean": "rimraf ./dist",
+    "dev": "tsc --watch --pretty --project ./",
     "lint": "tslint --project ./",
-    "test": "npx ava ./test/ --verbose"
+    "lint:fix": "tslint --fix --project ./",
+    "test": "ava ./test/*.js --verbose"
   },
   "homepage": "https://github.com/grandchild/AVS-File-Decoder#readme",
   "main": "node.js",
@@ -35,20 +37,20 @@
     "winamp"
   ],
   "dependencies": {
-    "chalk": "^2.4.2"
+    "chalk": "^3.0.0"
   },
   "devDependencies": {
-    "@types/node": "^11.13.0",
-    "ava": "^1.4.1",
-    "husky": "^1.3.1",
-    "rimraf": "^2.6.3",
-    "tslint": "^5.15.0",
-    "typescript": "^3.4.1",
-    "util": "^0.11.1"
+    "@types/node": "^12.12.14",
+    "ava": "^2.4.0",
+    "husky": "^3.1.0",
+    "rimraf": "^3.0.0",
+    "tslint": "^5.20.1",
+    "typescript": "^3.7.3",
+    "util": "^0.12.1"
   },
   "husky": {
     "hooks": {
-      "pre-publish": "npm run lint && npm run test"
+      "pre-commit": "npm run lint && npm run test"
     }
   }
 }
