@@ -14,7 +14,7 @@ commands:
           paths:
             - ./node_modules
       - run:
-          name: Lint Source
+          name: Run Tests
           command: npm run test
 
 jobs:
