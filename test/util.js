@@ -4,7 +4,6 @@ import { getISOTime, readPreset} from '../lib/util-node';
 
 // Dependencies
 import { join } from 'path';
-import { spawnSync } from 'child_process';
 import { statSync, readFileSync } from 'fs';
 import test from 'ava';
 

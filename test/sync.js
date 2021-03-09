@@ -2,7 +2,7 @@
 import { convertFileSync } from '../node';
 
 // Dependencies
-import { readFileSync, statSync } from 'fs';
+import { readFileSync } from 'fs';
 import { join } from 'path';
 import test from 'ava';
 
