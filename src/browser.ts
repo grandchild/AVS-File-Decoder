@@ -9,15 +9,18 @@ const sizeInt = 4;
 let verbosity = 0; // log individual key:value fields
 const componentTable: ComponentDefinition[] = Components.builtin.concat(Components.dll);
 
-const args: Arguments = {
+const defaultArgs: Arguments = {
     hidden: true,
     minify: false,
     quiet: false,
     verbose: 0
 };
 
-function convertBlob(data: Buffer | ArrayBuffer, presetName: string, presetDate?: string, customArgs?: Arguments): Object | void {
-    (<any>Object).assign(args, customArgs);
+function convertBlob(data: Buffer | ArrayBuffer, presetName: string, presetDate?: string, customArgs?: Arguments): unknown {
+    const args = {
+        ...defaultArgs,
+        ...customArgs
+    };
 
     verbosity = args.quiet ? -1 : args.verbose;
 
@@ -54,24 +57,24 @@ function convertBlob(data: Buffer | ArrayBuffer, presetName: string, presetDate?
     return preset;
 }
 
-function convertComponents(blob: Uint8Array): Object {
-    let fp: number = 0;
-    let components: any[] = [];
+function convertComponents(blob: Uint8Array): unknown {
+    let fp = 0;
+    const components: unknown[] = [];
     let res;
     // read file as long as there are components left.
     // a component takes at least two int32s of space, if there are less bytes than that left,
     // ignore them. usually fp < blob.length should suffice but some rare presets have trailing
     // bytes. found in one preset's trailing colormap so far.
     while (fp <= blob.length - sizeInt * 2) {
-        let code = Util.getUInt32(blob, fp);
-        let i = getComponentIndex(code, blob, fp);
-        let isDll: number = (code !== 0xfffffffe && code >= Util.builtinMax) ? 1 : 0;
-        let size = getComponentSize(blob, fp + sizeInt + isDll * 32);
+        const code = Util.getUInt32(blob, fp);
+        const i = getComponentIndex(code, blob, fp);
+        const isDll: number = (code !== 0xfffffffe && code >= Util.builtinMax) ? 1 : 0;
+        const size = getComponentSize(blob, fp + sizeInt + isDll * 32);
         // console.log("component size", size, "blob size", blob.length);
         if (i < 0) {
             res = { 'type': 'Unknown: (' + (-i) + ')' };
         } else {
-            let offset = fp + sizeInt * 2 + isDll * 32;
+            const offset = fp + sizeInt * 2 + isDll * 32;
             res = eval('decode_' + componentTable[i].func)(
                 blob,
                 offset,
@@ -123,12 +126,12 @@ function getComponentSize(blob: Uint8Array, offset: number) {
 }
 
 function decodePresetHeader(blob: Uint8Array): boolean {
-    let presetHeader0_1 = [
+    const presetHeader0_1 = [
         0x4E, 0x75, 0x6C, 0x6C, 0x73, 0x6F, 0x66, 0x74,
         0x20, 0x41, 0x56, 0x53, 0x20, 0x50, 0x72, 0x65,
         0x73, 0x65, 0x74, 0x20, 0x30, 0x2E, 0x31, 0x1A
     ];
-    let presetHeader0_2 = [
+    const presetHeader0_2 = [
         0x4E, 0x75, 0x6C, 0x6C, 0x73, 0x6F, 0x66, 0x74,
         0x20, 0x41, 0x56, 0x53, 0x20, 0x50, 0x72, 0x65,
         0x73, 0x65, 0x74, 0x20, 0x30, 0x2E, 0x32, 0x1A,
@@ -146,20 +149,21 @@ function decodePresetHeader(blob: Uint8Array): boolean {
 }
 
 //// component decode functions,
-function decode_effectList(blob: Uint8Array, offset: number, _: Object, name: string): Object {
-    let size: number = Util.getUInt32(blob, offset - sizeInt);
-    let comp = {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+function decode_effectList(blob: Uint8Array, offset: number, _: unknown, name: string): unknown {
+    const size: number = Util.getUInt32(blob, offset - sizeInt);
+    const comp = {
         'type': Util.removeSpaces(name),
         'enabled': Util.getBit(blob, offset, 1)[0] !== 1,
         'clearFrame': Util.getBit(blob, offset, 0)[0] === 1,
         'input': Table['blendmodeIn'][blob[offset + 2]],
         'output': Table['blendmodeOut'][blob[offset + 3]],
     };
-    let modebit: boolean = Util.getBit(blob, offset, 7)[0] === 1; // is true in all presets I know, probably only for truly ancient versions
+    const modebit: boolean = Util.getBit(blob, offset, 7)[0] === 1; // is true in all presets I know, probably only for truly ancient versions
     if (!modebit) {
         Log.error('EL modebit is off!! If you\'re seeing this, send this .avs file in please!');
     }
-    let configSize: number = (modebit ? blob[offset + 4] : blob[offset]) + 1;
+    const configSize: number = (modebit ? blob[offset + 4] : blob[offset]) + 1;
     if (configSize > 1) {
         comp['inAdjustBlend'] = Util.getUInt32(blob, offset + 5);
         comp['outAdjustBlend'] = Util.getUInt32(blob, offset + 9);
@@ -170,7 +174,7 @@ function decode_effectList(blob: Uint8Array, offset: number, _: Object, name: st
         comp['enableOnBeat'] = Util.getUInt32(blob, offset + 29) === 1;
         comp['enableOnBeatFor'] = Util.getUInt32(blob, offset + 33);
     }
-    let effectList28plusHeader = [
+    const effectList28plusHeader = [
         0x00, 0x40, 0x00, 0x00, 0x41, 0x56, 0x53, 0x20,
         0x32, 0x2E, 0x38, 0x2B, 0x20, 0x45, 0x66, 0x66,
         0x65, 0x63, 0x74, 0x20, 0x4C, 0x69, 0x73, 0x74,
@@ -179,30 +183,30 @@ function decode_effectList(blob: Uint8Array, offset: number, _: Object, name: st
     ];
     let contentOffset = offset + configSize;
     if (Util.cmpBytes(blob, contentOffset, effectList28plusHeader)) {
-        let codeOffset: number = offset + configSize + effectList28plusHeader.length;
-        let codeSize: number = Util.getUInt32(blob, codeOffset);
+        const codeOffset: number = offset + configSize + effectList28plusHeader.length;
+        const codeSize: number = Util.getUInt32(blob, codeOffset);
         comp['code'] = Util.getCodeEIF(blob, codeOffset + sizeInt)[0];
         contentOffset = codeOffset + sizeInt + codeSize;
     }
-    let content = convertComponents(blob.subarray(contentOffset, offset + size));
+    const content = convertComponents(blob.subarray(contentOffset, offset + size));
     comp['components'] = content;
     return comp;
 }
 
 // generic field decoding function that most components use.
-function decode_generic(blob: Uint8Array, offset: number, fields: Object, name: string, group: string, end: number): Object {
-    let comp = {
+function decode_generic(blob: Uint8Array, offset: number, fields: unknown, name: string, group: string, end: number): unknown {
+    const comp = {
         'type': Util.removeSpaces(name),
         'group': group,
     };
-    let keys = Object.keys(fields);
+    const keys = Object.keys(fields);
     let lastWasABitField = false;
     for (let i = 0; i < keys.length; i++) {
         if (offset >= end) {
             break;
         }
-        let k = keys[i];
-        let f = fields[k];
+        const k = keys[i];
+        const f = fields[k];
         // console.log(`key: ${k}, field: ${f}`);
         if (k.match(/^null[_0-9]*$/)) {
             offset += f;
@@ -213,9 +217,9 @@ function decode_generic(blob: Uint8Array, offset: number, fields: Object, name: 
         let size = 0;
         let value: jsontypes;
         let result: [jsontypes, number];
-        let num: boolean = typeof f === 'number';
-        let other: boolean = typeof f === 'string';
-        let array: boolean = f instanceof Array;
+        const num: boolean = typeof f === 'number';
+        const other: boolean = typeof f === 'string';
+        const array: boolean = f instanceof Array;
         if (num) {
             size = f;
             try {
@@ -225,7 +229,7 @@ function decode_generic(blob: Uint8Array, offset: number, fields: Object, name: 
             }
             lastWasABitField = false;
         } else if (other) {
-            let func = 'get' + f;
+            // const func = 'get' + f;
             // console.log(`get: ${f}`);
             result = Util.callFunction(f, blob, offset);
             value = result[0];
@@ -243,7 +247,7 @@ function decode_generic(blob: Uint8Array, offset: number, fields: Object, name: 
             // console.log(`get: ${f[0]} ${f[1]} ${typeof f[1]}`);
             let tableName: string = Util.lowerInitial(f[0]);
             if (tableName in Table) {
-                let tableKey: number = Util.getUInt(blob, offset, f[1]);
+                const tableKey: number = Util.getUInt(blob, offset, f[1]);
                 value = Table[tableName][tableKey];
                 size = f[1];
             } else {
@@ -280,13 +284,14 @@ function decode_generic(blob: Uint8Array, offset: number, fields: Object, name: 
     return comp;
 }
 
-function decode_versioned_generic(blob: Uint8Array, offset: number, fields: Object, name: string, group: string, end: number): Object {
-    let version: number = blob[offset];
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+function decode_versioned_generic(blob: Uint8Array, offset: number, fields: any, name: string, group: string, end: number): unknown {
+    const version: number = blob[offset];
     if (version === 1) {
         return decode_generic(blob, offset, fields, name, group, end);
     } else {
-        let oldFields = {};
-        for (let key in fields) {
+        const oldFields = {};
+        for (const key in fields) {
             if (key === 'new_version')
                 continue;
             if (key === 'code')
@@ -300,14 +305,15 @@ function decode_versioned_generic(blob: Uint8Array, offset: number, fields: Obje
     }
 }
 
-function decode_movement(blob: Uint8Array, offset: number, _: Object, name: string, group: string, end: number): Object {
-    let comp = {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+function decode_movement(blob: Uint8Array, offset: number, _: unknown, name: string, group: string, end: number): unknown {
+    const comp = {
         'type': name,
         'group': group,
     };
     // the special value 0 is because 'old versions of AVS barf' if the id is > 15, so
     // AVS writes out 0 in that case, and sets the actual id at the end of the save block.
-    let effectIdOld = Util.getUInt32(blob, offset);
+    const effectIdOld = Util.getUInt32(blob, offset);
     let effect = [];
     let code;
     let hidden: string[];
@@ -336,7 +342,7 @@ function decode_movement(blob: Uint8Array, offset: number, _: Object, name: stri
             }
         }
     } else {
-        let effectIdNew: number = 0;
+        let effectIdNew = 0;
         if (offset + sizeInt * 6 < end) {
             effectIdNew = Util.getUInt32(blob, offset + sizeInt * 6); // 1*sizeInt, because of oldId=0, and 5*sizeint because of the other settings.
         }
@@ -360,16 +366,17 @@ function decode_movement(blob: Uint8Array, offset: number, _: Object, name: stri
     return comp;
 }
 
-function decode_avi(blob: Uint8Array, offset: number): Object {
-    let comp = {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+function decode_avi(blob: Uint8Array, offset: number): unknown {
+    const comp = {
         'type': 'AVI',
         'group': 'Render',
         'enabled': Util.getBool(blob, offset, sizeInt)[0],
     };
-    let strAndSize = Util.getNtString(blob, offset + sizeInt * 3);
+    const strAndSize = Util.getNtString(blob, offset + sizeInt * 3);
     comp['file'] = strAndSize[0];
     comp['speed'] = Util.getUInt32(blob, offset + sizeInt * 5 + strAndSize[1]); // 0: fastest, 1000: slowest
-    let beatAdd = Util.getUInt32(blob, offset + sizeInt * 3 + strAndSize[1]);
+    const beatAdd = Util.getUInt32(blob, offset + sizeInt * 3 + strAndSize[1]);
     if (beatAdd) {
         comp['output'] = '50/50';
     } else {
@@ -381,12 +388,13 @@ function decode_avi(blob: Uint8Array, offset: number): Object {
     return comp;
 }
 
-function decode_simple(blob: Uint8Array, offset: number): Object {
-    let comp = {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+function decode_simple(blob: Uint8Array, offset: number): unknown {
+    const comp = {
         'type': 'Simple',
         'group': 'Render',
     };
-    let effect = Util.getUInt32(blob, offset);
+    const effect = Util.getUInt32(blob, offset);
     if (effect & (1 << 6)) {
         comp['audioSource'] = (effect & 2) ? 'Waveform' : 'Spectrum';
         comp['renderType'] = 'Dots';

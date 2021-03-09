@@ -5,7 +5,7 @@ import { convertBlob } from './browser';
 import { readFileSync, statSync } from 'fs';
 import { basename, extname } from 'path';
 
-const args: Arguments = {
+const defaultArgs: Arguments = {
     hidden: true,
     minify: false,
     quiet: false,
@@ -13,7 +13,10 @@ const args: Arguments = {
 };
 
 function convertFile(file: string, customArgs?: Arguments): Promise<any> {
-    (<any>Object).assign(args, customArgs);
+    const args = {
+        ...defaultArgs,
+        ...customArgs
+    };
 
     return Util.readPreset(file)
         .then(async (presetBlob: any) => {
@@ -29,8 +32,11 @@ function convertFile(file: string, customArgs?: Arguments): Promise<any> {
         });
 }
 
-function convertFileSync(file: string, customArgs?: Arguments): Object {
-    (<any>Object).assign(args, customArgs);
+function convertFileSync(file: string, customArgs?: Arguments): unknown {
+    const args = {
+        ...defaultArgs,
+        ...customArgs
+    };
 
     let presetBlob, presetDate, presetName, presetObj;
 

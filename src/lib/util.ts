@@ -2,19 +2,19 @@
 import * as Log from './log';
 
 // Constants
-const sizeInt: number = 4;
-const allFields: boolean  = true;
-const presetHeaderLength: number = 25;
-const builtinMax: number = 16384;
+const sizeInt = 4;
+const allFields  = true;
+const presetHeaderLength = 25;
+const builtinMax = 16384;
 
-let hiddenStrings: boolean = false;
+let hiddenStrings = false;
 const setHiddenStrings = (value: boolean): void => { hiddenStrings = value; };
-let verbosity: number = 0;
+let verbosity = 0;
 const setVerbosity = (value: number): void => { verbosity = value; };
 
 
 class ConvertException implements Error {
-    name: string = 'ConvertException';
+    name = 'ConvertException';
     message: string;
 
     constructor(public msg: string) {
@@ -41,7 +41,7 @@ function cmpBytes(arr: Uint8Array, offset: number, test: number[]): boolean {
 
 function printTable(name: string, table: any): void {
     Log.dim(`${name}:`);
-    for (let key in table) {
+    for (const key in table) {
         Log.dim(`\t${key}: ${table[key] ? ('' + table[key]).replace(/\n/g, '\n\t\t') : 'undefined'}`);
     }
 }
@@ -65,7 +65,7 @@ function callFunction(funcName: string, blobOrValue: jsontypes|Uint8Array, offse
 function getBit(blob: Uint8Array, offset: number, pos: any): [number, number] {
     if ((<number[]>pos).length) {
         if ((<number[]>pos).length !== 2) throw new this.ConvertException(`Invalid Bitfield range ${pos}.`);
-        let mask = (2 << (pos[1] - pos[0])) - 1;
+        const mask = (2 << (pos[1] - pos[0])) - 1;
         return [(blob[offset] >> pos[0]) & mask, 1];
     } else {
         return [((blob[offset] >> <number>pos) & 1), 1];
@@ -98,7 +98,7 @@ function getUInt32(blob: Uint8Array, offset: number): number {
             Log.warn(`WARNING: getUInt32: offset overflow ${offset} > ${blob.length - sizeInt}`);
         return 0;
     }
-    let array = blob.buffer.slice(blob.byteOffset + offset, blob.byteOffset + offset + sizeInt);
+    const array = blob.buffer.slice(blob.byteOffset + offset, blob.byteOffset + offset + sizeInt);
     try {
         return new Uint32Array(array, 0, 1)[0];
     } catch (e) {
@@ -119,7 +119,7 @@ function getInt32(blob: Uint8Array, offset: number): [number, number] {
             Log.warn(`WARNING: getInt32: offset overflow ${offset} > ${blob.length - sizeInt}`);
         return [0, sizeInt];
     }
-    let array = blob.buffer.slice(blob.byteOffset + offset, blob.byteOffset + offset + sizeInt);
+    const array = blob.buffer.slice(blob.byteOffset + offset, blob.byteOffset + offset + sizeInt);
     try {
         return [new Int32Array(array, 0, 1)[0], sizeInt];
     } catch (e) {
@@ -139,9 +139,9 @@ function getUInt64(blob: Uint8Array, offset: number): number {
             Log.warn(`WARNING: getUInt64: offset overflow ${offset} > ${blob.length - sizeInt * 2}`);
         return 0;
     }
-    let array = blob.buffer.slice(blob.byteOffset + offset, blob.byteOffset + offset + sizeInt * 2);
+    const array = blob.buffer.slice(blob.byteOffset + offset, blob.byteOffset + offset + sizeInt * 2);
     try {
-        let two32 = new Uint32Array(array, 0, 2);
+        const two32 = new Uint32Array(array, 0, 2);
         return two32[0] + two32[1] * 0x100000000;
     } catch (e) {
         if (e instanceof RangeError) {
@@ -155,7 +155,7 @@ function getUInt64(blob: Uint8Array, offset: number): number {
 function getFloat(blob: Uint8Array, offset: number): [number, number] {
     if (!offset)
         offset = 0;
-    let array = blob.buffer.slice(blob.byteOffset + offset, blob.byteOffset + offset + sizeInt);
+    const array = blob.buffer.slice(blob.byteOffset + offset, blob.byteOffset + offset + sizeInt);
     try {
         return [new Float32Array(array, 0, 1)[0], 4];
     } catch (e) {
@@ -168,7 +168,7 @@ function getFloat(blob: Uint8Array, offset: number): [number, number] {
 }
 
 function getBool(blob: Uint8Array, offset: number, size: number): [boolean, number] {
-    let val = size === 1 ? blob[offset] : getUInt32(blob, offset);
+    const val = size === 1 ? blob[offset] : getUInt32(blob, offset);
     return [val !== 0, size];
 }
 
@@ -179,14 +179,14 @@ function getBoolified(num: number): boolean {
 function getSizeString(blob: Uint8Array, offset: number, size?: number): [string, number] | [string, number, string[]] {
     let add = 0;
     let result = '';
-    let getHidden: boolean = false;
+    let getHidden = false;
     if (!size) {
         size = getUInt32(blob, offset);
         add = sizeInt;
     } else {
         getHidden = hiddenStrings;
     }
-    let end = offset + size + add;
+    const end = offset + size + add;
     let i = offset + add;
     let c = blob[i];
     while (c > 0 && i < end) {
@@ -205,15 +205,15 @@ function getSizeString(blob: Uint8Array, offset: number, size?: number): [string
 }
 
 function getHiddenStrings(blob: Uint8Array, i: number, end: number): string[] {
-    let nonPrintables: number[] = [
+    const nonPrintables: number[] = [
         0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16,
         17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31,
         127, 129, 141, 143, 144, 157, 173
     ];
-    let hidden: string[] = [];
+    const hidden: string[] = [];
     while (i < end) {
         let c = blob[i];
-        let s: string = '';
+        let s = '';
         while (nonPrintables.indexOf(c) < 0 && i < end) {
             s += String.fromCharCode(c);
             c = blob[++i];
@@ -230,7 +230,7 @@ function getHiddenStrings(blob: Uint8Array, i: number, end: number): string[] {
 }
 
 function getNtString(blob: Uint8Array, offset: number): [string, number] {
-    let result: string = '';
+    let result = '';
     let i = offset;
     let c = blob[i];
     while (c > 0) {
@@ -249,22 +249,22 @@ function lowerInitial(str: string): string {
 }
 
 
-function getMap1(blob: Uint8Array, offset: number, map: Object): [string, number] {
+function getMap1(blob: Uint8Array, offset: number, map: unknown): [string, number] {
     return [getMapping(map, blob[offset]), 1];
 }
 
-function getMap4(blob: Uint8Array, offset: number, map: Object): [string, number] {
+function getMap4(blob: Uint8Array, offset: number, map: unknown): [string, number] {
     return [getMapping(map, getUInt32(blob, offset)), sizeInt];
 }
 
-function getMap8(blob: Uint8Array, offset: number, map: Object): [string, number] {
+function getMap8(blob: Uint8Array, offset: number, map: unknown): [string, number] {
     return [getMapping(map, getUInt64(blob, offset)), sizeInt * 2];
 }
 
 function getRadioButton(blob: Uint8Array, offset: number, map: any[]): [string, number] {
     let key = 0;
     for (let i = 0; i < map.length; i++) {
-        let on: number = getUInt32(blob, offset + sizeInt * i) !== 0 ? 1 : 0;
+        const on: number = getUInt32(blob, offset + sizeInt * i) !== 0 ? 1 : 0;
         if (on) { // in case of (erroneous) multiple selections, the last one selected wins
             key = on * (i + 1);
         }
@@ -273,8 +273,8 @@ function getRadioButton(blob: Uint8Array, offset: number, map: any[]): [string, 
     return [getMapping(map, key), sizeInt * map.length];
 }
 
-function getMapping(map: Object, key: number): string {
-    let value = map[key];
+function getMapping(map: unknown, key: number): string {
+    const value = map[key];
     if (value === undefined) {
         throw new ConvertException(`Map: A value for key '${key}' does not exist.`);
     } else {
@@ -284,7 +284,7 @@ function getMapping(map: Object, key: number): string {
 
 // Point, Frame, Beat, Init code fields - reorder to I,F,B,P order.
 function getCodePFBI(blob: Uint8Array, offset: number): [CodeSection, number] {
-    let map: [string, number][] = [
+    const map: [string, number][] = [
         ['init', 3],
         ['perFrame', 1],
         ['onBeat', 2],
@@ -295,7 +295,7 @@ function getCodePFBI(blob: Uint8Array, offset: number): [CodeSection, number] {
 
 // Frame, Beat, Init code fields - reorder to I,F,B order.
 function getCodeFBI(blob: Uint8Array, offset: number): [CodeSection, number] {
-    let map: [string, number][] = [
+    const map: [string, number][] = [
         ['init', 2],
         ['perFrame', 1],
         ['onBeat', 0],
@@ -304,7 +304,7 @@ function getCodeFBI(blob: Uint8Array, offset: number): [CodeSection, number] {
 }
 
 function getCodeIFBP(blob: Uint8Array, offset: number): [CodeSection, number] {
-    let map: [string, number][] = [
+    const map: [string, number][] = [
         ['init', 0],
         ['perFrame', 1],
         ['onBeat', 2],
@@ -314,7 +314,7 @@ function getCodeIFBP(blob: Uint8Array, offset: number): [CodeSection, number] {
 }
 
 function getCodeIFB(blob: Uint8Array, offset: number): [CodeSection, number] {
-    let map: [string, number][] = [
+    const map: [string, number][] = [
         ['init', 0],
         ['perFrame', 1],
         ['onBeat', 2],
@@ -324,11 +324,11 @@ function getCodeIFB(blob: Uint8Array, offset: number): [CodeSection, number] {
 
 // used by 2.8+ 'Effect List'
 function getCodeEIF(blob: Uint8Array, offset: number): [CodeSection, number] {
-    let map: [string, number][] = [
+    const map: [string, number][] = [
         ['init', 0],
         ['perFrame', 1],
     ];
-    let code: [CodeSection, number] = getCodeSection(blob, offset, map);
+    const code: [CodeSection, number] = getCodeSection(blob, offset, map);
     return [{
         'enabled': getBool(blob, offset, sizeInt)[0],
         'init': code[0]['init'],
@@ -338,7 +338,7 @@ function getCodeEIF(blob: Uint8Array, offset: number): [CodeSection, number] {
 
 // used only by 'Global Variables'
 function getNtCodeIFB(blob: Uint8Array, offset: number): [CodeSection, number] {
-    let map: [string, number][] = [
+    const map: [string, number][] = [
         ['init', 0],
         ['perFrame', 1],
         ['onBeat', 2],
@@ -348,7 +348,7 @@ function getNtCodeIFB(blob: Uint8Array, offset: number): [CodeSection, number] {
 
 // used only by 'Triangle'
 function getNtCodeIFBP(blob: Uint8Array, offset: number): [CodeSection, number] {
-    let map: [string, number][] = [
+    const map: [string, number][] = [
         ['init', 0],
         ['perFrame', 1],
         ['onBeat', 2],
@@ -359,7 +359,7 @@ function getNtCodeIFBP(blob: Uint8Array, offset: number): [CodeSection, number] 
 
 // the 256*-functions are used by ancient versions of 'Super Scope', 'Dynamic Movement', 'Dynamic Distance Modifier', 'Dynamic Shift'
 function get256CodePFBI(blob: Uint8Array, offset: number): [CodeSection, number] {
-    let map: [string, number][] = [
+    const map: [string, number][] = [
         ['init', 3],
         ['perFrame', 1],
         ['onBeat', 2],
@@ -368,8 +368,9 @@ function get256CodePFBI(blob: Uint8Array, offset: number): [CodeSection, number]
     return getCodeSection(blob, offset, map, /*nullterminated*/ false, /*string max length*/ 256);
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function get256CodeIFB(blob: Uint8Array, offset: number): [CodeSection, number] {
-    let map: [string, number][] = [
+    const map: [string, number][] = [
         ['init', 0],
         ['perFrame', 1],
         ['onBeat', 2],
@@ -377,8 +378,8 @@ function get256CodeIFB(blob: Uint8Array, offset: number): [CodeSection, number] 
     return getCodeSection(blob, offset, map, /*nullterminated*/ false, /*string max length*/ 256);
 }
 
-function getCodeSection(blob: Uint8Array, offset: number, map: [string, number][], nt: boolean = false, fixedSize?: number): [CodeSection, number] {
-    let strings = new Array(map.length);
+function getCodeSection(blob: Uint8Array, offset: number, map: [string, number][], nt = false, fixedSize?: number): [CodeSection, number] {
+    const strings = new Array(map.length);
     let totalSize = 0;
     let strAndSize: [string, number] | [string, number, string[]];
     let hidden: string[] = [];
@@ -390,7 +391,7 @@ function getCodeSection(blob: Uint8Array, offset: number, map: [string, number][
             hidden = hidden.concat((<[string, number, string[]]>strAndSize)[2]);
         }
     }
-    let code = {};
+    const code = {};
     for (let i = 0; i < strings.length; i++) {
         code[map[i][0]] = strings[map[i][1]];
     }
@@ -401,9 +402,9 @@ function getCodeSection(blob: Uint8Array, offset: number, map: [string, number][
 }
 
 function getColorList(blob: Uint8Array, offset: number): [string[], number] {
-    let colors = [];
+    const colors = [];
     let num = getUInt32(blob, offset);
-    let size = sizeInt + num * sizeInt;
+    const size = sizeInt + num * sizeInt;
     while (num > 0) {
         offset += sizeInt;
         colors.push(getColor(blob, offset)[0]);
@@ -415,13 +416,13 @@ function getColorList(blob: Uint8Array, offset: number): [string[], number] {
 
 function getColorMaps(blob: Uint8Array, offset: number): [{ index: number; enabled: boolean; id?: number; fileName?: string; colors: { color: string; position: number; }[]; }[], number] {
     let mapOffset = offset + 480;
-    let maps: ColorMap[] = [];
-    let headerSize = 60; // 4B enabled, 4B num, 4B id, 48B filestring
+    const maps: ColorMap[] = [];
+    const headerSize = 60; // 4B enabled, 4B num, 4B id, 48B filestring
     let mi = 0; // map index, might be != i when maps are skipped
     for (let i = 0; i < 8; i++) {
-        let enabled = getBool(blob, offset + headerSize * i, sizeInt)[0];
-        let num = getUInt32(blob, offset + headerSize * i + sizeInt);
-        let map = getColorMap(blob, mapOffset, num);
+        const enabled = getBool(blob, offset + headerSize * i, sizeInt)[0];
+        const num = getUInt32(blob, offset + headerSize * i + sizeInt);
+        const map = getColorMap(blob, mapOffset, num);
         // check if it's a disabled default {0: #000000, 255: #ffffff} map, and only save it if not.
         if (!enabled && map.length === 2 && map[0].color === '#000000' && map[0].position === 0 && map[1].color === '#ffffff' && map[1].position === 255) {
             // skip this map
@@ -432,8 +433,8 @@ function getColorMaps(blob: Uint8Array, offset: number): [{ index: number; enabl
                 'colors': map,
             };
             if (allFields) {
-                let id = getUInt32(blob, offset + headerSize * i + sizeInt * 2); // id of the map - not really needed.
-                let mapFile = getNtString(blob, offset + headerSize * i + sizeInt * 3)[0];
+                const id = getUInt32(blob, offset + headerSize * i + sizeInt * 2); // id of the map - not really needed.
+                const mapFile = getNtString(blob, offset + headerSize * i + sizeInt * 3)[0];
                 maps[mi]['id'] = id;
                 maps[mi]['fileName'] = mapFile;
             }
@@ -446,10 +447,10 @@ function getColorMaps(blob: Uint8Array, offset: number): [{ index: number; enabl
 }
 
 function getColorMap(blob: Uint8Array, offset: number, num: number): Array<{ color: string; position: number; }> {
-    let colorMap = [];
+    const colorMap = [];
     for (let i = 0; i < num; i++) {
-        let pos = getUInt32(blob, offset);
-        let color = getColor(blob, offset + sizeInt)[0];
+        const pos = getUInt32(blob, offset);
+        const color = getColor(blob, offset + sizeInt)[0];
         offset += sizeInt * 3; // there's a 4byte id (presumably) following each color.
         colorMap[i] = { 'color': color, 'position': pos };
     }
@@ -461,7 +462,7 @@ function getColor(blob: Uint8Array, offset: number): [string, number] {
     // Colors in AVS are saved as (A)RGB (where A is always 0).
     // Maybe one should use an alpha channel right away and set
     // that to 0xff? For now, no 4th byte means full alpha.
-    let color = getUInt32(blob, offset).toString(16);
+    const color = getUInt32(blob, offset).toString(16);
     let padding = '';
     for (let i = color.length; i < 6; i++) {
         padding += '0';
@@ -470,20 +471,20 @@ function getColor(blob: Uint8Array, offset: number): [string, number] {
     return ['#' + padding + color, sizeInt];
 }
 
-function getConvoFilter(blob: Uint8Array, offset: number, dimensions: number[]): Object {
-    let size = dimensions[0] * dimensions[1];
-    let data = new Array(size);
+function getConvoFilter(blob: Uint8Array, offset: number, dimensions: number[]): unknown {
+    const size = dimensions[0] * dimensions[1];
+    const data = new Array(size);
     for (let i = 0; i < size; i++, offset += sizeInt) {
         data[i] = getInt32(blob, offset)[0];
     }
-    let matrix = { 'width': dimensions[0], 'height': dimensions[1], 'data': data };
+    const matrix = { 'width': dimensions[0], 'height': dimensions[1], 'data': data };
 
     return [matrix, size * sizeInt];
 }
 
 // 'Text' needs this
-function getSemiColSplit(str: string): Object | string {
-    let strings = str.split(';');
+function getSemiColSplit(str: string): unknown | string {
+    const strings = str.split(';');
     if (strings.length === 1) {
         return strings[0];
     } else {
@@ -491,7 +492,7 @@ function getSemiColSplit(str: string): Object | string {
     }
 }
 
-function getBufferNum(code: number): Object {
+function getBufferNum(code: number): unknown {
     if (code === 0) {
         return 'Current';
     }
