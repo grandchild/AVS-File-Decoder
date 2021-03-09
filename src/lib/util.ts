@@ -26,7 +26,7 @@ class ConvertException implements Error {
     }
 }
 
-const cmpBytes = (arr: Uint8Array, offset: number, test: number[]): boolean => {
+function cmpBytes(arr: Uint8Array, offset: number, test: number[]): boolean {
     for (let i = 0; i < test.length; i++) {
         if (test[i] === null) {
             continue; // null means 'any value' - a letiable
@@ -37,14 +37,14 @@ const cmpBytes = (arr: Uint8Array, offset: number, test: number[]): boolean => {
     }
 
     return true;
-};
+}
 
-const printTable = (name: string, table: any): void => {
+function printTable(name: string, table: any): void {
     Log.dim(`${name}:`);
     for (let key in table) {
         Log.dim(`\t${key}: ${table[key] ? ('' + table[key]).replace(/\n/g, '\n\t\t') : 'undefined'}`);
     }
-};
+}
 
 function callFunction(funcName: string, blobOrValue: Uint8Array, offset?: number, extra?: any): [jsontypes, number];
 function callFunction(funcName: string, blobOrValue: Uint8Array, offset?: number, extra?: void): [jsontypes, number];
@@ -65,7 +65,7 @@ function callFunction(funcName, blobOrValue, offset?, extra?): any {
     }
 }
 
-const getBit = (blob: Uint8Array, offset: number, pos: any): [number, number] => {
+function getBit(blob: Uint8Array, offset: number, pos: any): [number, number] {
     if ((<number[]>pos).length) {
         if ((<number[]>pos).length !== 2) throw new this.ConvertException(`Invalid Bitfield range ${pos}.`);
         let mask = (2 << (pos[1] - pos[0])) - 1;
@@ -73,11 +73,12 @@ const getBit = (blob: Uint8Array, offset: number, pos: any): [number, number] =>
     } else {
         return [((blob[offset] >> <number>pos) & 1), 1];
     }
-};
+}
 
-const getUInt = (blob: Uint8Array, offset: number, size: number): number => {
+function getUInt(blob: Uint8Array, offset: number, size: number): number {
     if (offset > blob.length - size) {
-        if (verbosity >= 1) Log.warn(`WARNING: getUInt: offset overflow ${offset} > ${blob.length - size}`);
+        if (verbosity >= 1)
+            Log.warn(`WARNING: getUInt: offset overflow ${offset} > ${blob.length - size}`);
         return 0;
     }
     switch (size) {
@@ -90,12 +91,14 @@ const getUInt = (blob: Uint8Array, offset: number, size: number): number => {
         default:
             throw new ConvertException(`Invalid integer size '${size}', only 1, ${sizeInt} and ${sizeInt * 2} allowed.`);
     }
-};
+}
 
-const getUInt32 = (blob: Uint8Array, offset: number): number => {
-    if (!offset) offset = 0;
+function getUInt32(blob: Uint8Array, offset: number): number {
+    if (!offset)
+        offset = 0;
     if (offset > blob.length - sizeInt) {
-        if (verbosity >= 1) Log.warn(`WARNING: getUInt32: offset overflow ${offset} > ${blob.length - sizeInt}`);
+        if (verbosity >= 1)
+            Log.warn(`WARNING: getUInt32: offset overflow ${offset} > ${blob.length - sizeInt}`);
         return 0;
     }
     let array = blob.buffer.slice(blob.byteOffset + offset, blob.byteOffset + offset + sizeInt);
@@ -109,12 +112,14 @@ const getUInt32 = (blob: Uint8Array, offset: number): number => {
             throw e;
         }
     }
-};
+}
 
-const getInt32 = (blob: Uint8Array, offset: number): [number, number] => {
-    if (!offset) offset = 0;
+function getInt32(blob: Uint8Array, offset: number): [number, number] {
+    if (!offset)
+        offset = 0;
     if (offset > blob.length - sizeInt) {
-        if (verbosity >= 1) Log.warn(`WARNING: getInt32: offset overflow ${offset} > ${blob.length - sizeInt}`);
+        if (verbosity >= 1)
+            Log.warn(`WARNING: getInt32: offset overflow ${offset} > ${blob.length - sizeInt}`);
         return [0, sizeInt];
     }
     let array = blob.buffer.slice(blob.byteOffset + offset, blob.byteOffset + offset + sizeInt);
@@ -127,12 +132,14 @@ const getInt32 = (blob: Uint8Array, offset: number): [number, number] => {
             throw e;
         }
     }
-};
+}
 
-const getUInt64 = (blob: Uint8Array, offset: number): number => {
-    if (!offset) offset = 0;
+function getUInt64(blob: Uint8Array, offset: number): number {
+    if (!offset)
+        offset = 0;
     if (offset > blob.length - sizeInt * 2) {
-        if (verbosity >= 1) Log.warn(`WARNING: getUInt64: offset overflow ${offset} > ${blob.length - sizeInt * 2}`);
+        if (verbosity >= 1)
+            Log.warn(`WARNING: getUInt64: offset overflow ${offset} > ${blob.length - sizeInt * 2}`);
         return 0;
     }
     let array = blob.buffer.slice(blob.byteOffset + offset, blob.byteOffset + offset + sizeInt * 2);
@@ -146,10 +153,11 @@ const getUInt64 = (blob: Uint8Array, offset: number): number => {
             throw e;
         }
     }
-};
+}
 
-const getFloat = (blob: Uint8Array, offset: number): [number, number] => {
-    if (!offset) offset = 0;
+function getFloat(blob: Uint8Array, offset: number): [number, number] {
+    if (!offset)
+        offset = 0;
     let array = blob.buffer.slice(blob.byteOffset + offset, blob.byteOffset + offset + sizeInt);
     try {
         return [new Float32Array(array, 0, 1)[0], 4];
@@ -160,18 +168,18 @@ const getFloat = (blob: Uint8Array, offset: number): [number, number] => {
             throw e;
         }
     }
-};
+}
 
-const getBool = (blob: Uint8Array, offset: number, size: number): [boolean, number] => {
+function getBool(blob: Uint8Array, offset: number, size: number): [boolean, number] {
     let val = size === 1 ? blob[offset] : getUInt32(blob, offset);
     return [val !== 0, size];
-};
+}
 
-const getBoolified = (num: number): boolean => {
+function getBoolified(num: number): boolean {
     return num === 0 ? false : true;
-};
+}
 
-const getSizeString = (blob: Uint8Array, offset: number, size?: number): [string, number]|[string, number, string[]] => {
+function getSizeString(blob: Uint8Array, offset: number, size?: number): [string, number] | [string, number, string[]] {
     let add = 0;
     let result = '';
     let getHidden: boolean = false;
@@ -197,13 +205,14 @@ const getSizeString = (blob: Uint8Array, offset: number, size?: number): [string
     } else {
         return [result, size + add, hidden];
     }
-};
+}
 
-const getHiddenStrings = (blob: Uint8Array, i: number, end: number): string[] => {
+function getHiddenStrings(blob: Uint8Array, i: number, end: number): string[] {
     let nonPrintables: number[] = [
         0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16,
         17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31,
-        127, 129, 141, 143, 144, 157, 173];
+        127, 129, 141, 143, 144, 157, 173
+    ];
     let hidden: string[] = [];
     while (i < end) {
         let c = blob[i];
@@ -221,9 +230,9 @@ const getHiddenStrings = (blob: Uint8Array, i: number, end: number): string[] =>
         }
     }
     return hidden;
-};
+}
 
-const getNtString = (blob: Uint8Array, offset: number): [string, number] => {
+function getNtString(blob: Uint8Array, offset: number): [string, number] {
     let result: string = '';
     let i = offset;
     let c = blob[i];
@@ -232,30 +241,30 @@ const getNtString = (blob: Uint8Array, offset: number): [string, number] => {
         c = blob[++i];
     }
     return [result, i - offset + 1];
-};
+}
 
-const removeSpaces = (str: string): string => {
+function removeSpaces(str: string): string {
     return str.replace(/[ ]/g, '');
-};
+}
 
-const lowerInitial = (str: string): string => {
+function lowerInitial(str: string): string {
     return str[0].toLowerCase() + str.slice(1);
-};
+}
 
 
-const getMap1 = (blob: Uint8Array, offset: number, map: Object): [string, number] => {
+function getMap1(blob: Uint8Array, offset: number, map: Object): [string, number] {
     return [getMapping(map, blob[offset]), 1];
-};
+}
 
-const getMap4 = (blob: Uint8Array, offset: number, map: Object): [string, number] => {
+function getMap4(blob: Uint8Array, offset: number, map: Object): [string, number] {
     return [getMapping(map, getUInt32(blob, offset)), sizeInt];
-};
+}
 
-const getMap8 = (blob: Uint8Array, offset: number, map: Object): [string, number] => {
+function getMap8(blob: Uint8Array, offset: number, map: Object): [string, number] {
     return [getMapping(map, getUInt64(blob, offset)), sizeInt * 2];
-};
+}
 
-const getRadioButton = (blob: Uint8Array, offset: number, map: any[]): [string, number] => {
+function getRadioButton(blob: Uint8Array, offset: number, map: any[]): [string, number] {
     let key = 0;
     for (let i = 0; i < map.length; i++) {
         let on: number = getUInt32(blob, offset + sizeInt * i) !== 0 ? 1 : 0;
@@ -265,59 +274,59 @@ const getRadioButton = (blob: Uint8Array, offset: number, map: any[]): [string, 
     }
 
     return [getMapping(map, key), sizeInt * map.length];
-};
+}
 
-const getMapping = (map: Object, key: number): string => {
+function getMapping(map: Object, key: number): string {
     let value = map[key];
     if (value === undefined) {
         throw new ConvertException(`Map: A value for key '${key}' does not exist.`);
     } else {
         return value;
     }
-};
+}
 
 // Point, Frame, Beat, Init code fields - reorder to I,F,B,P order.
-const getCodePFBI = (blob: Uint8Array, offset: number): [CodeSection, number] => {
-    let map: [string, number][] = [ // this is the sort map, lines are 'need'-sorted with 'is'-index.
+function getCodePFBI(blob: Uint8Array, offset: number): [CodeSection, number] {
+    let map: [string, number][] = [
         ['init', 3],
         ['perFrame', 1],
         ['onBeat', 2],
         ['perPoint', 0],
     ];
     return getCodeSection(blob, offset, map);
-};
+}
 
 // Frame, Beat, Init code fields - reorder to I,F,B order.
-const getCodeFBI = (blob: Uint8Array, offset: number): [CodeSection, number] => {
-    let map: [string, number][] = [ // see PFBI
+function getCodeFBI(blob: Uint8Array, offset: number): [CodeSection, number] {
+    let map: [string, number][] = [
         ['init', 2],
         ['perFrame', 1],
         ['onBeat', 0],
     ];
     return getCodeSection(blob, offset, map);
-};
+}
 
-const getCodeIFBP = (blob: Uint8Array, offset: number): [CodeSection, number] => {
-    let map: [string, number][] = [ // in this case the mapping is pretty redundant. the fields are already in order.
+function getCodeIFBP(blob: Uint8Array, offset: number): [CodeSection, number] {
+    let map: [string, number][] = [
         ['init', 0],
         ['perFrame', 1],
         ['onBeat', 2],
         ['perPoint', 3],
     ];
     return getCodeSection(blob, offset, map);
-};
+}
 
-const getCodeIFB = (blob: Uint8Array, offset: number): [CodeSection, number] => {
-    let map: [string, number][] = [ // see IFBP
+function getCodeIFB(blob: Uint8Array, offset: number): [CodeSection, number] {
+    let map: [string, number][] = [
         ['init', 0],
         ['perFrame', 1],
         ['onBeat', 2],
     ];
     return getCodeSection(blob, offset, map);
-};
+}
 
 // used by 2.8+ 'Effect List'
-const getCodeEIF = (blob: Uint8Array, offset: number): [CodeSection, number] => {
+function getCodeEIF(blob: Uint8Array, offset: number): [CodeSection, number] {
     let map: [string, number][] = [
         ['init', 0],
         ['perFrame', 1],
@@ -328,20 +337,20 @@ const getCodeEIF = (blob: Uint8Array, offset: number): [CodeSection, number] => 
         'init': code[0]['init'],
         'perFrame': code[0]['perFrame'],
     }, code[1]];
-};
+}
 
 // used only by 'Global Variables'
-const getNtCodeIFB = (blob: Uint8Array, offset: number): [CodeSection, number] => {
+function getNtCodeIFB(blob: Uint8Array, offset: number): [CodeSection, number] {
     let map: [string, number][] = [
         ['init', 0],
         ['perFrame', 1],
         ['onBeat', 2],
     ];
     return getCodeSection(blob, offset, map, /*nullterminated*/ true);
-};
+}
 
 // used only by 'Triangle'
-const getNtCodeIFBP = (blob: Uint8Array, offset: number): [CodeSection, number] => {
+function getNtCodeIFBP(blob: Uint8Array, offset: number): [CodeSection, number] {
     let map: [string, number][] = [
         ['init', 0],
         ['perFrame', 1],
@@ -349,32 +358,32 @@ const getNtCodeIFBP = (blob: Uint8Array, offset: number): [CodeSection, number] 
         ['perPoint', 3],
     ];
     return getCodeSection(blob, offset, map, /*nullterminated*/ true);
-};
+}
 
 // the 256*-functions are used by ancient versions of 'Super Scope', 'Dynamic Movement', 'Dynamic Distance Modifier', 'Dynamic Shift'
-const get256CodePFBI = (blob: Uint8Array, offset: number): [CodeSection, number] => {
+function get256CodePFBI(blob: Uint8Array, offset: number): [CodeSection, number] {
     let map: [string, number][] = [
         ['init', 3],
         ['perFrame', 1],
         ['onBeat', 2],
         ['perPoint', 0],
     ];
-    return getCodeSection(blob, offset, map, /*nullterminated*/false, /*string max length*/256);
-};
+    return getCodeSection(blob, offset, map, /*nullterminated*/ false, /*string max length*/ 256);
+}
 
-const get256CodeIFB = (blob: Uint8Array, offset: number): [CodeSection, number] => {
+function get256CodeIFB(blob: Uint8Array, offset: number): [CodeSection, number] {
     let map: [string, number][] = [
         ['init', 0],
         ['perFrame', 1],
         ['onBeat', 2],
     ];
-    return getCodeSection(blob, offset, map, /*nullterminated*/false, /*string max length*/256);
-};
+    return getCodeSection(blob, offset, map, /*nullterminated*/ false, /*string max length*/ 256);
+}
 
-const getCodeSection = (blob: Uint8Array, offset: number, map: [string, number][], nt: boolean = false, fixedSize?: number): [CodeSection, number] => {
+function getCodeSection(blob: Uint8Array, offset: number, map: [string, number][], nt: boolean = false, fixedSize?: number): [CodeSection, number] {
     let strings = new Array(map.length);
     let totalSize = 0;
-    let strAndSize: [string, number]|[string, number, string[]];
+    let strAndSize: [string, number] | [string, number, string[]];
     let hidden: string[] = [];
     for (let i = 0, p = offset; i < map.length; i++, p += strAndSize[1]) {
         strAndSize = nt ? getNtString(blob, p) : getSizeString(blob, p, fixedSize);
@@ -392,9 +401,9 @@ const getCodeSection = (blob: Uint8Array, offset: number, map: [string, number][
         code['_hidden'] = hidden;
     }
     return [<CodeSection>code, totalSize];
-};
+}
 
-const getColorList = (blob: Uint8Array, offset: number): [string[], number] => {
+function getColorList(blob: Uint8Array, offset: number): [string[], number] {
     let colors = [];
     let num = getUInt32(blob, offset);
     let size = sizeInt + num * sizeInt;
@@ -405,9 +414,9 @@ const getColorList = (blob: Uint8Array, offset: number): [string[], number] => {
     }
 
     return [colors, size];
-};
+}
 
-const getColorMaps = (blob: Uint8Array, offset: number): [{index: number, enabled: boolean, id?: number, fileName?: string, colors: {color: string, position: number}[]}[], number] => {
+function getColorMaps(blob: Uint8Array, offset: number): [{ index: number; enabled: boolean; id?: number; fileName?: string; colors: { color: string; position: number; }[]; }[], number] {
     let mapOffset = offset + 480;
     let maps: ColorMap[] = [];
     let headerSize = 60; // 4B enabled, 4B num, 4B id, 48B filestring
@@ -437,9 +446,9 @@ const getColorMaps = (blob: Uint8Array, offset: number): [{index: number, enable
     }
 
     return [maps, mapOffset - offset];
-};
+}
 
-const getColorMap = (blob: Uint8Array, offset: number, num: number): Array<{color: string, position: number}> => {
+function getColorMap(blob: Uint8Array, offset: number, num: number): Array<{ color: string; position: number; }> {
     let colorMap = [];
     for (let i = 0; i < num; i++) {
         let pos = getUInt32(blob, offset);
@@ -449,9 +458,9 @@ const getColorMap = (blob: Uint8Array, offset: number, num: number): Array<{colo
     }
 
     return colorMap;
-};
+}
 
-const getColor = (blob: Uint8Array, offset: number): [string, number] => {
+function getColor(blob: Uint8Array, offset: number): [string, number] {
     // Colors in AVS are saved as (A)RGB (where A is always 0).
     // Maybe one should use an alpha channel right away and set
     // that to 0xff? For now, no 4th byte means full alpha.
@@ -462,9 +471,9 @@ const getColor = (blob: Uint8Array, offset: number): [string, number] => {
     }
 
     return ['#' + padding + color, sizeInt];
-};
+}
 
-const getConvoFilter = (blob: Uint8Array, offset: number, dimensions: number[]): Object => {
+function getConvoFilter(blob: Uint8Array, offset: number, dimensions: number[]): Object {
     let size = dimensions[0] * dimensions[1];
     let data = new Array(size);
     for (let i = 0; i < size; i++, offset += sizeInt) {
@@ -473,24 +482,24 @@ const getConvoFilter = (blob: Uint8Array, offset: number, dimensions: number[]):
     let matrix = { 'width': dimensions[0], 'height': dimensions[1], 'data': data };
 
     return [matrix, size * sizeInt];
-};
+}
 
 // 'Text' needs this
-const getSemiColSplit = (str: string): Object|string => {
+function getSemiColSplit(str: string): Object | string {
     let strings = str.split(';');
     if (strings.length === 1) {
         return strings[0];
     } else {
         return strings;
     }
-};
+}
 
-const getBufferNum = (code: number): Object => {
+function getBufferNum(code: number): Object {
     if (code === 0) {
         return 'Current';
     }
     return code;
-};
+}
 
 export {
     builtinMax,

@@ -12,24 +12,24 @@ const args: Arguments = {
     verbose: 0
 };
 
-const convertFile = async (file: string, customArgs?: Arguments): Promise<any> => {
+function convertFile(file: string, customArgs?: Arguments): Promise<any> {
     (<any>Object).assign(args, customArgs);
 
     return Util.readPreset(file)
-    .then( async (presetBlob: any) => {
-        const presetName = (typeof args.name !== 'undefined' && args.name.trim().length > 0) ? args.name : basename(file, extname(file));
-        const presetDate = args.noDate ? undefined : await Util.getISOTime(file);
-        const presetObj = convertBlob(presetBlob, presetName, presetDate, args);
-        const whitespace: number = (args.minify === true) ? 0 : 4;
+        .then(async (presetBlob: any) => {
+            const presetName = (typeof args.name !== 'undefined' && args.name.trim().length > 0) ? args.name : basename(file, extname(file));
+            const presetDate = args.noDate ? undefined : await Util.getISOTime(file);
+            const presetObj = convertBlob(presetBlob, presetName, presetDate, args);
+            const whitespace: number = (args.minify === true) ? 0 : 4;
 
-        return JSON.stringify(presetObj, null, whitespace);
-    })
-    .catch( error => {
-        Log.error(error);
-    });
-};
+            return JSON.stringify(presetObj, null, whitespace);
+        })
+        .catch(error => {
+            Log.error(error);
+        });
+}
 
-const convertFileSync = (file: string, customArgs?: Arguments): Object => {
+function convertFileSync(file: string, customArgs?: Arguments): Object {
     (<any>Object).assign(args, customArgs);
 
     let presetBlob, presetDate, presetName, presetObj;
@@ -46,7 +46,7 @@ const convertFileSync = (file: string, customArgs?: Arguments): Object => {
     const whitespace: number = (args.minify === true) ? 0 : 4;
 
     return JSON.stringify(presetObj, null, whitespace);
-};
+}
 
 export {
     convertFile,

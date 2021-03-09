@@ -16,7 +16,7 @@ const args: Arguments = {
     verbose: 0
 };
 
-const convertBlob = (data: Buffer|ArrayBuffer, presetName: string, presetDate?: string, customArgs?: Arguments): Object|void => {
+function convertBlob(data: Buffer | ArrayBuffer, presetName: string, presetDate?: string, customArgs?: Arguments): Object | void {
     (<any>Object).assign(args, customArgs);
 
     verbosity = args.quiet ? -1 : args.verbose;
@@ -39,8 +39,10 @@ const convertBlob = (data: Buffer|ArrayBuffer, presetName: string, presetDate?: 
     } catch (e) {
         // TODO
         // if (verbosity < 0) Log.error(`Error in '${file}'`);
-        if (verbosity >= 1) Log.error(e.stack);
-        else Log.error(e);
+        if (verbosity >= 1)
+            Log.error(e.stack);
+        else
+            Log.error(e);
         // if(e instanceof Util.ConvertException) {
         //     Log.error('Error: '+e.message);
         //     return null;
@@ -50,9 +52,9 @@ const convertBlob = (data: Buffer|ArrayBuffer, presetName: string, presetDate?: 
     }
 
     return preset;
-};
+}
 
-const convertComponents = (blob: Uint8Array): Object => {
+function convertComponents(blob: Uint8Array): Object {
     let fp: number = 0;
     let components: any[] = [];
     let res;
@@ -86,9 +88,9 @@ const convertComponents = (blob: Uint8Array): Object => {
     }
 
     return components;
-};
+}
 
-const getComponentIndex = (code: number, blob: Uint8Array, offset: number): number => {
+function getComponentIndex(code: number, blob: Uint8Array, offset: number): number {
     if (code < Util.builtinMax || code === 0xfffffffe) {
         for (let i = 0; i < componentTable.length; i++) {
             if (code === componentTable[i].code) {
@@ -110,22 +112,23 @@ const getComponentIndex = (code: number, blob: Uint8Array, offset: number): numb
         }
     }
 
-    if (verbosity >= 1) Log.dim(`Found unknown component (code: ${code})`);
+    if (verbosity >= 1)
+        Log.dim(`Found unknown component (code: ${code})`);
 
     return -code;
-};
+}
 
-const getComponentSize = (blob: Uint8Array, offset: number) => {
+function getComponentSize(blob: Uint8Array, offset: number) {
     return Util.getUInt32(blob, offset);
-};
+}
 
-const decodePresetHeader = (blob: Uint8Array): boolean => {
-    let presetHeader0_1 = [ // reads: 'Nullsoft AVS Preset 0.1 \x1A'
+function decodePresetHeader(blob: Uint8Array): boolean {
+    let presetHeader0_1 = [
         0x4E, 0x75, 0x6C, 0x6C, 0x73, 0x6F, 0x66, 0x74,
         0x20, 0x41, 0x56, 0x53, 0x20, 0x50, 0x72, 0x65,
         0x73, 0x65, 0x74, 0x20, 0x30, 0x2E, 0x31, 0x1A
     ];
-    let presetHeader0_2 = [ // reads: 'Nullsoft AVS Preset 0.2 \x1A'
+    let presetHeader0_2 = [
         0x4E, 0x75, 0x6C, 0x6C, 0x73, 0x6F, 0x66, 0x74,
         0x20, 0x41, 0x56, 0x53, 0x20, 0x50, 0x72, 0x65,
         0x73, 0x65, 0x74, 0x20, 0x30, 0x2E, 0x32, 0x1A,
@@ -140,10 +143,10 @@ const decodePresetHeader = (blob: Uint8Array): boolean => {
     }
 
     return blob[Util.presetHeaderLength - 1] === 1; // 'Clear Every Frame'
-};
+}
 
 //// component decode functions,
-const decode_effectList = (blob: Uint8Array, offset: number, _: Object, name: string): Object => {
+function decode_effectList(blob: Uint8Array, offset: number, _: Object, name: string): Object {
     let size: number = Util.getUInt32(blob, offset - sizeInt);
     let comp = {
         'type': Util.removeSpaces(name),
@@ -167,7 +170,7 @@ const decode_effectList = (blob: Uint8Array, offset: number, _: Object, name: st
         comp['enableOnBeat'] = Util.getUInt32(blob, offset + 29) === 1;
         comp['enableOnBeatFor'] = Util.getUInt32(blob, offset + 33);
     }
-    let effectList28plusHeader = [ // reads: hex(builtinMax) + 'AVS 2.8+ Effect List Config....'
+    let effectList28plusHeader = [
         0x00, 0x40, 0x00, 0x00, 0x41, 0x56, 0x53, 0x20,
         0x32, 0x2E, 0x38, 0x2B, 0x20, 0x45, 0x66, 0x66,
         0x65, 0x63, 0x74, 0x20, 0x4C, 0x69, 0x73, 0x74,
@@ -184,10 +187,10 @@ const decode_effectList = (blob: Uint8Array, offset: number, _: Object, name: st
     let content = convertComponents(blob.subarray(contentOffset, offset + size));
     comp['components'] = content;
     return comp;
-};
+}
 
 // generic field decoding function that most components use.
-const decode_generic = (blob: Uint8Array, offset: number, fields: Object, name: string, group: string, end: number): Object => {
+function decode_generic(blob: Uint8Array, offset: number, fields: Object, name: string, group: string, end: number): Object {
     let comp = {
         'type': Util.removeSpaces(name),
         'group': group,
@@ -264,8 +267,10 @@ const decode_generic = (blob: Uint8Array, offset: number, fields: Object, name: 
             comp[k] = value;
             if (verbosity >= 2) {
                 Log.dim('- key: ' + k + '\n- val: ' + value);
-                if (k === 'code') Util.printTable('- code', value);
-                if (verbosity >= 3) Log.dim('- offset: ' + offset + '\n- size: ' + size);
+                if (k === 'code')
+                    Util.printTable('- code', value);
+                if (verbosity >= 3)
+                    Log.dim('- offset: ' + offset + '\n- size: ' + size);
                 // console.log();
             }
         }
@@ -273,25 +278,29 @@ const decode_generic = (blob: Uint8Array, offset: number, fields: Object, name: 
     }
 
     return comp;
-};
+}
 
-const decode_versioned_generic = (blob: Uint8Array, offset: number, fields: Object, name: string, group: string, end: number): Object => {
+function decode_versioned_generic(blob: Uint8Array, offset: number, fields: Object, name: string, group: string, end: number): Object {
     let version: number = blob[offset];
     if (version === 1) {
         return decode_generic(blob, offset, fields, name, group, end);
     } else {
         let oldFields = {};
         for (let key in fields) {
-            if (key === 'new_version') continue;
-            if (key === 'code') oldFields[key] = fields['code'].replace(/Code([IFBP]+)/, '256Code$1');
-            else oldFields[key] = fields[key];
+            if (key === 'new_version')
+                continue;
+            if (key === 'code')
+                oldFields[key] = fields['code'].replace(/Code([IFBP]+)/, '256Code$1');
+            else
+                oldFields[key] = fields[key];
         }
-        if (verbosity >= 3) console.log('oldFields, code changed to:', oldFields['code']);
+        if (verbosity >= 3)
+            console.log('oldFields, code changed to:', oldFields['code']);
         return decode_generic(blob, offset, oldFields, name, group, end);
     }
-};
+}
 
-const decode_movement = (blob: Uint8Array, offset: number, _: Object, name: string, group: string, end: number): Object => {
+function decode_movement(blob: Uint8Array, offset: number, _: Object, name: string, group: string, end: number): Object {
     let comp = {
         'type': name,
         'group': group,
@@ -304,7 +313,7 @@ const decode_movement = (blob: Uint8Array, offset: number, _: Object, name: stri
     let hidden: string[];
     if (effectIdOld !== 0) {
         if (effectIdOld === 0x7fff) {
-            let strAndSize: [string, number]|[string, number, string[]] = ['', 0];
+            let strAndSize: [string, number] | [string, number, string[]] = ['', 0];
             if (blob[offset + sizeInt] === 1) { // new-version marker
                 strAndSize = Util.getSizeString(blob, offset + sizeInt + 1);
             } else {
@@ -346,11 +355,12 @@ const decode_movement = (blob: Uint8Array, offset: number, _: Object, name: stri
         comp['coordinates'] = effect[2]; // overwrite
     }
     comp['code'] = code;
-    if (hidden) comp['_hidden'] = hidden;
+    if (hidden)
+        comp['_hidden'] = hidden;
     return comp;
-};
+}
 
-const decode_avi = (blob: Uint8Array, offset: number): Object => {
+function decode_avi(blob: Uint8Array, offset: number): Object {
     let comp = {
         'type': 'AVI',
         'group': 'Render',
@@ -369,9 +379,9 @@ const decode_avi = (blob: Uint8Array, offset: number): Object => {
     comp['persist'] = Util.getUInt32(blob, offset + sizeInt * 4 + strAndSize[1]); // 0-32
 
     return comp;
-};
+}
 
-const decode_simple = (blob: Uint8Array, offset: number): Object => {
+function decode_simple(blob: Uint8Array, offset: number): Object {
     let comp = {
         'type': 'Simple',
         'group': 'Render',
@@ -404,7 +414,7 @@ const decode_simple = (blob: Uint8Array, offset: number): Object => {
     comp['positionY'] = Table.positionY[(effect >> 4) & 3];
     comp['colors'] = Util.getColorList(blob, offset + sizeInt)[0];
     return comp;
-};
+}
 
 export {
     convertBlob,
