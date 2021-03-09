@@ -46,10 +46,7 @@ function printTable(name: string, table: any): void {
     }
 }
 
-function callFunction(funcName: string, blobOrValue: Uint8Array, offset?: number, extra?: any): [jsontypes, number];
-function callFunction(funcName: string, blobOrValue: Uint8Array, offset?: number, extra?: void): [jsontypes, number];
-function callFunction(funcName: string, blobOrValue: jsontypes, offset?: void, extra?: void): jsontypes;
-function callFunction(funcName, blobOrValue, offset?, extra?): any {
+function callFunction(funcName: string, blobOrValue: jsontypes|Uint8Array, offset?: void|number, extra?: any|void): any {
     try {
         if (blobOrValue instanceof Uint8Array) {
             return eval('get' + funcName)(blobOrValue, offset, extra);
