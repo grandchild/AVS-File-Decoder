@@ -64,7 +64,7 @@ function callFunction(funcName: string, blobOrValue: jsontypes|Uint8Array, offse
 
 function getBit(blob: Uint8Array, offset: number, pos: any): [number, number] {
     if ((<number[]>pos).length) {
-        if ((<number[]>pos).length !== 2) throw new this.ConvertException(`Invalid Bitfield range ${pos}.`);
+        if ((<number[]>pos).length !== 2) {throw new this.ConvertException(`Invalid Bitfield range ${pos}.`);}
         const mask = (2 << (pos[1] - pos[0])) - 1;
         return [(blob[offset] >> pos[0]) & mask, 1];
     } else {
@@ -75,7 +75,7 @@ function getBit(blob: Uint8Array, offset: number, pos: any): [number, number] {
 function getUInt(blob: Uint8Array, offset: number, size: number): number {
     if (offset > blob.length - size) {
         if (verbosity >= 1)
-            Log.warn(`WARNING: getUInt: offset overflow ${offset} > ${blob.length - size}`);
+            {Log.warn(`WARNING: getUInt: offset overflow ${offset} > ${blob.length - size}`);}
         return 0;
     }
     switch (size) {
@@ -92,10 +92,10 @@ function getUInt(blob: Uint8Array, offset: number, size: number): number {
 
 function getUInt32(blob: Uint8Array, offset: number): number {
     if (!offset)
-        offset = 0;
+        {offset = 0;}
     if (offset > blob.length - sizeInt) {
         if (verbosity >= 1)
-            Log.warn(`WARNING: getUInt32: offset overflow ${offset} > ${blob.length - sizeInt}`);
+            {Log.warn(`WARNING: getUInt32: offset overflow ${offset} > ${blob.length - sizeInt}`);}
         return 0;
     }
     const array = blob.buffer.slice(blob.byteOffset + offset, blob.byteOffset + offset + sizeInt);
@@ -113,10 +113,10 @@ function getUInt32(blob: Uint8Array, offset: number): number {
 
 function getInt32(blob: Uint8Array, offset: number): [number, number] {
     if (!offset)
-        offset = 0;
+        {offset = 0;}
     if (offset > blob.length - sizeInt) {
         if (verbosity >= 1)
-            Log.warn(`WARNING: getInt32: offset overflow ${offset} > ${blob.length - sizeInt}`);
+            {Log.warn(`WARNING: getInt32: offset overflow ${offset} > ${blob.length - sizeInt}`);}
         return [0, sizeInt];
     }
     const array = blob.buffer.slice(blob.byteOffset + offset, blob.byteOffset + offset + sizeInt);
@@ -133,10 +133,10 @@ function getInt32(blob: Uint8Array, offset: number): [number, number] {
 
 function getUInt64(blob: Uint8Array, offset: number): number {
     if (!offset)
-        offset = 0;
+        {offset = 0;}
     if (offset > blob.length - sizeInt * 2) {
         if (verbosity >= 1)
-            Log.warn(`WARNING: getUInt64: offset overflow ${offset} > ${blob.length - sizeInt * 2}`);
+            {Log.warn(`WARNING: getUInt64: offset overflow ${offset} > ${blob.length - sizeInt * 2}`);}
         return 0;
     }
     const array = blob.buffer.slice(blob.byteOffset + offset, blob.byteOffset + offset + sizeInt * 2);
@@ -154,7 +154,7 @@ function getUInt64(blob: Uint8Array, offset: number): number {
 
 function getFloat(blob: Uint8Array, offset: number): [number, number] {
     if (!offset)
-        offset = 0;
+        {offset = 0;}
     const array = blob.buffer.slice(blob.byteOffset + offset, blob.byteOffset + offset + sizeInt);
     try {
         return [new Float32Array(array, 0, 1)[0], 4];

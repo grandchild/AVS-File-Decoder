@@ -43,9 +43,9 @@ function convertBlob(data: Buffer | ArrayBuffer, presetName: string, presetDate?
         // TODO
         // if (verbosity < 0) Log.error(`Error in '${file}'`);
         if (verbosity >= 1)
-            Log.error(e.stack);
+            {Log.error(e.stack);}
         else
-            Log.error(e);
+            {Log.error(e);}
         // if(e instanceof Util.ConvertException) {
         //     Log.error('Error: '+e.message);
         //     return null;
@@ -137,7 +137,7 @@ function getComponentIndex(code: number, blob: Uint8Array, offset: number): numb
     }
 
     if (verbosity >= 1)
-        Log.dim(`Found unknown component (code: ${code})`);
+        {Log.dim(`Found unknown component (code: ${code})`);}
 
     return -code;
 }
@@ -293,9 +293,9 @@ function decode_generic(blob: Uint8Array, offset: number, fields: unknown, name:
             if (verbosity >= 2) {
                 Log.dim('- key: ' + k + '\n- val: ' + value);
                 if (k === 'code')
-                    Util.printTable('- code', value);
+                    {Util.printTable('- code', value);}
                 if (verbosity >= 3)
-                    Log.dim('- offset: ' + offset + '\n- size: ' + size);
+                    {Log.dim('- offset: ' + offset + '\n- size: ' + size);}
                 // console.log();
             }
         }
@@ -314,14 +314,14 @@ function decode_versioned_generic(blob: Uint8Array, offset: number, fields: any,
         const oldFields = {};
         for (const key in fields) {
             if (key === 'new_version')
-                continue;
+                {continue;}
             if (key === 'code')
-                oldFields[key] = fields['code'].replace(/Code([IFBP]+)/, '256Code$1');
+                {oldFields[key] = fields['code'].replace(/Code([IFBP]+)/, '256Code$1');}
             else
-                oldFields[key] = fields[key];
+                {oldFields[key] = fields[key];}
         }
         if (verbosity >= 3)
-            console.log('oldFields, code changed to:', oldFields['code']);
+            {console.log('oldFields, code changed to:', oldFields['code']);}
         return decode_generic(blob, offset, oldFields, name, group, end);
     }
 }
@@ -383,7 +383,7 @@ function decode_movement(blob: Uint8Array, offset: number, _: unknown, name: str
     }
     comp['code'] = code;
     if (hidden)
-        comp['_hidden'] = hidden;
+        {comp['_hidden'] = hidden;}
     return comp;
 }
 
