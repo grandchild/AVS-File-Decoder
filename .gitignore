@@ -8,6 +8,7 @@ assets/
 error.log
 node_modules/
 npm-debug.log
+yarn.lock
 
 # AVS specific
 *.ape

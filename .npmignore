@@ -10,3 +10,4 @@ test/
 tsconfig.json
 tslint.json
 types/
+yarn.lock
