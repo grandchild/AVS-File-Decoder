@@ -3,8 +3,6 @@ import * as Components from './lib/components';
 import * as Log from './lib/log';
 import * as Table from './lib/tables';
 import * as Util from './lib/util';
-import { basename, extname } from 'path';
-import { readFileSync, statSync } from 'fs';
 
 // Constants
 const sizeInt = 4;

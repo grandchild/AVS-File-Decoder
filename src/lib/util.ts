@@ -1,6 +1,5 @@
 // Modules
 import * as Log from './log';
-import * as Table from './tables';
 
 // Constants
 const sizeInt: number = 4;
