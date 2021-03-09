@@ -368,7 +368,6 @@ function get256CodePFBI(blob: Uint8Array, offset: number): [CodeSection, number]
     return getCodeSection(blob, offset, map, /*nullterminated*/ false, /*string max length*/ 256);
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function get256CodeIFB(blob: Uint8Array, offset: number): [CodeSection, number] {
     const map: [string, number][] = [
         ['init', 0],
@@ -504,6 +503,7 @@ export {
     callFunction,
     cmpBytes,
     ConvertException,
+    get256CodeIFB,
     get256CodePFBI,
     getBit,
     getBool,
