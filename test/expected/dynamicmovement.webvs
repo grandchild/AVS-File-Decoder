@@ -1,0 +1,1 @@
+{"name":"dynamicmovement","clearFrame":true,"components":[{"type":"DynamicMovement","group":"Trans","code":{"init":"","perFrame":"","onBeat":"","perPoint":""},"bFilter":true,"coord":"POLAR","gridW":16,"gridH":16,"blend":true,"wrap":true,"buffer":5,"alphaOnly":true}]}

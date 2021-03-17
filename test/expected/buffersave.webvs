@@ -1,0 +1,1 @@
+{"name":"buffersave","clearFrame":true,"components":[{"type":"BufferSave","group":"Misc","action":"ALTERNATE_SAVE_RESTORE","bufferId":7,"blendMode":"ADDITIVE","adjustBlend":52}]}
