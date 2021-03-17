@@ -16,7 +16,7 @@ const defaultArgs: Arguments = {
     verbose: 0
 };
 
-function convertBlob(data: Buffer | ArrayBuffer, presetName: string, presetDate?: string, customArgs?: Arguments): unknown {
+function convertBlob(data: Buffer | ArrayBuffer, presetName: string, presetDate?: string, customArgs?: Arguments): Preset|null {
     const args = {
         ...defaultArgs,
         ...customArgs
@@ -27,26 +27,27 @@ function convertBlob(data: Buffer | ArrayBuffer, presetName: string, presetDate?
     Util.setVerbosity(verbosity);
     Util.setHiddenStrings(args.hidden);
 
-    const preset = {
-        'name': presetName,
-    };
-    if (presetDate) {
-        preset['date'] = presetDate;
-    }
     const blob8 = new Uint8Array(data);
     try {
         const clearFrame = decodePresetHeader(blob8.subarray(0, Util.presetHeaderLength));
-        preset['clearFrame'] = clearFrame;
         const components = convertComponents(blob8.subarray(Util.presetHeaderLength));
-        preset['components'] = components;
+        const preset = {
+            'name': presetName,
+            'clearFrame': clearFrame,
+            'components': components,
+        };
+        if (presetDate) {
+            preset['date'] = presetDate;
+        }
+        return preset;
     } catch (e) {
-        if (verbosity >= 1)
-            {Log.error(e.stack);}
-        else
-            {Log.error(e);}
+        if (verbosity >= 1) {
+            Log.error(e.stack);
+        } else {
+            Log.error(e);
+        }
+        return null;
     }
-
-    return preset;
 }
 
 function convertComponents(blob: Uint8Array): Component[] {

@@ -57,3 +57,10 @@ interface Component {
     group?: string;
     [key: string]: jsontypes|CodeSection|Component[];
 }
+
+interface Preset {
+    name: string;
+    date?: string;
+    clearFrame: boolean;
+    components: Component[];
+}
