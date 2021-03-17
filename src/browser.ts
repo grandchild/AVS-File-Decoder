@@ -213,7 +213,9 @@ function decode_generic(blob: Uint8Array, offset: number, fields: ComponentField
         const f = field.v;
         if (fieldName === '_SKIP' && typeof f === 'number') {
             offset += f;
-            // 'null_: 0' resets bitfield continuity to allow several consecutive bitfields
+            // skipping bytes resets bitfield parsing.
+            // hint: multiple consecutive 1byte bitfields would thus be realized
+            // by skipping 0 bytes in between (no effect needs this atm.)
             lastWasABitField = false;
             continue;
         }
