@@ -33,5 +33,27 @@ interface ComponentDefinition {
     readonly code: number|number[];
     readonly group: string;
     readonly func: string;
-    readonly fields?: any;
+    readonly fields?: ComponentField[];
+}
+
+interface ComponentField {
+    readonly k: string;
+    readonly v: ComponentFieldValue;
+}
+
+type ComponentFieldValue =
+    string
+    |number
+    |[string, number, string?]
+    |[string, [number, number], string?]
+    |[string, ComponentFieldValueMap];
+
+interface ComponentFieldValueMap {
+    [key: number]: string|number;
+}
+
+interface Component {
+    type: string;
+    group?: string;
+    [key: string]: jsontypes|CodeSection|Component[];
 }

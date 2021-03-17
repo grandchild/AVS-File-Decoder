@@ -491,11 +491,12 @@ function getSemiColSplit(str: string): unknown | string {
     }
 }
 
-function getBufferNum(code: number): unknown {
+function getBufferNum(blob: Uint8Array, offset: number): [number|string, number] {
+    const code = getUInt32(blob, offset);
     if (code === 0) {
-        return 'Current';
+        return ['Current', 4];
     }
-    return code;
+    return [code, 4];
 }
 
 export {

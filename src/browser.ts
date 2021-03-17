@@ -57,9 +57,9 @@ function convertBlob(data: Buffer | ArrayBuffer, presetName: string, presetDate?
     return preset;
 }
 
-function convertComponents(blob: Uint8Array): unknown {
+function convertComponents(blob: Uint8Array): Component[] {
     let fp = 0;
-    const components: unknown[] = [];
+    const components: Component[] = [];
     let res;
     // read file as long as there are components left.
     // a component takes at least two int32s of space, if there are less bytes than that left,
@@ -163,9 +163,9 @@ function decodePresetHeader(blob: Uint8Array): boolean {
 
 //// component decode functions,
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-function decode_effectList(blob: Uint8Array, offset: number, _: unknown, name: string): unknown {
+function decode_effectList(blob: Uint8Array, offset: number, _: ComponentField[], name: string): Component {
     const size: number = Util.getUInt32(blob, offset - sizeInt);
-    const comp = {
+    const comp: Component = {
         'type': Util.removeSpaces(name),
         'enabled': Util.getBit(blob, offset, 1)[0] !== 1,
         'clearFrame': Util.getBit(blob, offset, 0)[0] === 1,
@@ -207,21 +207,20 @@ function decode_effectList(blob: Uint8Array, offset: number, _: unknown, name: s
 }
 
 // generic field decoding function that most components use.
-function decode_generic(blob: Uint8Array, offset: number, fields: unknown, name: string, group: string, end: number): unknown {
-    const comp = {
-        'type': Util.removeSpaces(name),
+function decode_generic(blob: Uint8Array, offset: number, fields: ComponentField[], name: string, group: string, end: number): Component {
+    const cleanName = Util.removeSpaces(name);
+    const comp: Component = {
+        'type': cleanName,
         'group': group,
     };
-    const keys = Object.keys(fields);
     let lastWasABitField = false;
-    for (let i = 0; i < keys.length; i++) {
+    for (const field of fields) {
         if (offset >= end) {
             break;
         }
-        const k = keys[i];
-        const f = fields[k];
-        // console.log(`key: ${k}, field: ${f}`);
-        if (k.match(/^null[_0-9]*$/)) {
+        const fieldName = field.k;
+        const f = field.v;
+        if (fieldName === '_SKIP' && typeof f === 'number') {
             offset += f;
             // 'null_: 0' resets bitfield continuity to allow several consecutive bitfields
             lastWasABitField = false;
@@ -230,10 +229,7 @@ function decode_generic(blob: Uint8Array, offset: number, fields: unknown, name:
         let size = 0;
         let value: jsontypes;
         let result: [jsontypes, number];
-        const num: boolean = typeof f === 'number';
-        const other: boolean = typeof f === 'string';
-        const array: boolean = f instanceof Array;
-        if (num) {
+        if (typeof f === 'number') {
             size = f;
             try {
                 value = Util.getUInt(blob, offset, size);
@@ -241,14 +237,12 @@ function decode_generic(blob: Uint8Array, offset: number, fields: unknown, name:
                 throw new Util.ConvertException('Invalid field size: ' + f + '.');
             }
             lastWasABitField = false;
-        } else if (other) {
-            // const func = 'get' + f;
-            // console.log(`get: ${f}`);
+        } else if (typeof f === 'string') {
             result = Util.callFunction(f, blob, offset);
             value = result[0];
             size = result[1];
             lastWasABitField = false;
-        } else if (array && f.length >= 2) {
+        } else if (f instanceof Array) {
             if (f[0] === 'Bit') {
                 if (lastWasABitField) {
                     offset -= 1; // compensate to stay in same bitfield
@@ -260,9 +254,16 @@ function decode_generic(blob: Uint8Array, offset: number, fields: unknown, name:
             // console.log(`get: ${f[0]} ${f[1]} ${typeof f[1]}`);
             let tableName: string = Util.lowerInitial(f[0]);
             if (tableName in Table) {
-                const tableKey: number = Util.getUInt(blob, offset, f[1]);
-                value = Table[tableName][tableKey];
-                size = f[1];
+                if (typeof f[1] === 'number') {
+                    const tableKey: number = Util.getUInt(blob, offset, f[1]);
+                    value = Table[tableName][tableKey];
+                    size = f[1];
+                } else {
+                    throw new Util.ConvertException(
+                        `Invalid component definition for ${cleanName} field ${fieldName}.`
+                        + ' (table field value second entry must be a single number)'
+                    );
+                }
             } else {
                 result = Util.callFunction(f[0], blob, offset, f[1]);
                 size = result[1];
@@ -280,12 +281,13 @@ function decode_generic(blob: Uint8Array, offset: number, fields: unknown, name:
         }
 
         // save value or function result of value in field
-        if (k !== 'new_version') { // but don't save new_version marker, if present
-            comp[k] = value;
+        if (fieldName !== 'new_version') { // but don't save new_version marker, if present
+            comp[fieldName] = value;
             if (verbosity >= 2) {
-                Log.dim('- key: ' + k + '\n- val: ' + value);
-                if (k === 'code')
-                    {Util.printTable('- code', value);}
+                Log.dim('- field name: ' + fieldName + '\n- val: ' + value);
+                if (fieldName === 'code') {
+                    Util.printTable('- code', value);
+                }
                 if (verbosity >= 3)
                     {Log.dim('- offset: ' + offset + '\n- size: ' + size);}
                 // console.log();
@@ -298,28 +300,33 @@ function decode_generic(blob: Uint8Array, offset: number, fields: unknown, name:
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-function decode_versioned_generic(blob: Uint8Array, offset: number, fields: any, name: string, group: string, end: number): unknown {
+function decode_versioned_generic(blob: Uint8Array, offset: number, fields: ComponentField[], name: string, group: string, end: number): Component {
     const version: number = blob[offset];
     if (version === 1) {
         return decode_generic(blob, offset, fields, name, group, end);
     } else {
-        const oldFields = {};
-        for (const key in fields) {
-            if (key === 'new_version')
-                {continue;}
-            if (key === 'code')
-                {oldFields[key] = fields['code'].replace(/Code([IFBP]+)/, '256Code$1');}
-            else
-                {oldFields[key] = fields[key];}
+        const oldFields: ComponentField[] = [];
+        let oldCodeFunc = '';
+        for (const field of fields) {
+            if (field.k === 'new_version') {
+                continue;
+            }
+            if (field.k === 'code' && typeof field.v === 'string') {
+                oldCodeFunc = field.v.replace(/Code([IFBP]+)/, '256Code$1');
+                oldFields.push({k: 'code', v: oldCodeFunc});
+            } else {
+                oldFields.push(field);
+            }
         }
-        if (verbosity >= 3)
-            {console.log('oldFields, code changed to:', oldFields['code']);}
+        if (verbosity >= 3) {
+            console.log('oldFields, code changed to:', oldFields['code']);
+        }
         return decode_generic(blob, offset, oldFields, name, group, end);
     }
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-function decode_movement(blob: Uint8Array, offset: number, _: unknown, name: string, group: string, end: number): unknown {
+function decode_movement(blob: Uint8Array, offset: number, _: ComponentField[], name: string, group: string, end: number): Component {
     const comp = {
         'type': name,
         'group': group,
@@ -380,7 +387,7 @@ function decode_movement(blob: Uint8Array, offset: number, _: unknown, name: str
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-function decode_avi(blob: Uint8Array, offset: number): unknown {
+function decode_avi(blob: Uint8Array, offset: number): Component {
     const comp = {
         'type': 'AVI',
         'group': 'Render',
@@ -402,7 +409,7 @@ function decode_avi(blob: Uint8Array, offset: number): unknown {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-function decode_simple(blob: Uint8Array, offset: number): unknown {
+function decode_simple(blob: Uint8Array, offset: number): Component {
     const comp = {
         'type': 'Simple',
         'group': 'Render',
