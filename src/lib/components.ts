@@ -1,6 +1,69 @@
 // Constants
 const sizeInt = 4;
 
+/*
+How component definition are written:
+
+(Occasionally the word 'effect' is used instead of 'component'. This happens when the
+perspective is more from within AVS itself, talking about the effect's particular
+behaviors and properties. The term 'Component' is used more when talking about the
+representation of an AVS effect in the context of this decoder/converter.)
+
+
+Each component must specify at least these four basic keys:
+
+- name:   A string with the effect name as shown in AVS
+
+- code:   A number or (for APEs) a list of bytes, that uniquely identifies a
+          component. The component code is the first data in an effect block in an .avs
+          preset file.
+
+- group:  A string describing the effect group the component belongs to. Typically one
+          of 'Render', 'Trans' or 'Misc', but various APEs introduced their own. 'Effect
+          List' is the only component with an empty group string and the only top-level
+          effect in AVS.
+
+- func:   The name of the parsing function used to decode this effect. Most commonly
+          this is 'generic' for components with a static list of fields, but some
+          effects have more complicated, conditional data layouts. These have dedicated
+          functions.
+          The value in 'func' is prepended with 'decode_' to form the function name in
+          the decoder code. E.g.: The logic for 'generic' is defined in the
+          'decode_generic()' function.
+
+
+If the 'func' key is 'generic', then an additional key must be defined:
+
+- fields: A list of ComponentField objects passed to decode_generic() to sequentially
+          parse the fields for this effect. ComponentField objects have two keys:
+
+          - k: The name of the field (or the special value '_SKIP', see below).
+
+          - v: A ComponentFieldValue instance, which specifies the size and/or decoding
+               and postprocessing function for the field. This is explained in detail
+               below.
+
+
+The ComponentFieldValue must take one the following shapes:
+
+- a single string:  Parse the next bytes according to this utility function. The
+                    function is defined in util.ts, prepended with 'get'. The number of
+                    bytes consumed from the input is dependent on the function. E.g.:
+                    Parsing a regular 32-bit/4-byte RGBA color value is done by using
+                    'Color', which calls 'getColor()' which consumes the next 4 bytes
+                    and adds the color value to the output.
+
+- a single number:  Interpret the next n bytes of the input as an unsigned integer.
+                    (Hint: If the value is signed, use the strings 'Int32' or 'Int64'
+                    instead.)
+
+- an array of types [string, number] or [string, number, string]:
+
+- an array of [string, [number, number], string?]
+
+- an array of [string, ComponentFieldValueMap];
+
+*/
 const builtin: ComponentDefinition[] = [
     {
         'name': 'Effect List', // builtin and r_list.cpp for extended Effect Lists
