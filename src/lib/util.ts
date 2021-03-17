@@ -39,14 +39,14 @@ function cmpBytes(arr: Uint8Array, offset: number, test: number[]): boolean {
     return true;
 }
 
-function printTable(name: string, table: any): void {
+function printTable(name: string, table: CodeSection): void {
     Log.dim(`${name}:`);
     for (const key in table) {
         Log.dim(`\t${key}: ${table[key] ? ('' + table[key]).replace(/\n/g, '\n\t\t') : 'undefined'}`);
     }
 }
 
-function callFunction(funcName: string, blobOrValue: jsontypes|Uint8Array, offset?: void|number, extra?: any|void): any {
+function callFunction(funcName: string, blobOrValue: jsontypes|Uint8Array, offset?: number, extra?: string|number): [jsontypes|CodeSection,number]|number {
     try {
         if (blobOrValue instanceof Uint8Array) {
             return eval('get' + funcName)(blobOrValue, offset, extra);
@@ -62,7 +62,7 @@ function callFunction(funcName: string, blobOrValue: jsontypes|Uint8Array, offse
     }
 }
 
-function getBit(blob: Uint8Array, offset: number, pos: any): [number, number] {
+function getBit(blob: Uint8Array, offset: number, pos: number[]|number): [number, number] {
     if ((<number[]>pos).length) {
         if ((<number[]>pos).length !== 2) {throw new this.ConvertException(`Invalid Bitfield range ${pos}.`);}
         const mask = (2 << (pos[1] - pos[0])) - 1;
@@ -261,7 +261,7 @@ function getMap8(blob: Uint8Array, offset: number, map: unknown): [string, numbe
     return [getMapping(map, getUInt64(blob, offset)), sizeInt * 2];
 }
 
-function getRadioButton(blob: Uint8Array, offset: number, map: any[]): [string, number] {
+function getRadioButton(blob: Uint8Array, offset: number, map: ComponentFieldValueMap): [string, number] {
     let key = 0;
     for (let i = 0; i < map.length; i++) {
         const on: number = getUInt32(blob, offset + sizeInt * i) !== 0 ? 1 : 0;
@@ -273,7 +273,7 @@ function getRadioButton(blob: Uint8Array, offset: number, map: any[]): [string, 
     return [getMapping(map, key), sizeInt * map.length];
 }
 
-function getMapping(map: unknown, key: number): string {
+function getMapping(map: ComponentFieldValueMap, key: number): string {
     const value = map[key];
     if (value === undefined) {
         throw new ConvertException(`Map: A value for key '${key}' does not exist.`);

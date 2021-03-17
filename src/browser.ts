@@ -126,7 +126,7 @@ function getComponentIndex(code: number, blob: Uint8Array, offset: number): numb
     return -code;
 }
 
-function getComponentSize(blob: Uint8Array, offset: number) {
+function getComponentSize(blob: Uint8Array, offset: number): number {
     return Util.getUInt32(blob, offset);
 }
 

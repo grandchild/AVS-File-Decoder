@@ -12,14 +12,14 @@ const defaultArgs: Arguments = {
     verbose: 0
 };
 
-function convertFile(file: string, customArgs?: Arguments): Promise<any> {
+function convertFile(file: string, customArgs?: Arguments): Promise<string> {
     const args = {
         ...defaultArgs,
         ...customArgs
     };
 
     return Util.readPreset(file)
-        .then(async (presetBlob: any) => {
+        .then(async (presetBlob: Buffer | ArrayBuffer) => {
             const presetName = (typeof args.name !== 'undefined' && args.name.trim().length > 0) ? args.name : basename(file, extname(file));
             const presetDate = args.noDate ? undefined : await Util.getISOTime(file);
             const presetObj = convertBlob(presetBlob, presetName, presetDate, args);
@@ -32,7 +32,7 @@ function convertFile(file: string, customArgs?: Arguments): Promise<any> {
         });
 }
 
-function convertFileSync(file: string, customArgs?: Arguments): unknown {
+function convertFileSync(file: string, customArgs?: Arguments): string {
     const args = {
         ...defaultArgs,
         ...customArgs
