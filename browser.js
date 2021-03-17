@@ -1,4 +1,15 @@
 "use strict";
+var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
 var __importStar = (this && this.__importStar) || function (mod) {
     if (mod && mod.__esModule) return mod;
     var result = {};
@@ -16,14 +27,14 @@ var Util = __importStar(require("./lib/util"));
 var sizeInt = 4;
 var verbosity = 0; // log individual key:value fields
 var componentTable = Components.builtin.concat(Components.dll);
-var args = {
+var defaultArgs = {
     hidden: true,
     minify: false,
     quiet: false,
     verbose: 0
 };
-var convertBlob = function (data, presetName, presetDate, customArgs) {
-    Object.assign(args, customArgs);
+function convertBlob(data, presetName, presetDate, customArgs) {
+    var args = __assign(__assign({}, defaultArgs), customArgs);
     verbosity = args.quiet ? -1 : args.verbose;
     Util.setVerbosity(verbosity);
     Util.setHiddenStrings(args.hidden);
@@ -41,23 +52,17 @@ var convertBlob = function (data, presetName, presetDate, customArgs) {
         preset['components'] = components;
     }
     catch (e) {
-        // TODO
-        // if (verbosity < 0) Log.error(`Error in '${file}'`);
-        if (verbosity >= 1)
+        if (verbosity >= 1) {
             Log.error(e.stack);
-        else
+        }
+        else {
             Log.error(e);
-        // if(e instanceof Util.ConvertException) {
-        //     Log.error('Error: '+e.message);
-        //     return null;
-        // } else {
-        //     throw e;
-        // }
+        }
     }
     return preset;
-};
+}
 exports.convertBlob = convertBlob;
-var convertComponents = function (blob) {
+function convertComponents(blob) {
     var fp = 0;
     var components = [];
     var res;
@@ -70,13 +75,31 @@ var convertComponents = function (blob) {
         var i = getComponentIndex(code, blob, fp);
         var isDll = (code !== 0xfffffffe && code >= Util.builtinMax) ? 1 : 0;
         var size = getComponentSize(blob, fp + sizeInt + isDll * 32);
-        // console.log("component size", size, "blob size", blob.length);
         if (i < 0) {
             res = { 'type': 'Unknown: (' + (-i) + ')' };
         }
         else {
             var offset = fp + sizeInt * 2 + isDll * 32;
-            res = eval('decode_' + componentTable[i].func)(blob, offset, componentTable[i].fields, componentTable[i].name, componentTable[i].group, offset + size);
+            switch (componentTable[i].func) {
+                case 'avi':
+                    res = decode_avi(blob, offset);
+                    break;
+                case 'effectList':
+                    res = decode_effectList(blob, offset, componentTable[i].fields, componentTable[i].name);
+                    break;
+                case 'generic':
+                    res = decode_generic(blob, offset, componentTable[i].fields, componentTable[i].name, componentTable[i].group, offset + size);
+                    break;
+                case 'movement':
+                    res = decode_movement(blob, offset, componentTable[i].fields, componentTable[i].name, componentTable[i].group, offset + size);
+                    break;
+                case 'simple':
+                    res = decode_simple(blob, offset);
+                    break;
+                case 'versioned_generic':
+                    res = decode_versioned_generic(blob, offset, componentTable[i].fields, componentTable[i].name, componentTable[i].group, offset + size);
+                    break;
+            }
         }
         if (!res || typeof res !== 'object') { // should not happen, decode functions should throw their own.
             throw new Util.ConvertException('Unknown convert error');
@@ -85,9 +108,9 @@ var convertComponents = function (blob) {
         fp += size + sizeInt * 2 + isDll * 32;
     }
     return components;
-};
+}
 exports.convertComponents = convertComponents;
-var getComponentIndex = function (code, blob, offset) {
+function getComponentIndex(code, blob, offset) {
     if (code < Util.builtinMax || code === 0xfffffffe) {
         for (var i = 0; i < componentTable.length; i++) {
             if (code === componentTable[i].code) {
@@ -109,14 +132,15 @@ var getComponentIndex = function (code, blob, offset) {
             }
         }
     }
-    if (verbosity >= 1)
+    if (verbosity >= 1) {
         Log.dim("Found unknown component (code: " + code + ")");
+    }
     return -code;
-};
-var getComponentSize = function (blob, offset) {
+}
+function getComponentSize(blob, offset) {
     return Util.getUInt32(blob, offset);
-};
-var decodePresetHeader = function (blob) {
+}
+function decodePresetHeader(blob) {
     var presetHeader0_1 = [
         0x4E, 0x75, 0x6C, 0x6C, 0x73, 0x6F, 0x66, 0x74,
         0x20, 0x41, 0x56, 0x53, 0x20, 0x50, 0x72, 0x65,
@@ -134,9 +158,10 @@ var decodePresetHeader = function (blob) {
             '  If it does load with Winamp\'s AVS please send the file in so we can look at it.');
     }
     return blob[Util.presetHeaderLength - 1] === 1; // 'Clear Every Frame'
-};
+}
 //// component decode functions,
-var decode_effectList = function (blob, offset, _, name) {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+function decode_effectList(blob, offset, _, name) {
     var size = Util.getUInt32(blob, offset - sizeInt);
     var comp = {
         'type': Util.removeSpaces(name),
@@ -177,35 +202,34 @@ var decode_effectList = function (blob, offset, _, name) {
     var content = convertComponents(blob.subarray(contentOffset, offset + size));
     comp['components'] = content;
     return comp;
-};
+}
 // generic field decoding function that most components use.
-var decode_generic = function (blob, offset, fields, name, group, end) {
+function decode_generic(blob, offset, fields, name, group, end) {
+    var cleanName = Util.removeSpaces(name);
     var comp = {
-        'type': Util.removeSpaces(name),
+        'type': cleanName,
         'group': group,
     };
-    var keys = Object.keys(fields);
     var lastWasABitField = false;
-    for (var i = 0; i < keys.length; i++) {
+    for (var _i = 0, fields_1 = fields; _i < fields_1.length; _i++) {
+        var field = fields_1[_i];
         if (offset >= end) {
             break;
         }
-        var k = keys[i];
-        var f = fields[k];
-        // console.log(`key: ${k}, field: ${f}`);
-        if (k.match(/^null[_0-9]*$/)) {
+        var fieldName = field.k;
+        var f = field.v;
+        if (fieldName === '_SKIP' && typeof f === 'number') {
             offset += f;
-            // 'null_: 0' resets bitfield continuity to allow several consecutive bitfields
+            // skipping bytes resets bitfield parsing.
+            // hint: multiple consecutive 1byte bitfields would thus be realized
+            // by skipping 0 bytes in between (no effect needs this atm.)
             lastWasABitField = false;
             continue;
         }
         var size = 0;
         var value = void 0;
         var result = void 0;
-        var num = typeof f === 'number';
-        var other = typeof f === 'string';
-        var array = f instanceof Array;
-        if (num) {
+        if (typeof f === 'number') {
             size = f;
             try {
                 value = Util.getUInt(blob, offset, size);
@@ -215,15 +239,13 @@ var decode_generic = function (blob, offset, fields, name, group, end) {
             }
             lastWasABitField = false;
         }
-        else if (other) {
-            var func = 'get' + f;
-            // console.log(`get: ${f}`);
+        else if (typeof f === 'string') {
             result = Util.callFunction(f, blob, offset);
             value = result[0];
             size = result[1];
             lastWasABitField = false;
         }
-        else if (array && f.length >= 2) {
+        else if (f instanceof Array) {
             if (f[0] === 'Bit') {
                 if (lastWasABitField) {
                     offset -= 1; // compensate to stay in same bitfield
@@ -233,12 +255,17 @@ var decode_generic = function (blob, offset, fields, name, group, end) {
             else {
                 lastWasABitField = false;
             }
-            // console.log(`get: ${f[0]} ${f[1]} ${typeof f[1]}`);
             var tableName = Util.lowerInitial(f[0]);
             if (tableName in Table) {
-                var tableKey = Util.getUInt(blob, offset, f[1]);
-                value = Table[tableName][tableKey];
-                size = f[1];
+                if (typeof f[1] === 'number') {
+                    var tableKey = Util.getUInt(blob, offset, f[1]);
+                    value = Table[tableName][tableKey];
+                    size = f[1];
+                }
+                else {
+                    throw new Util.ConvertException("Invalid component definition for " + cleanName + " field " + fieldName + "."
+                        + ' (table field value second entry must be a single number)');
+                }
             }
             else {
                 result = Util.callFunction(f[0], blob, offset, f[1]);
@@ -246,7 +273,6 @@ var decode_generic = function (blob, offset, fields, name, group, end) {
                 value = result[0];
             }
             if (f[2]) { // further processing if wanted
-                // console.log('get' + f[2]);
                 tableName = Util.lowerInitial(f[2]);
                 if (tableName in Table) {
                     value = Table[tableName][value];
@@ -257,42 +283,52 @@ var decode_generic = function (blob, offset, fields, name, group, end) {
             }
         }
         // save value or function result of value in field
-        if (k !== 'new_version') { // but don't save new_version marker, if present
-            comp[k] = value;
+        if (fieldName !== 'new_version') { // but don't save new_version marker, if present
+            comp[fieldName] = value;
             if (verbosity >= 2) {
-                Log.dim('- key: ' + k + '\n- val: ' + value);
-                if (k === 'code')
+                Log.dim('- field name: ' + fieldName + '\n- val: ' + value);
+                if (fieldName === 'code') {
                     Util.printTable('- code', value);
-                if (verbosity >= 3)
+                }
+                if (verbosity >= 3) {
                     Log.dim('- offset: ' + offset + '\n- size: ' + size);
-                // console.log();
+                }
             }
         }
         offset += size;
     }
     return comp;
-};
-var decode_versioned_generic = function (blob, offset, fields, name, group, end) {
+}
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+function decode_versioned_generic(blob, offset, fields, name, group, end) {
     var version = blob[offset];
     if (version === 1) {
         return decode_generic(blob, offset, fields, name, group, end);
     }
     else {
-        var oldFields = {};
-        for (var key in fields) {
-            if (key === 'new_version')
+        var oldFields = [];
+        var oldCodeFunc = '';
+        for (var _i = 0, fields_2 = fields; _i < fields_2.length; _i++) {
+            var field = fields_2[_i];
+            if (field.k === 'new_version') {
                 continue;
-            if (key === 'code')
-                oldFields[key] = fields['code'].replace(/Code([IFBP]+)/, '256Code$1');
-            else
-                oldFields[key] = fields[key];
+            }
+            if (field.k === 'code' && typeof field.v === 'string') {
+                oldCodeFunc = field.v.replace(/Code([IFBP]+)/, '256Code$1');
+                oldFields.push({ k: 'code', v: oldCodeFunc });
+            }
+            else {
+                oldFields.push(field);
+            }
         }
-        if (verbosity >= 3)
+        if (verbosity >= 3) {
             console.log('oldFields, code changed to:', oldFields['code']);
+        }
         return decode_generic(blob, offset, oldFields, name, group, end);
     }
-};
-var decode_movement = function (blob, offset, _, name, group, end) {
+}
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+function decode_movement(blob, offset, _, name, group, end) {
     var comp = {
         'type': name,
         'group': group,
@@ -351,11 +387,13 @@ var decode_movement = function (blob, offset, _, name, group, end) {
         comp['coordinates'] = effect[2]; // overwrite
     }
     comp['code'] = code;
-    if (hidden)
+    if (hidden) {
         comp['_hidden'] = hidden;
+    }
     return comp;
-};
-var decode_avi = function (blob, offset) {
+}
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+function decode_avi(blob, offset) {
     var comp = {
         'type': 'AVI',
         'group': 'Render',
@@ -374,8 +412,9 @@ var decode_avi = function (blob, offset) {
     comp['onBeatAdd'] = beatAdd;
     comp['persist'] = Util.getUInt32(blob, offset + sizeInt * 4 + strAndSize[1]); // 0-32
     return comp;
-};
-var decode_simple = function (blob, offset) {
+}
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+function decode_simple(blob, offset) {
     var comp = {
         'type': 'Simple',
         'group': 'Render',
@@ -409,5 +448,5 @@ var decode_simple = function (blob, offset) {
     comp['positionY'] = Table.positionY[(effect >> 4) & 3];
     comp['colors'] = Util.getColorList(blob, offset + sizeInt)[0];
     return comp;
-};
+}
 //# sourceMappingURL=browser.js.map
