@@ -40,18 +40,10 @@ function convertBlob(data: Buffer | ArrayBuffer, presetName: string, presetDate?
         const components = convertComponents(blob8.subarray(Util.presetHeaderLength));
         preset['components'] = components;
     } catch (e) {
-        // TODO
-        // if (verbosity < 0) Log.error(`Error in '${file}'`);
         if (verbosity >= 1)
             {Log.error(e.stack);}
         else
             {Log.error(e);}
-        // if(e instanceof Util.ConvertException) {
-        //     Log.error('Error: '+e.message);
-        //     return null;
-        // } else {
-        //     throw e;
-        // }
     }
 
     return preset;
@@ -70,7 +62,6 @@ function convertComponents(blob: Uint8Array): Component[] {
         const i = getComponentIndex(code, blob, fp);
         const isDll: number = (code !== 0xfffffffe && code >= Util.builtinMax) ? 1 : 0;
         const size = getComponentSize(blob, fp + sizeInt + isDll * 32);
-        // console.log("component size", size, "blob size", blob.length);
         if (i < 0) {
             res = { 'type': 'Unknown: (' + (-i) + ')' };
         } else {
@@ -251,7 +242,6 @@ function decode_generic(blob: Uint8Array, offset: number, fields: ComponentField
             } else {
                 lastWasABitField = false;
             }
-            // console.log(`get: ${f[0]} ${f[1]} ${typeof f[1]}`);
             let tableName: string = Util.lowerInitial(f[0]);
             if (tableName in Table) {
                 if (typeof f[1] === 'number') {
@@ -270,7 +260,6 @@ function decode_generic(blob: Uint8Array, offset: number, fields: ComponentField
                 value = result[0];
             }
             if (f[2]) { // further processing if wanted
-                // console.log('get' + f[2]);
                 tableName = Util.lowerInitial(f[2]);
                 if (tableName in Table) {
                     value = Table[tableName][<number>value];
@@ -288,9 +277,9 @@ function decode_generic(blob: Uint8Array, offset: number, fields: ComponentField
                 if (fieldName === 'code') {
                     Util.printTable('- code', value);
                 }
-                if (verbosity >= 3)
-                    {Log.dim('- offset: ' + offset + '\n- size: ' + size);}
-                // console.log();
+                if (verbosity >= 3) {
+                    Log.dim('- offset: ' + offset + '\n- size: ' + size);
+                }
             }
         }
         offset += size;
