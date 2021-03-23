@@ -33,22 +33,22 @@ interface ComponentDefinition {
     readonly code: number|number[];
     readonly group: string;
     readonly func: string;
-    readonly fields?: ComponentField[];
+    readonly fields?: ComponentDefinitionField[];
 }
 
-interface ComponentField {
+interface ComponentDefinitionField {
     readonly k: string;
-    readonly v: ComponentFieldValue;
+    readonly v: ComponentDefinitionFieldValue;
 }
 
-type ComponentFieldValue =
+type ComponentDefinitionFieldValue =
     string
     |number
     |[string, number, string?]
     |[string, [number, number], string?]
-    |[string, ComponentFieldValueMap];
+    |[string, ComponentDefinitionFieldValueMap];
 
-interface ComponentFieldValueMap {
+interface ComponentDefinitionFieldValueMap {
     [key: number]: string|number;
 }
 

@@ -155,7 +155,7 @@ function decodePresetHeader(blob: Uint8Array): boolean {
 
 //// component decode functions,
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-function decode_effectList(blob: Uint8Array, offset: number, _: ComponentField[], name: string): Component {
+function decode_effectList(blob: Uint8Array, offset: number, _: ComponentDefinitionField[], name: string): Component {
     const size: number = Util.getUInt32(blob, offset - sizeInt);
     const comp: Component = {
         'type': Util.removeSpaces(name),
@@ -199,7 +199,7 @@ function decode_effectList(blob: Uint8Array, offset: number, _: ComponentField[]
 }
 
 // generic field decoding function that most components use.
-function decode_generic(blob: Uint8Array, offset: number, fields: ComponentField[], name: string, group: string, end: number): Component {
+function decode_generic(blob: Uint8Array, offset: number, fields: ComponentDefinitionField[], name: string, group: string, end: number): Component {
     const cleanName = Util.removeSpaces(name);
     const comp: Component = {
         'type': cleanName,
@@ -211,7 +211,7 @@ function decode_generic(blob: Uint8Array, offset: number, fields: ComponentField
             break;
         }
         const fieldName = field.k;
-        const f = field.v;
+        const f: ComponentDefinitionFieldValue = field.v;
         if (fieldName === '_SKIP' && typeof f === 'number') {
             offset += f;
             // skipping bytes resets bitfield parsing.
@@ -292,12 +292,12 @@ function decode_generic(blob: Uint8Array, offset: number, fields: ComponentField
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-function decode_versioned_generic(blob: Uint8Array, offset: number, fields: ComponentField[], name: string, group: string, end: number): Component {
+function decode_versioned_generic(blob: Uint8Array, offset: number, fields: ComponentDefinitionField[], name: string, group: string, end: number): Component {
     const version: number = blob[offset];
     if (version === 1) {
         return decode_generic(blob, offset, fields, name, group, end);
     } else {
-        const oldFields: ComponentField[] = [];
+        const oldFields: ComponentDefinitionField[] = [];
         let oldCodeFunc = '';
         for (const field of fields) {
             if (field.k === 'new_version') {
@@ -318,7 +318,7 @@ function decode_versioned_generic(blob: Uint8Array, offset: number, fields: Comp
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-function decode_movement(blob: Uint8Array, offset: number, _: ComponentField[], name: string, group: string, end: number): Component {
+function decode_movement(blob: Uint8Array, offset: number, _: ComponentDefinitionField[], name: string, group: string, end: number): Component {
     const comp = {
         'type': name,
         'group': group,

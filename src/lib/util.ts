@@ -261,7 +261,7 @@ function getMap8(blob: Uint8Array, offset: number, map: unknown): [string, numbe
     return [getMapping(map, getUInt64(blob, offset)), sizeInt * 2];
 }
 
-function getRadioButton(blob: Uint8Array, offset: number, map: ComponentFieldValueMap): [string, number] {
+function getRadioButton(blob: Uint8Array, offset: number, map: ComponentDefinitionFieldValueMap): [string|number, number] {
     let key = 0;
     for (let i = 0; i < map.length; i++) {
         const on: number = getUInt32(blob, offset + sizeInt * i) !== 0 ? 1 : 0;
@@ -273,7 +273,7 @@ function getRadioButton(blob: Uint8Array, offset: number, map: ComponentFieldVal
     return [getMapping(map, key), sizeInt * map.length];
 }
 
-function getMapping(map: ComponentFieldValueMap, key: number): string {
+function getMapping(map: ComponentDefinitionFieldValueMap, key: number): string|number {
     const value = map[key];
     if (value === undefined) {
         throw new ConvertException(`Map: A value for key '${key}' does not exist.`);
