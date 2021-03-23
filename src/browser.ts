@@ -210,7 +210,7 @@ function decode_generic(blob: Uint8Array, offset: number, fields: ComponentDefin
         if (offset >= end) {
             break;
         }
-        const fieldName = field.k;
+        const fieldName: string = field.k;
         const f: ComponentDefinitionFieldValue = field.v;
         if (fieldName === '_SKIP' && typeof f === 'number') {
             offset += f;
@@ -220,9 +220,9 @@ function decode_generic(blob: Uint8Array, offset: number, fields: ComponentDefin
             lastWasABitField = false;
             continue;
         }
+        let result: [ComponentFieldValue, number];
+        let value: ComponentFieldValue;
         let size = 0;
-        let value: jsontypes;
-        let result: [jsontypes, number];
         if (typeof f === 'number') {
             size = f;
             try {
@@ -259,15 +259,15 @@ function decode_generic(blob: Uint8Array, offset: number, fields: ComponentDefin
                 }
             } else {
                 result = Util.callFunction(f[0], blob, offset, f[1]);
-                size = result[1];
                 value = result[0];
+                size = result[1];
             }
             if (f[2]) { // further processing if wanted
                 tableName = Util.lowerInitial(f[2]);
                 if (tableName in Table) {
                     value = Table[tableName][<number>value];
                 } else {
-                    value = Util.callFunction(f[2], value);
+                    value = Util.callPostProcFunction(f[2], value);
                 }
             }
         }
@@ -278,7 +278,7 @@ function decode_generic(blob: Uint8Array, offset: number, fields: ComponentDefin
             if (verbosity >= 2) {
                 Log.dim('- field name: ' + fieldName + '\n- val: ' + value);
                 if (fieldName === 'code') {
-                    Util.printTable('- code', value);
+                    Util.printTable('- code', <CodeSection>value);
                 }
                 if (verbosity >= 3) {
                     Log.dim('- offset: ' + offset + '\n- size: ' + size);

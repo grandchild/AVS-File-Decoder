@@ -46,13 +46,26 @@ function printTable(name: string, table: CodeSection): void {
     }
 }
 
-function callFunction(funcName: string, blobOrValue: jsontypes|Uint8Array, offset?: number, extra?: string|number): [jsontypes|CodeSection,number]|number {
+function callFunction(
+    funcName: string,
+    blob: Uint8Array,
+    offset: number,
+    extra?: string|number|[number, number]|ComponentDefinitionFieldValueMap
+): [ComponentFieldValue, number] {
     try {
-        if (blobOrValue instanceof Uint8Array) {
-            return eval('get' + funcName)(blobOrValue, offset, extra);
+        return eval('get' + funcName)(blob, offset, extra);
+    } catch (e) {
+        if (e.message.search(/not a function|has no method/) >= 0) {
+            throw new ConvertException(`Method or table '${'get' + funcName}' was not found. Correct capitalization?`);
         } else {
-            return eval('get' + funcName)(blobOrValue);
+            throw e;
         }
+    }
+}
+
+function callPostProcFunction(funcName: string, value: ComponentFieldValue): ComponentFieldValue {
+    try {
+        return eval('get' + funcName)(value);
     } catch (e) {
         if (e.message.search(/not a function|has no method/) >= 0) {
             throw new ConvertException(`Method or table '${'get' + funcName}' was not found. Correct capitalization?`);
@@ -249,28 +262,30 @@ function lowerInitial(str: string): string {
 }
 
 
-function getMap1(blob: Uint8Array, offset: number, map: unknown): [string, number] {
+function getMap1(blob: Uint8Array, offset: number, map: ComponentDefinitionFieldValueMap): [string|number, number] {
     return [getMapping(map, blob[offset]), 1];
 }
 
-function getMap4(blob: Uint8Array, offset: number, map: unknown): [string, number] {
+function getMap4(blob: Uint8Array, offset: number, map: ComponentDefinitionFieldValueMap): [string|number, number] {
     return [getMapping(map, getUInt32(blob, offset)), sizeInt];
 }
 
-function getMap8(blob: Uint8Array, offset: number, map: unknown): [string, number] {
+function getMap8(blob: Uint8Array, offset: number, map: ComponentDefinitionFieldValueMap): [string|number, number] {
     return [getMapping(map, getUInt64(blob, offset)), sizeInt * 2];
 }
 
+// only used by CustomBPM effect -- parses sequential integers where one of them is 1, the others 0.
 function getRadioButton(blob: Uint8Array, offset: number, map: ComponentDefinitionFieldValueMap): [string|number, number] {
     let key = 0;
-    for (let i = 0; i < map.length; i++) {
+    const numOptions: number = Object.keys(map).length;
+    for (let i = 0; i < numOptions; i++) {
         const on: number = getUInt32(blob, offset + sizeInt * i) !== 0 ? 1 : 0;
         if (on) { // in case of (erroneous) multiple selections, the last one selected wins
-            key = on * (i + 1);
+            key = i;
         }
     }
 
-    return [getMapping(map, key), sizeInt * map.length];
+    return [getMapping(map, key), sizeInt * numOptions];
 }
 
 function getMapping(map: ComponentDefinitionFieldValueMap, key: number): string|number {
@@ -421,15 +436,19 @@ function getColorMaps(blob: Uint8Array, offset: number): [{ index: number; enabl
     for (let i = 0; i < 8; i++) {
         const enabled = getBool(blob, offset + headerSize * i, sizeInt)[0];
         const num = getUInt32(blob, offset + headerSize * i + sizeInt);
-        const map = getColorMap(blob, mapOffset, num);
+        const mapColors = getColorMap(blob, mapOffset, num);
         // check if it's a disabled default {0: #000000, 255: #ffffff} map, and only save it if not.
-        if (!enabled && map.length === 2 && map[0].color === '#000000' && map[0].position === 0 && map[1].color === '#ffffff' && map[1].position === 255) {
+        if (!enabled && mapColors.length === 2
+            && mapColors[0].color === '#000000'
+            && mapColors[0].position === 0
+            && mapColors[1].color === '#ffffff'
+            && mapColors[1].position === 255) {
             // skip this map
         } else {
             maps[mi] = {
                 'index': i,
                 'enabled': enabled,
-                'colors': map,
+                'colors': mapColors,
             };
             if (allFields) {
                 const id = getUInt32(blob, offset + headerSize * i + sizeInt * 2); // id of the map - not really needed.
@@ -445,8 +464,8 @@ function getColorMaps(blob: Uint8Array, offset: number): [{ index: number; enabl
     return [maps, mapOffset - offset];
 }
 
-function getColorMap(blob: Uint8Array, offset: number, num: number): Array<{ color: string; position: number; }> {
-    const colorMap = [];
+function getColorMap(blob: Uint8Array, offset: number, num: number): { color: string, position: number }[] {
+    const colorMap: { color: string, position: number }[] = [];
     for (let i = 0; i < num; i++) {
         const pos = getUInt32(blob, offset);
         const color = getColor(blob, offset + sizeInt)[0];
@@ -470,19 +489,19 @@ function getColor(blob: Uint8Array, offset: number): [string, number] {
     return ['#' + padding + color, sizeInt];
 }
 
-function getConvoFilter(blob: Uint8Array, offset: number, dimensions: number[]): unknown {
+function getConvoFilter(blob: Uint8Array, offset: number, dimensions: number[]): [ConvolutionFilter, number] {
     const size = dimensions[0] * dimensions[1];
     const data = new Array(size);
     for (let i = 0; i < size; i++, offset += sizeInt) {
         data[i] = getInt32(blob, offset)[0];
     }
-    const matrix = { 'width': dimensions[0], 'height': dimensions[1], 'data': data };
+    const matrix: ConvolutionFilter = { 'width': dimensions[0], 'height': dimensions[1], 'data': data };
 
     return [matrix, size * sizeInt];
 }
 
 // 'Text' needs this
-function getSemiColSplit(str: string): unknown | string {
+function getSemiColSplit(str: string): string[] | string {
     const strings = str.split(';');
     if (strings.length === 1) {
         return strings[0];
@@ -502,6 +521,7 @@ function getBufferNum(blob: Uint8Array, offset: number): [number|string, number]
 export {
     builtinMax,
     callFunction,
+    callPostProcFunction,
     cmpBytes,
     ConvertException,
     get256CodeIFB,
