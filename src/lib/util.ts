@@ -1,5 +1,5 @@
 // Modules
-import * as Log from './log';
+import Log from './log';
 import config from '../config';
 import get from './get';
 
@@ -35,9 +35,9 @@ function cmpBytes(arr: Uint8Array, offset: number, test: number[]): boolean {
 }
 
 function printTable(name: string, table: any): void {
-    Log.dim(`${name}:`);
+    Log.log(`${name}:`);
     for (const key in table) {
-        Log.dim(`\t${key}: ${table[key] ? ('' + table[key]).replace(/\n/g, '\n\t\t') : 'undefined'}`);
+        Log.log(`\t${key}: ${table[key] ? ('' + table[key]).replace(/\n/g, '\n\t\t') : 'undefined'}`);
     }
 }
 

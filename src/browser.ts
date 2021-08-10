@@ -1,6 +1,6 @@
 // Modules
 import * as Components from './lib/components';
-import * as Log from './lib/log';
+import Log from './lib/log';
 import * as Util from './lib/util';
 import decode from './lib/decode';
 import config from './config';
@@ -99,7 +99,7 @@ function getComponentIndex(code: number, blob: Uint8Array, offset: number): numb
         for (let i = 0; i < componentTable.length; i++) {
             if (code === componentTable[i].code) {
                 if (verbosity >= 1) {
-                    Log.dim(`Found component: ${componentTable[i].name} (${code})`);
+                    Log.log(`Found component: ${componentTable[i].name} (${code})`);
                 }
                 return i;
             }
@@ -109,7 +109,7 @@ function getComponentIndex(code: number, blob: Uint8Array, offset: number): numb
             if (componentTable[i].code instanceof Array &&
                 Util.cmpBytes(blob, offset + config.sizeInt, <number[]>componentTable[i].code)) {
                 if (verbosity >= 1) {
-                    Log.dim(`Found component: ${componentTable[i].name}`);
+                    Log.log(`Found component: ${componentTable[i].name}`);
                 }
                 return i;
             }
@@ -117,7 +117,7 @@ function getComponentIndex(code: number, blob: Uint8Array, offset: number): numb
     }
 
     if (verbosity >= 1)
-        {Log.dim(`Found unknown component (code: ${code})`);}
+        {Log.log(`Found unknown component (code: ${code})`);}
 
     return -code;
 }

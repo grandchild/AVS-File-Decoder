@@ -1,5 +1,5 @@
 import { convertComponents } from '../browser';
-import * as Log from './log';
+import Log from './log';
 import * as Table from './tables';
 import * as Util from './util';
 import config from '../config';
@@ -153,11 +153,11 @@ export default {
             if (k !== 'new_version') { // but don't save new_version marker, if present
                 comp[k] = value;
                 if (verbosity >= 2) {
-                    Log.dim('- key: ' + k + '\n- val: ' + value);
+                    Log.log('- key: ' + k + '\n- val: ' + value);
                     if (k === 'code')
                         {Util.printTable('- code', value);}
                     if (verbosity >= 3)
-                        {Log.dim('- offset: ' + offset + '\n- size: ' + size);}
+                        {Log.log('- offset: ' + offset + '\n- size: ' + size);}
                     // console.log();
                 }
             }

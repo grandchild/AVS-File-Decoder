@@ -1,5 +1,5 @@
 // Modules
-import * as Log from './lib/log';
+import Log from './lib/log';
 import * as Util from './lib/util-node';
 import { convertBlob } from './browser';
 import { readFileSync, statSync } from 'fs';

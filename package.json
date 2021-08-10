@@ -49,7 +49,7 @@
     "prepare": "husky install"
   },
   "dependencies": {
-    "chalk": "^4.1.0"
+    "log-symbols": "^4.1.0"
   },
   "devDependencies": {
     "@rollup/plugin-commonjs": "^20.0.0",

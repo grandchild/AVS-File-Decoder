@@ -1,6 +1,6 @@
 import { ConvertException } from './util';
 import config from '../config';
-import * as Log from './log';
+import Log from './log';
 
 export default {
     Bit(blob: Uint8Array, offset: number, pos: any): [number, number] {
