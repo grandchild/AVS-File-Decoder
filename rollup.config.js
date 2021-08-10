@@ -7,7 +7,6 @@ const plugins = [commonjs(), json()];
 const compilerOptions = {
     allowSyntheticDefaultImports: true,
     moduleResolution: 'node',
-    strictNullChecks: true,
     typeRoots: ['./types', './node_modules/@types']
 };
 
