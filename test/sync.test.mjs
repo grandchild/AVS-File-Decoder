@@ -1,14 +1,15 @@
 // Modules
-import { convertFileSync } from '../node';
+import { convertFileSync } from '../dist/node.mjs';
 
 // Dependencies
-import { readFileSync } from 'fs';
-import { join } from 'path';
+import { readFileSync } from 'node:fs';
+import path from 'node:path';
 import test from 'ava';
 
 // Variables
-const fixturesDir = join(__dirname, 'fixtures');
-const expectedDir = join(__dirname, 'expected');
+const __dirname = path.resolve(path.dirname(''));
+const fixturesDir = path.join(__dirname, 'test/fixtures');
+const expectedDir = path.join(__dirname, 'test/expected');
 
 // Converter Settings
 const options = {

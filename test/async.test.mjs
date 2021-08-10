@@ -1,16 +1,15 @@
 // Modules
-import { convertFile } from '../node';
+import { convertFile } from '../dist/node.mjs';
 
 // Dependencies
-import { readFile } from 'fs';
-import { join } from 'path';
+import { promises as fs } from 'node:fs';
+import path from 'node:path';
 import test from 'ava';
-import { promisify } from 'util';
 
 // Variables
-const readFileAsync = promisify(readFile);
-const fixturesDir = join(__dirname, 'fixtures');
-const expectedDir = join(__dirname, 'expected');
+const __dirname = path.resolve(path.dirname(''));
+const fixturesDir = path.join(__dirname, 'test/fixtures');
+const expectedDir = path.join(__dirname, 'test/expected');
 
 // Converter Settings
 const options = {
@@ -22,7 +21,7 @@ const options = {
 test('Convert: comment.avs', async t => {
   const file = 'comment';
   const actual = await convertFile(`${fixturesDir}/${file}.avs`, options);
-  const expected = (await readFileAsync(`${expectedDir}/${file}.webvs`, 'utf-8')).toString();
+  const expected = (await fs.readFile(`${expectedDir}/${file}.webvs`, 'utf-8')).toString();
 
   t.is(expected, actual);
 });
@@ -30,7 +29,7 @@ test('Convert: comment.avs', async t => {
 test('Convert: empty.avs', async t => {
   const file = 'empty';
   const actual = await convertFile(`${fixturesDir}/${file}.avs`, options);
-  const expected = (await readFileAsync(`${expectedDir}/${file}.webvs`, 'utf-8')).toString();
+  const expected = (await fs.readFile(`${expectedDir}/${file}.webvs`, 'utf-8')).toString();
 
   t.is(expected, actual);
 });
@@ -38,7 +37,7 @@ test('Convert: empty.avs', async t => {
 test('Convert: invert.avs', async t => {
   const file = 'invert';
   const actual = await convertFile(`${fixturesDir}/${file}.avs`, options);
-  const expected = (await readFileAsync(`${expectedDir}/${file}.webvs`, 'utf-8')).toString();
+  const expected = (await fs.readFile(`${expectedDir}/${file}.webvs`, 'utf-8')).toString();
 
   t.is(expected, actual);
 });
@@ -46,7 +45,7 @@ test('Convert: invert.avs', async t => {
 test('Convert: superscope.avs', async t => {
   const file = 'superscope';
   const actual = await convertFile(`${fixturesDir}/${file}.avs`, options);
-  const expected = (await readFileAsync(`${expectedDir}/${file}.webvs`, 'utf-8')).toString();
+  const expected = (await fs.readFile(`${expectedDir}/${file}.webvs`, 'utf-8')).toString();
 
   t.is(expected, actual);
 });
