@@ -1,5 +1,6 @@
 // Modules
 import * as Util from '../lib/util';
+import get from '../lib/get';
 import { getISOTime, readPreset} from '../lib/util-node';
 
 // Dependencies
@@ -13,14 +14,14 @@ const fixturesDir = join(__dirname, 'fixtures');
 // Tests
 test('Boolify: false', t => {
   const expected = false;
-  const actual = Util.getBoolified(0);
+  const actual = get.Boolified(0);
 
   t.is(actual, expected);
 });
 
 test('Boolify: true', t => {
   const expected = true;
-  const actual = Util.getBoolified(1);
+  const actual = get.Boolified(1);
 
   t.is(actual, expected);
 });
@@ -41,20 +42,20 @@ test('Removes Spaces', t => {
 
 test('Split semicolons', t => {
   const expected = ['a', 'b', 'c'];
-  const actual = Util.getSemiColSplit("a;b;c");
+  const actual = get.SemiColSplit("a;b;c");
 
   t.deepEqual(actual, expected);
 });
 
 test('Buffer number: 0', async t => {
-  const actual = Util.getBufferNum(0);
+  const actual = get.BufferNum(0);
   const expected = 'Current';
 
   t.is(actual, expected);
 });
 
 test('Buffer number: not 0', async t => {
-  const actual = Util.getBufferNum(1337);
+  const actual = get.BufferNum(1337);
   const expected = 1337;
 
   t.is(actual, expected);
