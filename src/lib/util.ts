@@ -1,8 +1,8 @@
 // Modules
 import * as Log from './log';
+import config from '../config';
 
 // Constants
-const sizeInt = 4;
 const allFields  = true;
 const presetHeaderLength = 25;
 const builtinMax = 16384;
@@ -81,24 +81,24 @@ function getUInt(blob: Uint8Array, offset: number, size: number): number {
     switch (size) {
         case 1:
             return blob[offset];
-        case sizeInt:
+        case config.sizeInt:
             return getUInt32(blob, offset);
-        case sizeInt * 2:
+        case config.sizeInt * 2:
             return getUInt64(blob, offset);
         default:
-            throw new ConvertException(`Invalid integer size '${size}', only 1, ${sizeInt} and ${sizeInt * 2} allowed.`);
+            throw new ConvertException(`Invalid integer size '${size}', only 1, ${config.sizeInt} and ${config.sizeInt * 2} allowed.`);
     }
 }
 
 function getUInt32(blob: Uint8Array, offset: number): number {
     if (!offset)
         {offset = 0;}
-    if (offset > blob.length - sizeInt) {
+    if (offset > blob.length - config.sizeInt) {
         if (verbosity >= 1)
-            {Log.warn(`WARNING: getUInt32: offset overflow ${offset} > ${blob.length - sizeInt}`);}
+            {Log.warn(`WARNING: getUInt32: offset overflow ${offset} > ${blob.length - config.sizeInt}`);}
         return 0;
     }
-    const array = blob.buffer.slice(blob.byteOffset + offset, blob.byteOffset + offset + sizeInt);
+    const array = blob.buffer.slice(blob.byteOffset + offset, blob.byteOffset + offset + config.sizeInt);
     try {
         return new Uint32Array(array, 0, 1)[0];
     } catch (e) {
@@ -114,14 +114,14 @@ function getUInt32(blob: Uint8Array, offset: number): number {
 function getInt32(blob: Uint8Array, offset: number): [number, number] {
     if (!offset)
         {offset = 0;}
-    if (offset > blob.length - sizeInt) {
+    if (offset > blob.length - config.sizeInt) {
         if (verbosity >= 1)
-            {Log.warn(`WARNING: getInt32: offset overflow ${offset} > ${blob.length - sizeInt}`);}
-        return [0, sizeInt];
+            {Log.warn(`WARNING: getInt32: offset overflow ${offset} > ${blob.length - config.sizeInt}`);}
+        return [0, config.sizeInt];
     }
-    const array = blob.buffer.slice(blob.byteOffset + offset, blob.byteOffset + offset + sizeInt);
+    const array = blob.buffer.slice(blob.byteOffset + offset, blob.byteOffset + offset + config.sizeInt);
     try {
-        return [new Int32Array(array, 0, 1)[0], sizeInt];
+        return [new Int32Array(array, 0, 1)[0], config.sizeInt];
     } catch (e) {
         if (e instanceof RangeError) {
             throw new ConvertException(`Invalid offset ${offset} to getInt32.\nIs this preset very old? Send it in, so we can look at it!`);
@@ -134,12 +134,12 @@ function getInt32(blob: Uint8Array, offset: number): [number, number] {
 function getUInt64(blob: Uint8Array, offset: number): number {
     if (!offset)
         {offset = 0;}
-    if (offset > blob.length - sizeInt * 2) {
+    if (offset > blob.length - config.sizeInt * 2) {
         if (verbosity >= 1)
-            {Log.warn(`WARNING: getUInt64: offset overflow ${offset} > ${blob.length - sizeInt * 2}`);}
+            {Log.warn(`WARNING: getUInt64: offset overflow ${offset} > ${blob.length - config.sizeInt * 2}`);}
         return 0;
     }
-    const array = blob.buffer.slice(blob.byteOffset + offset, blob.byteOffset + offset + sizeInt * 2);
+    const array = blob.buffer.slice(blob.byteOffset + offset, blob.byteOffset + offset + config.sizeInt * 2);
     try {
         const two32 = new Uint32Array(array, 0, 2);
         return two32[0] + two32[1] * 0x100000000;
@@ -155,7 +155,7 @@ function getUInt64(blob: Uint8Array, offset: number): number {
 function getFloat(blob: Uint8Array, offset: number): [number, number] {
     if (!offset)
         {offset = 0;}
-    const array = blob.buffer.slice(blob.byteOffset + offset, blob.byteOffset + offset + sizeInt);
+    const array = blob.buffer.slice(blob.byteOffset + offset, blob.byteOffset + offset + config.sizeInt);
     try {
         return [new Float32Array(array, 0, 1)[0], 4];
     } catch (e) {
@@ -182,7 +182,7 @@ function getSizeString(blob: Uint8Array, offset: number, size?: number): [string
     let getHidden = false;
     if (!size) {
         size = getUInt32(blob, offset);
-        add = sizeInt;
+        add = config.sizeInt;
     } else {
         getHidden = hiddenStrings;
     }
@@ -254,23 +254,23 @@ function getMap1(blob: Uint8Array, offset: number, map: unknown): [string, numbe
 }
 
 function getMap4(blob: Uint8Array, offset: number, map: unknown): [string, number] {
-    return [getMapping(map, getUInt32(blob, offset)), sizeInt];
+    return [getMapping(map, getUInt32(blob, offset)), config.sizeInt];
 }
 
 function getMap8(blob: Uint8Array, offset: number, map: unknown): [string, number] {
-    return [getMapping(map, getUInt64(blob, offset)), sizeInt * 2];
+    return [getMapping(map, getUInt64(blob, offset)), config.sizeInt * 2];
 }
 
 function getRadioButton(blob: Uint8Array, offset: number, map: any[]): [string, number] {
     let key = 0;
     for (let i = 0; i < map.length; i++) {
-        const on: number = getUInt32(blob, offset + sizeInt * i) !== 0 ? 1 : 0;
+        const on: number = getUInt32(blob, offset + config.sizeInt * i) !== 0 ? 1 : 0;
         if (on) { // in case of (erroneous) multiple selections, the last one selected wins
             key = on * (i + 1);
         }
     }
 
-    return [getMapping(map, key), sizeInt * map.length];
+    return [getMapping(map, key), config.sizeInt * map.length];
 }
 
 function getMapping(map: unknown, key: number): string {
@@ -330,7 +330,7 @@ function getCodeEIF(blob: Uint8Array, offset: number): [CodeSection, number] {
     ];
     const code: [CodeSection, number] = getCodeSection(blob, offset, map);
     return [{
-        'enabled': getBool(blob, offset, sizeInt)[0],
+        'enabled': getBool(blob, offset, config.sizeInt)[0],
         'init': code[0]['init'],
         'perFrame': code[0]['perFrame'],
     }, code[1]];
@@ -403,9 +403,9 @@ function getCodeSection(blob: Uint8Array, offset: number, map: [string, number][
 function getColorList(blob: Uint8Array, offset: number): [string[], number] {
     const colors = [];
     let num = getUInt32(blob, offset);
-    const size = sizeInt + num * sizeInt;
+    const size = config.sizeInt + num * config.sizeInt;
     while (num > 0) {
-        offset += sizeInt;
+        offset += config.sizeInt;
         colors.push(getColor(blob, offset)[0]);
         num--;
     }
@@ -419,8 +419,8 @@ function getColorMaps(blob: Uint8Array, offset: number): [{ index: number; enabl
     const headerSize = 60; // 4B enabled, 4B num, 4B id, 48B filestring
     let mi = 0; // map index, might be != i when maps are skipped
     for (let i = 0; i < 8; i++) {
-        const enabled = getBool(blob, offset + headerSize * i, sizeInt)[0];
-        const num = getUInt32(blob, offset + headerSize * i + sizeInt);
+        const enabled = getBool(blob, offset + headerSize * i, config.sizeInt)[0];
+        const num = getUInt32(blob, offset + headerSize * i + config.sizeInt);
         const map = getColorMap(blob, mapOffset, num);
         // check if it's a disabled default {0: #000000, 255: #ffffff} map, and only save it if not.
         if (!enabled && map.length === 2 && map[0].color === '#000000' && map[0].position === 0 && map[1].color === '#ffffff' && map[1].position === 255) {
@@ -432,14 +432,14 @@ function getColorMaps(blob: Uint8Array, offset: number): [{ index: number; enabl
                 'colors': map,
             };
             if (allFields) {
-                const id = getUInt32(blob, offset + headerSize * i + sizeInt * 2); // id of the map - not really needed.
-                const mapFile = getNtString(blob, offset + headerSize * i + sizeInt * 3)[0];
+                const id = getUInt32(blob, offset + headerSize * i + config.sizeInt * 2); // id of the map - not really needed.
+                const mapFile = getNtString(blob, offset + headerSize * i + config.sizeInt * 3)[0];
                 maps[mi]['id'] = id;
                 maps[mi]['fileName'] = mapFile;
             }
             mi++;
         }
-        mapOffset += num * sizeInt * 3;
+        mapOffset += num * config.sizeInt * 3;
     }
 
     return [maps, mapOffset - offset];
@@ -449,8 +449,8 @@ function getColorMap(blob: Uint8Array, offset: number, num: number): Array<{ col
     const colorMap = [];
     for (let i = 0; i < num; i++) {
         const pos = getUInt32(blob, offset);
-        const color = getColor(blob, offset + sizeInt)[0];
-        offset += sizeInt * 3; // there's a 4byte id (presumably) following each color.
+        const color = getColor(blob, offset + config.sizeInt)[0];
+        offset += config.sizeInt * 3; // there's a 4byte id (presumably) following each color.
         colorMap[i] = { 'color': color, 'position': pos };
     }
 
@@ -467,18 +467,18 @@ function getColor(blob: Uint8Array, offset: number): [string, number] {
         padding += '0';
     }
 
-    return ['#' + padding + color, sizeInt];
+    return ['#' + padding + color, config.sizeInt];
 }
 
 function getConvoFilter(blob: Uint8Array, offset: number, dimensions: number[]): unknown {
     const size = dimensions[0] * dimensions[1];
     const data = new Array(size);
-    for (let i = 0; i < size; i++, offset += sizeInt) {
+    for (let i = 0; i < size; i++, offset += config.sizeInt) {
         data[i] = getInt32(blob, offset)[0];
     }
     const matrix = { 'width': dimensions[0], 'height': dimensions[1], 'data': data };
 
-    return [matrix, size * sizeInt];
+    return [matrix, size * config.sizeInt];
 }
 
 // 'Text' needs this

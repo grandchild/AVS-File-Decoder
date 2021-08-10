@@ -3,9 +3,9 @@ import * as Components from './lib/components';
 import * as Log from './lib/log';
 import * as Util from './lib/util';
 import decode from './lib/decode';
+import config from './config';
 
 // Constants
-const sizeInt = 4;
 let verbosity = 0; // log individual key:value fields
 const componentTable: ComponentDefinition[] = Components.builtin.concat(Components.dll);
 
@@ -65,16 +65,16 @@ function convertComponents(blob: Uint8Array): unknown {
     // a component takes at least two int32s of space, if there are less bytes than that left,
     // ignore them. usually fp < blob.length should suffice but some rare presets have trailing
     // bytes. found in one preset's trailing colormap so far.
-    while (fp <= blob.length - sizeInt * 2) {
+    while (fp <= blob.length - config.sizeInt * 2) {
         const code = Util.getUInt32(blob, fp);
         const i = getComponentIndex(code, blob, fp);
         const isDll: number = (code !== 0xfffffffe && code >= Util.builtinMax) ? 1 : 0;
-        const size = getComponentSize(blob, fp + sizeInt + isDll * 32);
+        const size = getComponentSize(blob, fp + config.sizeInt + isDll * 32);
         // console.log("component size", size, "blob size", blob.length);
         if (i < 0) {
             res = { 'type': 'Unknown: (' + (-i) + ')' };
         } else {
-            const offset = fp + sizeInt * 2 + isDll * 32;
+            const offset = fp + config.sizeInt * 2 + isDll * 32;
             res = decode[componentTable[i].func](
                 blob,
                 offset,
@@ -87,7 +87,7 @@ function convertComponents(blob: Uint8Array): unknown {
             throw new Util.ConvertException('Unknown convert error');
         }
         components.push(res);
-        fp += size + sizeInt * 2 + isDll * 32;
+        fp += size + config.sizeInt * 2 + isDll * 32;
     }
 
     return components;
@@ -106,7 +106,7 @@ function getComponentIndex(code: number, blob: Uint8Array, offset: number): numb
     } else {
         for (let i = Components.builtin.length; i < componentTable.length; i++) {
             if (componentTable[i].code instanceof Array &&
-                Util.cmpBytes(blob, offset + sizeInt, <number[]>componentTable[i].code)) {
+                Util.cmpBytes(blob, offset + config.sizeInt, <number[]>componentTable[i].code)) {
                 if (verbosity >= 1) {
                     Log.dim(`Found component: ${componentTable[i].name}`);
                 }

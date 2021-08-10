@@ -2,8 +2,8 @@ import { convertComponents } from '../browser';
 import * as Log from './log';
 import * as Table from './tables';
 import * as Util from './util';
+import config from '../config';
 
-const sizeInt = 4;
 const verbosity = 0;
 
 export default {
@@ -33,7 +33,7 @@ export default {
     //// component decode ,
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     effectList(blob: Uint8Array, offset: number, _: unknown, name: string): unknown {
-        const size: number = Util.getUInt32(blob, offset - sizeInt);
+        const size: number = Util.getUInt32(blob, offset - config.sizeInt);
         const comp = {
             'type': Util.removeSpaces(name),
             'enabled': Util.getBit(blob, offset, 1)[0] !== 1,
@@ -67,8 +67,8 @@ export default {
         if (Util.cmpBytes(blob, contentOffset, effectList28plusHeader)) {
             const codeOffset: number = offset + configSize + effectList28plusHeader.length;
             const codeSize: number = Util.getUInt32(blob, codeOffset);
-            comp['code'] = Util.getCodeEIF(blob, codeOffset + sizeInt)[0];
-            contentOffset = codeOffset + sizeInt + codeSize;
+            comp['code'] = Util.getCodeEIF(blob, codeOffset + config.sizeInt)[0];
+            contentOffset = codeOffset + config.sizeInt + codeSize;
         }
         const content = convertComponents(blob.subarray(contentOffset, offset + size));
         comp['components'] = content;
@@ -202,10 +202,10 @@ export default {
         if (effectIdOld !== 0) {
             if (effectIdOld === 0x7fff) {
                 let strAndSize: [string, number] | [string, number, string[]] = ['', 0];
-                if (blob[offset + sizeInt] === 1) { // new-version marker
-                    strAndSize = Util.getSizeString(blob, offset + sizeInt + 1);
+                if (blob[offset + config.sizeInt] === 1) { // new-version marker
+                    strAndSize = Util.getSizeString(blob, offset + config.sizeInt + 1);
                 } else {
-                    strAndSize = Util.getSizeString(blob, offset + sizeInt, 256);
+                    strAndSize = Util.getSizeString(blob, offset + config.sizeInt, 256);
                 }
                 offset += strAndSize[1];
                 code = strAndSize[0];
@@ -225,19 +225,19 @@ export default {
             }
         } else {
             let effectIdNew = 0;
-            if (offset + sizeInt * 6 < end) {
-                effectIdNew = Util.getUInt32(blob, offset + sizeInt * 6); // 1*sizeInt, because of oldId=0, and 5*sizeint because of the other settings.
+            if (offset + config.sizeInt * 6 < end) {
+                effectIdNew = Util.getUInt32(blob, offset + config.sizeInt * 6); // 1*config.sizeInt, because of oldId=0, and 5*config.sizeint because of the other settings.
             }
             effect = Table.movementEffect[effectIdNew];
         }
         if (effect && effect.length > 0) {
             comp['builtinEffect'] = effect[0];
         }
-        comp['output'] = Util.getUInt32(blob, offset + sizeInt) ? '50/50' : 'Replace';
-        comp['sourceMapped'] = Util.getBool(blob, offset + sizeInt * 2, sizeInt)[0];
-        comp['coordinates'] = Table.coordinates[Util.getUInt32(blob, offset + sizeInt * 3)];
-        comp['bilinear'] = Util.getBool(blob, offset + sizeInt * 4, sizeInt)[0];
-        comp['wrap'] = Util.getBool(blob, offset + sizeInt * 5, sizeInt)[0];
+        comp['output'] = Util.getUInt32(blob, offset + config.sizeInt) ? '50/50' : 'Replace';
+        comp['sourceMapped'] = Util.getBool(blob, offset + config.sizeInt * 2, config.sizeInt)[0];
+        comp['coordinates'] = Table.coordinates[Util.getUInt32(blob, offset + config.sizeInt * 3)];
+        comp['bilinear'] = Util.getBool(blob, offset + config.sizeInt * 4, config.sizeInt)[0];
+        comp['wrap'] = Util.getBool(blob, offset + config.sizeInt * 5, config.sizeInt)[0];
         if (effect && effect.length && effectIdOld !== 1 && effectIdOld !== 7) { // 'slight fuzzify' and 'blocky partial out' have no script representation.
             code = effect[1];
             comp['coordinates'] = effect[2]; // overwrite
@@ -253,19 +253,19 @@ export default {
         const comp = {
             'type': 'AVI',
             'group': 'Render',
-            'enabled': Util.getBool(blob, offset, sizeInt)[0],
+            'enabled': Util.getBool(blob, offset, config.sizeInt)[0],
         };
-        const strAndSize = Util.getNtString(blob, offset + sizeInt * 3);
+        const strAndSize = Util.getNtString(blob, offset + config.sizeInt * 3);
         comp['file'] = strAndSize[0];
-        comp['speed'] = Util.getUInt32(blob, offset + sizeInt * 5 + strAndSize[1]); // 0: fastest, 1000: slowest
-        const beatAdd = Util.getUInt32(blob, offset + sizeInt * 3 + strAndSize[1]);
+        comp['speed'] = Util.getUInt32(blob, offset + config.sizeInt * 5 + strAndSize[1]); // 0: fastest, 1000: slowest
+        const beatAdd = Util.getUInt32(blob, offset + config.sizeInt * 3 + strAndSize[1]);
         if (beatAdd) {
             comp['output'] = '50/50';
         } else {
-            comp['output'] = Util.getMap8(blob, offset + sizeInt, { 0: 'Replace', 1: 'Additive', 0x100000000: '50/50' });
+            comp['output'] = Util.getMap8(blob, offset + config.sizeInt, { 0: 'Replace', 1: 'Additive', 0x100000000: '50/50' });
         }
         comp['onBeatAdd'] = beatAdd;
-        comp['persist'] = Util.getUInt32(blob, offset + sizeInt * 4 + strAndSize[1]); // 0-32
+        comp['persist'] = Util.getUInt32(blob, offset + config.sizeInt * 4 + strAndSize[1]); // 0-32
 
         return comp;
     },
@@ -302,7 +302,7 @@ export default {
         }
         comp['audioChannel'] = Table.audioChannel[(effect >> 2) & 3];
         comp['positionY'] = Table.positionY[(effect >> 4) & 3];
-        comp['colors'] = Util.getColorList(blob, offset + sizeInt)[0];
+        comp['colors'] = Util.getColorList(blob, offset + config.sizeInt)[0];
         return comp;
     }
 }
