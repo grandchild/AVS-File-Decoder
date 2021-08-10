@@ -35,9 +35,9 @@ function convertBlob(data: Buffer | ArrayBuffer, presetName: string, presetDate?
     }
     const blob8 = new Uint8Array(data);
     try {
-        const clearFrame = decode.presetHeader(blob8.subarray(0, Util.presetHeaderLength));
+        const clearFrame = decode.presetHeader(blob8.subarray(0, config.presetHeaderLength));
         preset['clearFrame'] = clearFrame;
-        const components = convertComponents(blob8.subarray(Util.presetHeaderLength));
+        const components = convertComponents(blob8.subarray(config.presetHeaderLength));
         preset['components'] = components;
     } catch (e) {
         // TODO
@@ -68,7 +68,7 @@ function convertComponents(blob: Uint8Array): unknown {
     while (fp <= blob.length - config.sizeInt * 2) {
         const code = Util.getUInt32(blob, fp);
         const i = getComponentIndex(code, blob, fp);
-        const isDll: number = (code !== 0xfffffffe && code >= Util.builtinMax) ? 1 : 0;
+        const isDll: number = (code !== 0xfffffffe && code >= config.builtinMax) ? 1 : 0;
         const size = getComponentSize(blob, fp + config.sizeInt + isDll * 32);
         // console.log("component size", size, "blob size", blob.length);
         if (i < 0) {
@@ -94,7 +94,7 @@ function convertComponents(blob: Uint8Array): unknown {
 }
 
 function getComponentIndex(code: number, blob: Uint8Array, offset: number): number {
-    if (code < Util.builtinMax || code === 0xfffffffe) {
+    if (code < config.builtinMax || code === 0xfffffffe) {
         for (let i = 0; i < componentTable.length; i++) {
             if (code === componentTable[i].code) {
                 if (verbosity >= 1) {

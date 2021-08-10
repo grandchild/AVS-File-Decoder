@@ -2,13 +2,7 @@
 import * as Log from './log';
 import config from '../config';
 
-// Constants
-const allFields  = true;
-const presetHeaderLength = 25;
-const builtinMax = 16384;
-
-let hiddenStrings = false;
-const setHiddenStrings = (value: boolean): void => { hiddenStrings = value; };
+const setHiddenStrings = (value: boolean): void => { config.hiddenStrings = value; };
 let verbosity = 0;
 const setVerbosity = (value: number): void => { verbosity = value; };
 
@@ -184,7 +178,7 @@ function getSizeString(blob: Uint8Array, offset: number, size?: number): [string
         size = getUInt32(blob, offset);
         add = config.sizeInt;
     } else {
-        getHidden = hiddenStrings;
+        getHidden = config.hiddenStrings;
     }
     const end = offset + size + add;
     let i = offset + add;
@@ -431,7 +425,7 @@ function getColorMaps(blob: Uint8Array, offset: number): [{ index: number; enabl
                 'enabled': enabled,
                 'colors': map,
             };
-            if (allFields) {
+            if (config.allFields) {
                 const id = getUInt32(blob, offset + headerSize * i + config.sizeInt * 2); // id of the map - not really needed.
                 const mapFile = getNtString(blob, offset + headerSize * i + config.sizeInt * 3)[0];
                 maps[mi]['id'] = id;
@@ -499,7 +493,6 @@ function getBufferNum(code: number): unknown {
 }
 
 export {
-    builtinMax,
     callFunction,
     cmpBytes,
     ConvertException,
@@ -536,7 +529,6 @@ export {
     getUInt32,
     getUInt64,
     lowerInitial,
-    presetHeaderLength,
     printTable,
     removeSpaces,
     setHiddenStrings,

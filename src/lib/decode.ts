@@ -27,7 +27,7 @@ export default {
             );
         }
 
-        return blob[Util.presetHeaderLength - 1] === 1; // 'Clear Every Frame'
+        return blob[config.presetHeaderLength - 1] === 1; // 'Clear Every Frame'
     },
 
     //// component decode ,
