@@ -75,26 +75,34 @@ function convertComponents(blob: Uint8Array): unknown {
             res = { 'type': 'Unknown: (' + (-i) + ')' };
         } else {
             const offset = fp + sizeInt * 2 + isDll * 32;
+            let decoder;
             switch(componentTable[i].func) {
                 case 'avi':
-                    res = decode_avi(blob, offset);
+                    decoder = decode_avi;
                     break;
                 case 'effectList':
-                    res = decode_effectList(blob, offset, componentTable[i].fields, componentTable[i].name);
+                    decoder = decode_effectList;
                     break;
                 case 'generic':
-                    res = decode_generic(blob, offset, componentTable[i].fields, componentTable[i].name, componentTable[i].group, offset + size);
+                    decoder = decode_generic;
                     break;
                 case 'movement':
-                    res = decode_movement(blob, offset, componentTable[i].fields, componentTable[i].name, componentTable[i].group, offset + size);
+                    decoder = decode_movement;
                     break;
                 case 'simple':
-                    res = decode_simple(blob, offset);
+                    decoder = decode_simple;
                     break;
                 case 'versioned_generic':
-                    res = decode_versioned_generic(blob, offset, componentTable[i].fields, componentTable[i].name, componentTable[i].group, offset + size);
+                    decoder = decode_versioned_generic;
                     break;
             }
+            res = decoder(
+                blob,
+                offset,
+                componentTable[i].fields,
+                componentTable[i].name,
+                componentTable[i].group,
+                offset + size);
         }
         if (!res || typeof res !== 'object') { // should not happen, decode functions should throw their own.
             throw new Util.ConvertException('Unknown convert error');
