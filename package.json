@@ -34,7 +34,8 @@
     "dev": "tsc --watch --pretty --project ./",
     "lint:js": "eslint ./src --ignore-path .gitignore",
     "lint": "npm-run-all --parallel lint:*",
-    "test": "ava ./test/*.js --verbose"
+    "test": "ava ./test/*.js --verbose",
+    "prepare": "husky install"
   },
   "dependencies": {
     "chalk": "^4.1.0"
@@ -46,16 +47,11 @@
     "ava": "^3.15.0",
     "eslint": "^7.21.0",
     "esm": "^3.2.25",
-    "husky": "^4.0.0",
+    "husky": "^7.0.0",
     "lint-staged": ">=10",
     "npm-run-all": "^4.1.5",
     "rimraf": "^3.0.0",
     "typescript": "^4.2.3"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
   },
   "ava": {
     "require": [
