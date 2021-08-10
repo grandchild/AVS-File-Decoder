@@ -1,9 +1,9 @@
 // Modules
-import Log from './lib/log';
-import * as Util from './lib/util-node';
+import { basename, extname } from 'path';
 import { convertBlob } from './browser';
 import { readFileSync, statSync } from 'fs';
-import { basename, extname } from 'path';
+import * as Util from './lib/util-node';
+import Log from './lib/log';
 
 const defaultArgs: Arguments = {
     hidden: true,

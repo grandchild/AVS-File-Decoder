@@ -1,7 +1,7 @@
 // Modules
-import Log from './log';
 import config from '../config';
 import get from './get';
+import Log from './log';
 
 const setHiddenStrings = (value: boolean): void => { config.hiddenStrings = value; };
 let verbosity = 0;

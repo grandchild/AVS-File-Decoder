@@ -1,10 +1,10 @@
 // Modules
 import * as Components from './lib/components';
-import Log from './lib/log';
 import * as Util from './lib/util';
-import decode from './lib/decode';
 import config from './config';
+import decode from './lib/decode';
 import get from './lib/get';
+import Log from './lib/log';
 
 // Constants
 let verbosity = 0; // log individual key:value fields

@@ -1,9 +1,9 @@
 import { convertComponents } from '../browser';
-import Log from './log';
 import * as Table from './tables';
 import * as Util from './util';
 import config from '../config';
 import get from './get';
+import Log from './log';
 
 const verbosity = 0;
 
