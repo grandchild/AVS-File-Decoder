@@ -6,7 +6,6 @@ const plugins = [commonjs(), json()];
 
 const compilerOptions = {
     allowSyntheticDefaultImports: true,
-    moduleResolution: 'node',
     typeRoots: ['./types', './node_modules/@types']
 };
 
@@ -19,16 +18,18 @@ export default [
         input: 'src/browser.ts',
         output: {
             file: 'dist/browser.cjs',
-            format: 'cjs'
+            format: 'cjs',
+            sourcemap: true
         },
-        plugins: [...plugins, typescript(compilerOptions)]
+        plugins: [...plugins, typescript(compilerOptions)],
     },
     {
         external,
         input: 'src/node.ts',
         output: {
             file: 'dist/node.cjs',
-            format: 'cjs'
+            format: 'cjs',
+            sourcemap: true
         },
         plugins: [...plugins, typescript(compilerOptions)]
     },
@@ -39,13 +40,14 @@ export default [
         input: 'src/browser.ts',
         output: {
             file: 'dist/browser.mjs',
-            format: 'esm'
+            format: 'esm',
+            sourcemap: true
         },
         plugins: [
             ...plugins,
             typescript({
                 ...compilerOptions,
-                module: 'ES2020',
+                module: 'es2020',
                 moduleResolution: 'node'
             })
         ]
@@ -55,13 +57,14 @@ export default [
         input: 'src/node.ts',
         output: {
             file: 'dist/node.mjs',
-            format: 'esm'
+            format: 'esm',
+            sourcemap: true
         },
         plugins: [
             ...plugins,
             typescript({
                 ...compilerOptions,
-                module: 'ES2020',
+                module: 'es2020',
                 moduleResolution: 'node'
             })
         ]
