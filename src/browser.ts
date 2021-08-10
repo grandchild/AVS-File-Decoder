@@ -4,6 +4,7 @@ import * as Log from './lib/log';
 import * as Util from './lib/util';
 import decode from './lib/decode';
 import config from './config';
+import get from './lib/get';
 
 // Constants
 let verbosity = 0; // log individual key:value fields
@@ -66,7 +67,7 @@ function convertComponents(blob: Uint8Array): unknown {
     // ignore them. usually fp < blob.length should suffice but some rare presets have trailing
     // bytes. found in one preset's trailing colormap so far.
     while (fp <= blob.length - config.sizeInt * 2) {
-        const code = Util.getUInt32(blob, fp);
+        const code = get.UInt32(blob, fp);
         const i = getComponentIndex(code, blob, fp);
         const isDll: number = (code !== 0xfffffffe && code >= config.builtinMax) ? 1 : 0;
         const size = getComponentSize(blob, fp + config.sizeInt + isDll * 32);
@@ -122,7 +123,7 @@ function getComponentIndex(code: number, blob: Uint8Array, offset: number): numb
 }
 
 function getComponentSize(blob: Uint8Array, offset: number) {
-    return Util.getUInt32(blob, offset);
+    return get.UInt32(blob, offset);
 }
 
 export {

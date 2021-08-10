@@ -3,6 +3,7 @@ import * as Log from './log';
 import * as Table from './tables';
 import * as Util from './util';
 import config from '../config';
+import get from './get';
 
 const verbosity = 0;
 
@@ -33,28 +34,28 @@ export default {
     //// component decode ,
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     effectList(blob: Uint8Array, offset: number, _: unknown, name: string): unknown {
-        const size: number = Util.getUInt32(blob, offset - config.sizeInt);
+        const size: number = get.UInt32(blob, offset - config.sizeInt);
         const comp = {
             'type': Util.removeSpaces(name),
-            'enabled': Util.getBit(blob, offset, 1)[0] !== 1,
-            'clearFrame': Util.getBit(blob, offset, 0)[0] === 1,
+            'enabled': get.Bit(blob, offset, 1)[0] !== 1,
+            'clearFrame': get.Bit(blob, offset, 0)[0] === 1,
             'input': Table['blendmodeIn'][blob[offset + 2]],
             'output': Table['blendmodeOut'][blob[offset + 3]],
         };
-        const modebit: boolean = Util.getBit(blob, offset, 7)[0] === 1; // is true in all presets I know, probably only for truly ancient versions
+        const modebit: boolean = get.Bit(blob, offset, 7)[0] === 1; // is true in all presets I know, probably only for truly ancient versions
         if (!modebit) {
             Log.error('EL modebit is off!! If you\'re seeing this, send this .avs file in please!');
         }
         const configSize: number = (modebit ? blob[offset + 4] : blob[offset]) + 1;
         if (configSize > 1) {
-            comp['inAdjustBlend'] = Util.getUInt32(blob, offset + 5);
-            comp['outAdjustBlend'] = Util.getUInt32(blob, offset + 9);
-            comp['inBuffer'] = Util.getUInt32(blob, offset + 13);
-            comp['outBuffer'] = Util.getUInt32(blob, offset + 17);
-            comp['inBufferInvert'] = Util.getUInt32(blob, offset + 21) === 1;
-            comp['outBufferInvert'] = Util.getUInt32(blob, offset + 25) === 1;
-            comp['enableOnBeat'] = Util.getUInt32(blob, offset + 29) === 1;
-            comp['enableOnBeatFor'] = Util.getUInt32(blob, offset + 33);
+            comp['inAdjustBlend'] = get.UInt32(blob, offset + 5);
+            comp['outAdjustBlend'] = get.UInt32(blob, offset + 9);
+            comp['inBuffer'] = get.UInt32(blob, offset + 13);
+            comp['outBuffer'] = get.UInt32(blob, offset + 17);
+            comp['inBufferInvert'] = get.UInt32(blob, offset + 21) === 1;
+            comp['outBufferInvert'] = get.UInt32(blob, offset + 25) === 1;
+            comp['enableOnBeat'] = get.UInt32(blob, offset + 29) === 1;
+            comp['enableOnBeatFor'] = get.UInt32(blob, offset + 33);
         }
         const effectList28plusHeader = [
             0x00, 0x40, 0x00, 0x00, 0x41, 0x56, 0x53, 0x20,
@@ -66,8 +67,8 @@ export default {
         let contentOffset = offset + configSize;
         if (Util.cmpBytes(blob, contentOffset, effectList28plusHeader)) {
             const codeOffset: number = offset + configSize + effectList28plusHeader.length;
-            const codeSize: number = Util.getUInt32(blob, codeOffset);
-            comp['code'] = Util.getCodeEIF(blob, codeOffset + config.sizeInt)[0];
+            const codeSize: number = get.UInt32(blob, codeOffset);
+            comp['code'] = get.CodeEIF(blob, codeOffset + config.sizeInt)[0];
             contentOffset = codeOffset + config.sizeInt + codeSize;
         }
         const content = convertComponents(blob.subarray(contentOffset, offset + size));
@@ -105,7 +106,7 @@ export default {
             if (num) {
                 size = f;
                 try {
-                    value = Util.getUInt(blob, offset, size);
+                    value = get.UInt(blob, offset, size);
                 } catch (e) {
                     throw new Util.ConvertException('Invalid field size: ' + f + '.');
                 }
@@ -129,7 +130,7 @@ export default {
                 // console.log(`get: ${f[0]} ${f[1]} ${typeof f[1]}`);
                 let tableName: string = Util.lowerInitial(f[0]);
                 if (tableName in Table) {
-                    const tableKey: number = Util.getUInt(blob, offset, f[1]);
+                    const tableKey: number = get.UInt(blob, offset, f[1]);
                     value = Table[tableName][tableKey];
                     size = f[1];
                 } else {
@@ -195,7 +196,7 @@ export default {
         };
         // the special value 0 is because 'old versions of AVS barf' if the id is > 15, so
         // AVS writes out 0 in that case, and sets the actual id at the end of the save block.
-        const effectIdOld = Util.getUInt32(blob, offset);
+        const effectIdOld = get.UInt32(blob, offset);
         let effect = [];
         let code;
         let hidden: string[];
@@ -203,9 +204,9 @@ export default {
             if (effectIdOld === 0x7fff) {
                 let strAndSize: [string, number] | [string, number, string[]] = ['', 0];
                 if (blob[offset + config.sizeInt] === 1) { // new-version marker
-                    strAndSize = Util.getSizeString(blob, offset + config.sizeInt + 1);
+                    strAndSize = get.SizeString(blob, offset + config.sizeInt + 1);
                 } else {
-                    strAndSize = Util.getSizeString(blob, offset + config.sizeInt, 256);
+                    strAndSize = get.SizeString(blob, offset + config.sizeInt, 256);
                 }
                 offset += strAndSize[1];
                 code = strAndSize[0];
@@ -226,18 +227,18 @@ export default {
         } else {
             let effectIdNew = 0;
             if (offset + config.sizeInt * 6 < end) {
-                effectIdNew = Util.getUInt32(blob, offset + config.sizeInt * 6); // 1*config.sizeInt, because of oldId=0, and 5*config.sizeint because of the other settings.
+                effectIdNew = get.UInt32(blob, offset + config.sizeInt * 6); // 1*config.sizeInt, because of oldId=0, and 5*config.sizeint because of the other settings.
             }
             effect = Table.movementEffect[effectIdNew];
         }
         if (effect && effect.length > 0) {
             comp['builtinEffect'] = effect[0];
         }
-        comp['output'] = Util.getUInt32(blob, offset + config.sizeInt) ? '50/50' : 'Replace';
-        comp['sourceMapped'] = Util.getBool(blob, offset + config.sizeInt * 2, config.sizeInt)[0];
-        comp['coordinates'] = Table.coordinates[Util.getUInt32(blob, offset + config.sizeInt * 3)];
-        comp['bilinear'] = Util.getBool(blob, offset + config.sizeInt * 4, config.sizeInt)[0];
-        comp['wrap'] = Util.getBool(blob, offset + config.sizeInt * 5, config.sizeInt)[0];
+        comp['output'] = get.UInt32(blob, offset + config.sizeInt) ? '50/50' : 'Replace';
+        comp['sourceMapped'] = get.Bool(blob, offset + config.sizeInt * 2, config.sizeInt)[0];
+        comp['coordinates'] = Table.coordinates[get.UInt32(blob, offset + config.sizeInt * 3)];
+        comp['bilinear'] = get.Bool(blob, offset + config.sizeInt * 4, config.sizeInt)[0];
+        comp['wrap'] = get.Bool(blob, offset + config.sizeInt * 5, config.sizeInt)[0];
         if (effect && effect.length && effectIdOld !== 1 && effectIdOld !== 7) { // 'slight fuzzify' and 'blocky partial out' have no script representation.
             code = effect[1];
             comp['coordinates'] = effect[2]; // overwrite
@@ -253,19 +254,19 @@ export default {
         const comp = {
             'type': 'AVI',
             'group': 'Render',
-            'enabled': Util.getBool(blob, offset, config.sizeInt)[0],
+            'enabled': get.Bool(blob, offset, config.sizeInt)[0],
         };
-        const strAndSize = Util.getNtString(blob, offset + config.sizeInt * 3);
+        const strAndSize = get.NtString(blob, offset + config.sizeInt * 3);
         comp['file'] = strAndSize[0];
-        comp['speed'] = Util.getUInt32(blob, offset + config.sizeInt * 5 + strAndSize[1]); // 0: fastest, 1000: slowest
-        const beatAdd = Util.getUInt32(blob, offset + config.sizeInt * 3 + strAndSize[1]);
+        comp['speed'] = get.UInt32(blob, offset + config.sizeInt * 5 + strAndSize[1]); // 0: fastest, 1000: slowest
+        const beatAdd = get.UInt32(blob, offset + config.sizeInt * 3 + strAndSize[1]);
         if (beatAdd) {
             comp['output'] = '50/50';
         } else {
-            comp['output'] = Util.getMap8(blob, offset + config.sizeInt, { 0: 'Replace', 1: 'Additive', 0x100000000: '50/50' });
+            comp['output'] = get.Map8(blob, offset + config.sizeInt, { 0: 'Replace', 1: 'Additive', 0x100000000: '50/50' });
         }
         comp['onBeatAdd'] = beatAdd;
-        comp['persist'] = Util.getUInt32(blob, offset + config.sizeInt * 4 + strAndSize[1]); // 0-32
+        comp['persist'] = get.UInt32(blob, offset + config.sizeInt * 4 + strAndSize[1]); // 0-32
 
         return comp;
     },
@@ -276,7 +277,7 @@ export default {
             'type': 'Simple',
             'group': 'Render',
         };
-        const effect = Util.getUInt32(blob, offset);
+        const effect = get.UInt32(blob, offset);
         if (effect & (1 << 6)) {
             comp['audioSource'] = (effect & 2) ? 'Waveform' : 'Spectrum';
             comp['renderType'] = 'Dots';
@@ -302,7 +303,7 @@ export default {
         }
         comp['audioChannel'] = Table.audioChannel[(effect >> 2) & 3];
         comp['positionY'] = Table.positionY[(effect >> 4) & 3];
-        comp['colors'] = Util.getColorList(blob, offset + config.sizeInt)[0];
+        comp['colors'] = get.ColorList(blob, offset + config.sizeInt)[0];
         return comp;
     }
 }
