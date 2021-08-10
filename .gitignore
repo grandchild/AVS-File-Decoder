@@ -25,6 +25,9 @@ avs/
 etc/
 ui/
 
+# Development
+.eslintcache
+
 # Test
 !test/**/*avs
 !test/**/*webvs

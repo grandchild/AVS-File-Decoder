@@ -1,9 +1,10 @@
-*.avs
-*.webvs
 .circleci
 .editorconfig
+.eslintcache
 .gitignore
 .travis.yml
+*.avs
+*.webvs
 doc/
 src/
 test/
