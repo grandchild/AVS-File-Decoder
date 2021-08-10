@@ -63,7 +63,7 @@
     ]
   },
   "lint-staged": {
-    "*.js": "eslint --cache --fix"
+    "*.ts": "eslint --cache --fix"
   },
   "volta": {
     "node": "14.16.0"
