@@ -75,28 +75,7 @@ function convertComponents(blob: Uint8Array): unknown {
             res = { 'type': 'Unknown: (' + (-i) + ')' };
         } else {
             const offset = fp + sizeInt * 2 + isDll * 32;
-            let decoder;
-            switch(componentTable[i].func) {
-                case 'avi':
-                    decoder = decode_avi;
-                    break;
-                case 'effectList':
-                    decoder = decode_effectList;
-                    break;
-                case 'generic':
-                    decoder = decode_generic;
-                    break;
-                case 'movement':
-                    decoder = decode_movement;
-                    break;
-                case 'simple':
-                    decoder = decode_simple;
-                    break;
-                case 'versioned_generic':
-                    decoder = decode_versioned_generic;
-                    break;
-            }
-            res = decoder(
+            res = eval('decode_' + componentTable[i].func)(
                 blob,
                 offset,
                 componentTable[i].fields,
