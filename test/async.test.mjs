@@ -3,6 +3,7 @@ import { convertFile } from '../dist/node.mjs';
 
 // Dependencies
 import { promises as fs } from 'node:fs';
+import globby from 'globby';
 import path from 'node:path';
 import test from 'ava';
 
@@ -17,35 +18,21 @@ const options = {
   noDate: true
 };
 
-// Tests
-test('Convert: comment.avs', async t => {
-  const file = 'comment';
-  const actual = await convertFile(`${fixturesDir}/${file}.avs`, options);
-  const expected = (await fs.readFile(`${expectedDir}/${file}.webvs`, 'utf-8')).toString();
+const avsFiles = await globby(['**/*.avs'], { cwd: fixturesDir });
 
-  t.is(expected, actual);
-});
+avsFiles.map(avsFile => {
+    const basename = path.basename(avsFile, '.avs');
+    const dirname = path.dirname(avsFile);
 
-test('Convert: empty.avs', async t => {
-  const file = 'empty';
-  const actual = await convertFile(`${fixturesDir}/${file}.avs`, options);
-  const expected = (await fs.readFile(`${expectedDir}/${file}.webvs`, 'utf-8')).toString();
+    const absolutePath = {
+        expected: path.join(expectedDir, dirname, `${basename}.webvs`),
+        fixture: path.join(fixturesDir, avsFile)
+    };
 
-  t.is(expected, actual);
-});
+    test(avsFile, async t => {
+        const actual = await convertFile(absolutePath.fixture, options);
+        const expected = (await fs.readFile(absolutePath.expected, 'utf-8')).toString();
 
-test('Convert: invert.avs', async t => {
-  const file = 'invert';
-  const actual = await convertFile(`${fixturesDir}/${file}.avs`, options);
-  const expected = (await fs.readFile(`${expectedDir}/${file}.webvs`, 'utf-8')).toString();
-
-  t.is(expected, actual);
-});
-
-test('Convert: superscope.avs', async t => {
-  const file = 'superscope';
-  const actual = await convertFile(`${fixturesDir}/${file}.avs`, options);
-  const expected = (await fs.readFile(`${expectedDir}/${file}.webvs`, 'utf-8')).toString();
-
-  t.is(expected, actual);
+        t.is(actual, expected);
+    });
 });
