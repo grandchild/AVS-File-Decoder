@@ -1,0 +1,1 @@
+{"name":"Color Modifier","clearFrame":true,"components":[{"type":"ColorModifier","group":"Trans","recomputeEveryFrame":true,"code":{"init":"","perFrame":"","onBeat":"","perPoint":""}}]}

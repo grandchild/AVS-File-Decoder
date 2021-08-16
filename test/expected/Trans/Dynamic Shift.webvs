@@ -1,0 +1,1 @@
+{"name":"Dynamic Shift","clearFrame":true,"components":[{"type":"DynamicShift","group":"Trans","code":{"init":"d=0;","perFrame":"x=sin(d)*1.4; y=1.4*cos(d); d=d+0.01;","onBeat":"d=d+2.0"},"blendMode":"Replace","bilinear":true}]}

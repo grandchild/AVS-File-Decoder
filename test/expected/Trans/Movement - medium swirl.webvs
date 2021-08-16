@@ -1,0 +1,1 @@
+{"name":"Movement - medium swirl","clearFrame":true,"components":[{"type":"Movement","group":"Trans","builtinEffect":"Medium Swirl","output":"Replace","sourceMapped":false,"coordinates":0,"bilinear":true,"wrap":false,"code":"d = d * (0.99 * (1.0 - sin(r-$PI*0.5) / 32.0)),\r\nr = r + (0.03 * sin(d * $PI * 4)),"}]}

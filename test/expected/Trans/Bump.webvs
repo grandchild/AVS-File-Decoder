@@ -1,0 +1,1 @@
+{"name":"Bump","clearFrame":true,"components":[{"type":"Bump","group":"Trans","enabled":true,"onBeat":false,"duration":15,"depth":30,"onBeatDepth":100,"blendMode":"REPLACE","code":{"init":"t=0;","perFrame":"","onBeat":"x=0.5+cos(t)*0.3;\r\ny=0.5+sin(t)*0.3;\r\nt=t+0.1;"},"showDot":false,"invertDepth":false,"depthBuffer":29}]}

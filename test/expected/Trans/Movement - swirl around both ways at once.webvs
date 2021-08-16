@@ -1,0 +1,1 @@
+{"name":"Movement - swirl around both ways at once","clearFrame":true,"components":[{"type":"Movement","group":"Trans","builtinEffect":"Swirling Around Both Ways At Once","output":"Replace","sourceMapped":false,"coordinates":0,"bilinear":true,"wrap":false,"code":"r = r + (0.1 * sin(d * $PI * 5)),"}]}

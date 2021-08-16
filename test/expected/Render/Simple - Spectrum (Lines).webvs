@@ -1,0 +1,1 @@
+{"name":"Simple - Spectrum (Lines)","clearFrame":true,"components":[{"type":"Simple","group":"Render","audioSource":"Spectrum","renderType":"Lines","audioChannel":"CENTER","positionY":"CENTER","colors":["#ffffff"]}]}

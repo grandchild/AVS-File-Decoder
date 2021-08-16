@@ -1,0 +1,1 @@
+{"name":"SuperScope - Alternating Diagonal Scope","clearFrame":true,"components":[{"type":"SuperScope","group":"Render","code":{"init":"n=64; t=1;","perFrame":"","onBeat":"t=-t;","perPoint":"sc=0.4*sin(i*$PI); x=2*(i-0.5-v*sc)*t; y=2*(i-0.5+v*sc);"},"audioChannel":"CENTER","audioSource":"WAVEFORM","colors":["#ffffff"],"drawMode":"DOTS"}]}

@@ -1,0 +1,1 @@
+{"name":"Movement - sunburster","clearFrame":true,"components":[{"type":"Movement","group":"Trans","builtinEffect":"Sunburster","output":"Replace","sourceMapped":false,"coordinates":0,"bilinear":true,"wrap":false,"code":"d = d * (0.94 + (cos((r-$PI*0.5) * 32.0) * 0.06)),"}]}

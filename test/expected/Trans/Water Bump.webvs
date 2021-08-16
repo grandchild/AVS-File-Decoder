@@ -1,0 +1,1 @@
+{"name":"Water Bump","clearFrame":true,"components":[{"type":"WaterBump","group":"Trans","enabled":true,"density":6,"depth":600,"random":false,"dropPositionX":1,"dropPositionY":1,"dropRadius":40,"method":0}]}

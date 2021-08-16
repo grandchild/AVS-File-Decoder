@@ -1,0 +1,1 @@
+{"name":"Clear Screen - Default render blend mode","clearFrame":true,"components":[{"type":"ClearScreen","group":"Render","enabled":true,"color":"#000000","blendMode":"DEFAULT","onlyFirst":false}]}

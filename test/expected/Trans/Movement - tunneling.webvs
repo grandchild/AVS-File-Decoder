@@ -1,0 +1,1 @@
+{"name":"Movement - tunneling","clearFrame":true,"components":[{"type":"Movement","group":"Trans","builtinEffect":"Tunneling","output":"Replace","sourceMapped":false,"coordinates":0,"bilinear":true,"wrap":false,"code":"r = r + 0.04,\r\nd = d * (0.96 + cos(d * $PI) * 0.05),"}]}

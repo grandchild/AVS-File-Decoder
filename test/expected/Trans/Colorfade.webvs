@@ -1,0 +1,1 @@
+{"name":"Colorfade","clearFrame":true,"components":[{"type":"Colorfade","group":"Trans","enabled":true,"onBeat":false,"onBeatRandom":false,"fader1":8,"fader2":-8,"fader3":-8,"beatFader1":8,"beatFader2":-8,"beatFader3":-8}]}

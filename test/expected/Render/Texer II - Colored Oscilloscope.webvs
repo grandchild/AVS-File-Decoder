@@ -1,0 +1,1 @@
+{"name":"Texer II - Colored Oscilloscope","clearFrame":true,"components":[{"type":"TexerII","group":"Render","imageSrc":"","resizing":false,"wrapAround":false,"colorFiltering":true,"code":{"init":"// This example needs Maximum render mode\r\nn=300;","perFrame":"","onBeat":"","perPoint":"x=(i*2-1)*2;y=v;\r\nred=1-y*2;green=abs(y)*2;blue=y*2-1;"}}]}

@@ -1,0 +1,1 @@
+{"name":"Movement - bubbling outward","clearFrame":true,"components":[{"type":"Movement","group":"Trans","builtinEffect":"Bubbling Outward","output":"Replace","sourceMapped":false,"coordinates":0,"bilinear":true,"wrap":false,"code":"t = sin(d * $PI),\r\nd = d - (8*t*t*t*t*t)/sqrt((sw*sw+sh*sh)/4),"}]}

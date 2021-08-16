@@ -1,0 +1,1 @@
+{"name":"Grain - Additive blend","clearFrame":true,"components":[{"type":"Grain","group":"Trans","enabled":true,"blendMode":"ADDITIVE","amount":100,"static":false}]}

@@ -1,0 +1,1 @@
+{"name":"Movement - bubbling outward with swirl","clearFrame":true,"components":[{"type":"Movement","group":"Trans","builtinEffect":"Bubbling Outward With Swirl","output":"Replace","sourceMapped":false,"coordinates":0,"bilinear":true,"wrap":false,"code":"t = sin(d * $PI),\r\nd = d - (8*t*t*t*t*t)/sqrt((sw*sw+sh*sh)/4),\r\nt=cos(d*$PI/2.0),\r\nr= r + 0.1*t*t*t,"}]}

@@ -1,0 +1,1 @@
+{"name":"Movement - 5 pointed distro","clearFrame":true,"components":[{"type":"Movement","group":"Trans","builtinEffect":"5 Pointed Distro","output":"Replace","sourceMapped":false,"coordinates":0,"bilinear":true,"wrap":false,"code":"d = d * (0.95 + (cos(((r-$PI*0.5) * 5.0) - ($PI / 2.50)) * 0.03)),"}]}

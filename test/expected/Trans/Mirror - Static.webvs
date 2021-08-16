@@ -1,0 +1,1 @@
+{"name":"Mirror - Static","clearFrame":true,"components":[{"type":"Mirror","group":"Trans","enabled":true,"topToBottom":true,"bottomToTop":false,"leftToRight":false,"rightToLeft":false,"onBeatRandom":false,"smoothTransition":false,"transitionDuration":4}]}

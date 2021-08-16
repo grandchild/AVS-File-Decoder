@@ -1,0 +1,1 @@
+{"name":"Dynamic Distance Modifier","clearFrame":true,"components":[{"type":"DynamicDistanceModifier","group":"Trans","code":{"init":"u=1;t=0","perFrame":"t=t+u;t=min(100,t);t=max(0,t);u=if(equal(t,100),-1,u);u=if(equal(t,0),1,u)","onBeat":"","perPoint":"d=d-sigmoid((t-50)/100,2)"},"blendMode":"REPLACE","bilinear":false}]}

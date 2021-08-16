@@ -1,0 +1,1 @@
+{"name":"SuperScope - Rotating Bow Thing","clearFrame":true,"components":[{"type":"SuperScope","group":"Render","code":{"init":"n=80;t=0.0;","perFrame":"t=t+0.01","onBeat":"","perPoint":"r=i*$PI*2; d=sin(r*3)+v*0.5; x=cos(t+r)*d; y=sin(t-r)*d"},"audioChannel":"CENTER","audioSource":"WAVEFORM","colors":["#ffffff"],"drawMode":"DOTS"}]}

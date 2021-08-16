@@ -1,0 +1,1 @@
+{"name":"Simple - Spectrum (Dots)","clearFrame":true,"components":[{"type":"Simple","group":"Render","audioSource":"Spectrum","renderType":"Dots","audioChannel":"CENTER","positionY":"CENTER","colors":["#ffffff"]}]}

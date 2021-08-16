@@ -1,0 +1,1 @@
+{"name":"Blitter Feedback","clearFrame":true,"components":[{"type":"BlitterFeedback","group":"Misc","zoom":30,"onBeatZoom":30,"blendMode":"REPLACE","onBeat":false,"bilinear":true}]}

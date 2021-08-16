@@ -1,0 +1,1 @@
+{"name":"Mirror - OnBeat Random","clearFrame":true,"components":[{"type":"Mirror","group":"Trans","enabled":true,"topToBottom":true,"bottomToTop":true,"leftToRight":true,"rightToLeft":true,"onBeatRandom":true,"smoothTransition":false,"transitionDuration":4}]}

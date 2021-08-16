@@ -1,0 +1,1 @@
+{"name":"Simple - Oscilloscope (Lines)","clearFrame":true,"components":[{"type":"Simple","group":"Render","audioSource":"Waveform","renderType":"Lines","audioChannel":"CENTER","positionY":"CENTER","colors":["#ffffff"]}]}
