@@ -5,6 +5,8 @@ import get from './get';
 import Log from './log';
 import Table from './tables';
 
+import type { JSONObject } from '../../types';
+
 const verbosity = 0;
 
 export default {
@@ -98,8 +100,8 @@ export default {
                 continue;
             }
             let size = 0;
-            let value: jsontypes;
-            let result: [jsontypes, number];
+            let value: JSONObject;
+            let result: [JSONObject, number];
             const num: boolean = typeof f === 'number';
             const other: boolean = typeof f === 'string';
             const array: boolean = f instanceof Array;

@@ -3,6 +3,8 @@ import config from '../config';
 import get from './get';
 import Log from './log';
 
+import type { JSONObject } from '../../types';
+
 const setHiddenStrings = (value: boolean): void => { config.hiddenStrings = value; };
 let verbosity = 0;
 const setVerbosity = (value: number): void => { verbosity = value; };
@@ -40,7 +42,7 @@ function printTable(name: string, table: any): void {
     }
 }
 
-function callFunction(funcName: string, blobOrValue: jsontypes|Uint8Array, offset?: void|number, extra?: any|void): any {
+function callFunction(funcName: string, blobOrValue: JSONObject|Uint8Array, offset?: void|number, extra?: any|void): any {
     try {
         if (blobOrValue instanceof Uint8Array) {
             return get[funcName](blobOrValue, offset, extra);
