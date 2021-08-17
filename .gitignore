@@ -32,3 +32,6 @@ ui/
 # Test
 !test/**/*avs
 !test/**/*webvs
+
+# Temporary
+presets.d.ts
