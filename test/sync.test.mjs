@@ -18,21 +18,24 @@ const options = {
   noDate: true
 };
 
-const avsFiles = await globby.sync(['**/*.avs'], { cwd: fixturesDir });
+// TODO: Use top-level await when Node 16 becomes LTS
+(async () => {
+    const avsFiles = await globby.sync(['**/*.avs'], { cwd: fixturesDir });
 
-avsFiles.map(avsFile => {
-    const basename = path.basename(avsFile, '.avs');
-    const dirname = path.dirname(avsFile);
+    avsFiles.map(avsFile => {
+        const basename = path.basename(avsFile, '.avs');
+        const dirname = path.dirname(avsFile);
 
-    const absolutePath = {
-        expected: path.join(expectedDir, dirname, `${basename}.webvs`),
-        fixture: path.join(fixturesDir, avsFile)
-    };
+        const absolutePath = {
+            expected: path.join(expectedDir, dirname, `${basename}.webvs`),
+            fixture: path.join(fixturesDir, avsFile)
+        };
 
-    test(avsFile, t => {
-        const actual = convertFileSync(absolutePath.fixture, options);
-        const expected = fs.readFileSync(absolutePath.expected, 'utf-8').toString();
+        test(avsFile, t => {
+            const actual = convertFileSync(absolutePath.fixture, options);
+            const expected = fs.readFileSync(absolutePath.expected, 'utf-8').toString();
 
-        t.is(actual, expected);
+            t.is(actual, expected);
+        });
     });
-});
+})();
