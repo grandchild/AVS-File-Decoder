@@ -16,6 +16,9 @@ export default {
     },
 
     UInt(blob: Uint8Array, offset: number, size: number): number {
+        if (!offset) {
+            offset = 0
+        }
         if (offset > blob.length - size) {
             Log.warn(`WARNING: getUInt: offset overflow ${offset} > ${blob.length - size}`);
             return 0;
