@@ -1,11 +1,9 @@
-import { convertComponents } from '../browser';
+import { convertComponents } from '../converter';
 import * as Util from './util';
 import config from '../config';
 import get from './get';
 import Log from './log';
 import Table from './tables';
-
-import type { JSONObject } from '../../types';
 
 const verbosity = 0;
 
@@ -100,8 +98,8 @@ export default {
                 continue;
             }
             let size = 0;
-            let value: JSONObject;
-            let result: [JSONObject, number];
+            let value: JSONPrimitive;
+            let result: [JSONPrimitive, number];
             const num: boolean = typeof f === 'number';
             const other: boolean = typeof f === 'string';
             const array: boolean = f instanceof Array;
