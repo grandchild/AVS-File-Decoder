@@ -1046,6 +1046,9 @@ var get = {
         }
     },
     UInt: function (blob, offset, size) {
+        if (!offset) {
+            offset = 0;
+        }
         if (offset > blob.length - size) {
             Log.warn("WARNING: getUInt: offset overflow " + offset + " > " + (blob.length - size));
             return 0;
@@ -1434,10 +1437,10 @@ var get = {
 // Modules
 var setHiddenStrings = function (value) { config.hiddenStrings = value; };
 var ConvertException = /** @class */ (function () {
-    function ConvertException(msg) {
-        this.msg = msg;
+    function ConvertException(message) {
+        this.message = message;
         this.name = 'ConvertException';
-        this.message = msg;
+        this.message = message;
     }
     ConvertException.prototype.toString = function () {
         return this.name + " : " + this.message;

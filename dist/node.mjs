@@ -1,6 +1,6 @@
 import { basename, extname } from 'path';
 import logSymbols from 'log-symbols';
-import { readFile, stat, readFileSync, statSync } from 'fs';
+import { promises, readFileSync, statSync } from 'fs';
 
 /*! *****************************************************************************
 Copyright (c) Microsoft Corporation.
@@ -1078,6 +1078,9 @@ var get = {
         }
     },
     UInt: function (blob, offset, size) {
+        if (!offset) {
+            offset = 0;
+        }
         if (offset > blob.length - size) {
             Log.warn("WARNING: getUInt: offset overflow " + offset + " > " + (blob.length - size));
             return 0;
@@ -1466,10 +1469,10 @@ var get = {
 // Modules
 var setHiddenStrings = function (value) { config.hiddenStrings = value; };
 var ConvertException = /** @class */ (function () {
-    function ConvertException(msg) {
-        this.msg = msg;
+    function ConvertException(message) {
+        this.message = message;
         this.name = 'ConvertException';
-        this.message = msg;
+        this.message = message;
     }
     ConvertException.prototype.toString = function () {
         return this.name + " : " + this.message;
@@ -2122,18 +2125,26 @@ function getComponentSize(blob, offset) {
     return get.UInt32(blob, offset);
 }
 
-// Modules
 function getISOTime(file) {
-    return new Promise(function (resolve, reject) {
-        stat(file, function (err, time) {
-            err ? reject(err) : resolve(time.mtime.toISOString());
+    return __awaiter(this, void 0, void 0, function () {
+        var time;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, promises.stat(file)];
+                case 1:
+                    time = _a.sent();
+                    return [2 /*return*/, time.mtime.toISOString()];
+            }
         });
     });
 }
 function readPreset(file) {
-    return new Promise(function (resolve, reject) {
-        readFile(file, function (err, data) {
-            err ? reject(err) : resolve(data);
+    return __awaiter(this, void 0, void 0, function () {
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, promises.readFile(file)];
+                case 1: return [2 /*return*/, _a.sent()];
+            }
         });
     });
 }
