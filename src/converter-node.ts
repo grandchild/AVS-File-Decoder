@@ -20,14 +20,14 @@ function convertFile(file: string, customArgs?: Arguments): Promise<any> {
 
     return Util.readPreset(file)
         .then(async (presetBlob: any) => {
-            const presetName = (typeof args.name !== 'undefined' && args.name.trim().length > 0) ? args.name : basename(file, extname(file));
+            const presetName = typeof args.name !== 'undefined' && args.name.trim().length > 0 ? args.name : basename(file, extname(file));
             const presetDate = args.noDate ? undefined : await Util.getISOTime(file);
             const presetObj = convertBlob(presetBlob, presetName, presetDate, args);
-            const whitespace: number = (args.minify === true) ? 0 : 4;
+            const whitespace: number = args.minify === true ? 0 : 4;
 
             return JSON.stringify(presetObj, null, whitespace);
         })
-        .catch(error => {
+        .catch((error) => {
             Log.error(error);
         });
 }
@@ -42,19 +42,16 @@ function convertFileSync(file: string, customArgs?: Arguments): unknown {
 
     try {
         presetBlob = readFileSync(file);
-        presetName = (typeof args.name !== 'undefined' && args.name.trim().length > 0) ? args.name : basename(file, extname(file));
+        presetName = typeof args.name !== 'undefined' && args.name.trim().length > 0 ? args.name : basename(file, extname(file));
         presetDate = args.noDate ? undefined : statSync(file).mtime.toISOString();
         presetObj = convertBlob(presetBlob, presetName, presetDate, args);
     } catch (error) {
         Log.error(error);
     }
 
-    const whitespace: number = (args.minify === true) ? 0 : 4;
+    const whitespace: number = args.minify === true ? 0 : 4;
 
     return JSON.stringify(presetObj, null, whitespace);
 }
 
-export {
-    convertFile,
-    convertFileSync
-};
+export { convertFile, convertFileSync };

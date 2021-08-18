@@ -8,18 +8,18 @@ export default {
     },
 
     info(message: string): void {
-        console.info((isNode) ? (logSymbols.info, message) : message);
+        console.info(isNode ? (logSymbols.info, message) : message);
     },
 
     error(message: string): void {
-        console.error((isNode) ? (logSymbols.error, message) : message);
+        console.error(isNode ? (logSymbols.error, message) : message);
     },
 
     success(message: string): void {
-        console.log((isNode) ? (logSymbols.success, message) : message);
+        console.log(isNode ? (logSymbols.success, message) : message);
     },
 
     warn(message: string): void {
-        console.warn((isNode) ? (logSymbols.warning, message) : message);
-    },
-}
+        console.warn(isNode ? (logSymbols.warning, message) : message);
+    }
+};

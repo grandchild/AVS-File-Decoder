@@ -11,13 +11,13 @@ export default {
             const mask = (2 << (pos[1] - pos[0])) - 1;
             return [(blob[offset] >> pos[0]) & mask, 1];
         } else {
-            return [((blob[offset] >> <number>pos) & 1), 1];
+            return [(blob[offset] >> (<number>pos)) & 1, 1];
         }
     },
 
     UInt(blob: Uint8Array, offset: number, size: number): number {
         if (!offset) {
-            offset = 0
+            offset = 0;
         }
         if (offset > blob.length - size) {
             Log.warn(`WARNING: getUInt: offset overflow ${offset} > ${blob.length - size}`);
@@ -139,11 +139,7 @@ export default {
     },
 
     HiddenStrings(blob: Uint8Array, i: number, end: number): string[] {
-        const nonPrintables: number[] = [
-            0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16,
-            17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31,
-            127, 129, 141, 143, 144, 157, 173
-        ];
+        const nonPrintables: number[] = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 127, 129, 141, 143, 144, 157, 173];
         const hidden: string[] = [];
         while (i < end) {
             let c = blob[i];
@@ -190,7 +186,8 @@ export default {
         let key = 0;
         for (let i = 0; i < map.length; i++) {
             const on: number = this.UInt32(blob, offset + config.sizeInt * i) !== 0 ? 1 : 0;
-            if (on) { // in case of (erroneous) multiple selections, the last one selected wins
+            if (on) {
+                // in case of (erroneous) multiple selections, the last one selected wins
                 key = on * (i + 1);
             }
         }
@@ -213,7 +210,7 @@ export default {
             ['init', 3],
             ['perFrame', 1],
             ['onBeat', 2],
-            ['perPoint', 0],
+            ['perPoint', 0]
         ];
         return this.CodeSection(blob, offset, map);
     },
@@ -223,7 +220,7 @@ export default {
         const map: [string, number][] = [
             ['init', 2],
             ['perFrame', 1],
-            ['onBeat', 0],
+            ['onBeat', 0]
         ];
         return this.CodeSection(blob, offset, map);
     },
@@ -233,7 +230,7 @@ export default {
             ['init', 0],
             ['perFrame', 1],
             ['onBeat', 2],
-            ['perPoint', 3],
+            ['perPoint', 3]
         ];
         return this.CodeSection(blob, offset, map);
     },
@@ -242,7 +239,7 @@ export default {
         const map: [string, number][] = [
             ['init', 0],
             ['perFrame', 1],
-            ['onBeat', 2],
+            ['onBeat', 2]
         ];
         return this.CodeSection(blob, offset, map);
     },
@@ -251,14 +248,17 @@ export default {
     CodeEIF(blob: Uint8Array, offset: number): [CodeSection, number] {
         const map: [string, number][] = [
             ['init', 0],
-            ['perFrame', 1],
+            ['perFrame', 1]
         ];
         const code: [CodeSection, number] = this.CodeSection(blob, offset, map);
-        return [{
-            'enabled': this.Bool(blob, offset, config.sizeInt)[0],
-            'init': code[0]['init'],
-            'perFrame': code[0]['perFrame'],
-        }, code[1]];
+        return [
+            {
+                enabled: this.Bool(blob, offset, config.sizeInt)[0],
+                init: code[0]['init'],
+                perFrame: code[0]['perFrame']
+            },
+            code[1]
+        ];
     },
 
     // used only by 'Global Variables'
@@ -266,7 +266,7 @@ export default {
         const map: [string, number][] = [
             ['init', 0],
             ['perFrame', 1],
-            ['onBeat', 2],
+            ['onBeat', 2]
         ];
         return this.CodeSection(blob, offset, map, /*nullterminated*/ true);
     },
@@ -277,7 +277,7 @@ export default {
             ['init', 0],
             ['perFrame', 1],
             ['onBeat', 2],
-            ['perPoint', 3],
+            ['perPoint', 3]
         ];
         return this.CodeSection(blob, offset, map, /*nullterminated*/ true);
     },
@@ -288,7 +288,7 @@ export default {
             ['init', 3],
             ['perFrame', 1],
             ['onBeat', 2],
-            ['perPoint', 0],
+            ['perPoint', 0]
         ];
         return this.CodeSection(blob, offset, map, /*nullterminated*/ false, /*string max length*/ 256);
     },
@@ -298,7 +298,7 @@ export default {
         const map: [string, number][] = [
             ['init', 0],
             ['perFrame', 1],
-            ['onBeat', 2],
+            ['onBeat', 2]
         ];
         return this.CodeSection(blob, offset, map, /*nullterminated*/ false, /*string max length*/ 256);
     },
@@ -339,7 +339,7 @@ export default {
         return [colors, size];
     },
 
-    ColorMaps(blob: Uint8Array, offset: number): [{ index: number; enabled: boolean; id?: number; fileName?: string; colors: { color: string; position: number; }[]; }[], number] {
+    ColorMaps(blob: Uint8Array, offset: number): [{ index: number; enabled: boolean; id?: number; fileName?: string; colors: { color: string; position: number }[] }[], number] {
         let mapOffset = offset + 480;
         const maps: ColorMap[] = [];
         const headerSize = 60; // 4B enabled, 4B num, 4B id, 48B filestring
@@ -353,9 +353,9 @@ export default {
                 // skip this map
             } else {
                 maps[mi] = {
-                    'index': i,
-                    'enabled': enabled,
-                    'colors': map,
+                    index: i,
+                    enabled: enabled,
+                    colors: map
                 };
                 if (config.allFields) {
                     const id = this.UInt32(blob, offset + headerSize * i + config.sizeInt * 2); // id of the map - not really needed.
@@ -371,13 +371,13 @@ export default {
         return [maps, mapOffset - offset];
     },
 
-    ColorMap(blob: Uint8Array, offset: number, num: number): Array<{ color: string; position: number; }> {
+    ColorMap(blob: Uint8Array, offset: number, num: number): Array<{ color: string; position: number }> {
         const colorMap = [];
         for (let i = 0; i < num; i++) {
             const pos = this.UInt32(blob, offset);
             const color = this.Color(blob, offset + config.sizeInt)[0];
             offset += config.sizeInt * 3; // there's a 4byte id (presumably) following each color.
-            colorMap[i] = { 'color': color, 'position': pos };
+            colorMap[i] = { color: color, position: pos };
         }
 
         return colorMap;
@@ -402,7 +402,7 @@ export default {
         for (let i = 0; i < size; i++, offset += config.sizeInt) {
             data[i] = this.Int32(blob, offset)[0];
         }
-        const matrix = { 'width': dimensions[0], 'height': dimensions[1], 'data': data };
+        const matrix = { width: dimensions[0], height: dimensions[1], data: data };
 
         return [matrix, size * config.sizeInt];
     },
@@ -423,4 +423,4 @@ export default {
         }
         return code;
     }
-}
+};

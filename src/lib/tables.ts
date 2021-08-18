@@ -12,7 +12,7 @@ export default {
         '9': 'XOR',
         '10': 'ADJUSTABLE',
         '11': 'MULTIPLY',
-        '12': 'BUFFER',
+        '12': 'BUFFER'
     },
 
     blendmodeOut: {
@@ -29,7 +29,7 @@ export default {
         '10': 'MULTIPLY',
         '11': 'ADJUSTABLE',
         // don't ask me....
-        '13': 'BUFFER',
+        '13': 'BUFFER'
     },
 
     blendmodeBuffer: {
@@ -44,7 +44,7 @@ export default {
         '8': 'MINIMUM',
         '9': 'SUB_SRC_DEST',
         '10': 'MULTIPLY',
-        '11': 'ADJUSTABLE',
+        '11': 'ADJUSTABLE'
     },
 
     blendmodeRender: {
@@ -56,7 +56,7 @@ export default {
         '5': 'SUB_SRC_DEST',
         '6': 'MULTIPLY',
         '7': 'ADJUSTABLE',
-        '8': 'XOR',
+        '8': 'XOR'
     },
 
     blendmodePicture2: {
@@ -70,7 +70,7 @@ export default {
         '7': 'MULTIPLY',
         '8': 'XOR',
         '9': 'ADJUSTABLE',
-        '10': 'IGNORE',
+        '10': 'IGNORE'
     },
 
     blendmodeColorMap: {
@@ -83,7 +83,7 @@ export default {
         '6': 'SUB_SRC_DEST',
         '7': 'MULTIPLY',
         '8': 'XOR',
-        '9': 'ADJUSTABLE',
+        '9': 'ADJUSTABLE'
     },
 
     blendmodeTexer: {
@@ -97,65 +97,65 @@ export default {
         '2': 'BLUE',
         '3': 'CHANNEL_SUM_HALF',
         '4': 'MAX',
-        '5': 'CHANNEL_AVERAGE',
+        '5': 'CHANNEL_AVERAGE'
     },
 
     colorMapCycleMode: {
         '0': 'SINGLE',
         '1': 'ONBEAT_RANDOM',
-        '2': 'ONBEAT_SEQUENTIAL',
+        '2': 'ONBEAT_SEQUENTIAL'
     },
 
     bufferMode: {
         '0': 'SAVE',
         '1': 'RESTORE',
         '2': 'ALTERNATE_SAVE_RESTORE',
-        '3': 'ALTERNATE_RESTORE_SAVE',
+        '3': 'ALTERNATE_RESTORE_SAVE'
     },
 
     coordinates: {
         '0': 'POLAR',
-        '1': 'CARTESIAN',
+        '1': 'CARTESIAN'
     },
 
     drawMode: {
         '0': 'DOTS',
-        '1': 'LINES',
+        '1': 'LINES'
     },
 
     audioChannel: {
         '0': 'LEFT',
         '1': 'RIGHT',
-        '2': 'CENTER',
+        '2': 'CENTER'
     },
 
     audioSource: {
         '0': 'WAVEFORM',
-        '1': 'SPECTRUM',
+        '1': 'SPECTRUM'
     },
 
     positionX: {
         '0': 'LEFT',
         '1': 'RIGHT',
-        '2': 'CENTER',
+        '2': 'CENTER'
     },
 
     positionY: {
         '0': 'TOP',
         '1': 'BOTTOM',
-        '2': 'CENTER',
+        '2': 'CENTER'
     },
 
     convolutionEdgeMode: {
         '0': 'EXTEND',
-        '1': 'WRAP',
+        '1': 'WRAP'
     },
 
     multiFilterEffect: {
         '0': 'CHROME',
         '1': 'DOUBLE_CHROME',
         '2': 'TRIPLE_CHROME',
-        '3': 'INFINITE_ROOT_MULTIPLIER_AND_SMALL_BORDER_CONVOLUTION',
+        '3': 'INFINITE_ROOT_MULTIPLIER_AND_SMALL_BORDER_CONVOLUTION'
     },
 
     bufferBlendMode: {
@@ -169,7 +169,7 @@ export default {
         '7': 'ADJUSTABLE',
         '8': 'XOR',
         '9': 'MINIMUM',
-        '10': 'ABSOLUTE_DIFFERENCE',
+        '10': 'ABSOLUTE_DIFFERENCE'
     },
 
     bufferBlendBuffer: {
@@ -181,7 +181,7 @@ export default {
         '5': 'buffer6',
         '6': 'buffer7',
         '7': 'buffer8',
-        '8': 'CURRENT',
+        '8': 'CURRENT'
     },
 
     particleSystemAccelerationType: {
@@ -189,7 +189,7 @@ export default {
         '1': 'FADE_OUT_BY_0_9',
         '2': 'FADE_OUT_BY_0_6',
         '3': 'COSINE',
-        '4': 'SQUARED_COSINE',
+        '4': 'SQUARED_COSINE'
     },
 
     particleSystemColorBounce: {
@@ -197,9 +197,8 @@ export default {
         '1': 'WRAP_EACH',
         '2': 'WAVE_EACH',
         '3': 'WRAP_ALL',
-        '4': 'WAVE_ALL',
+        '4': 'WAVE_ALL'
     },
-
 
     // pretty much directly from vis_avs/r_trans.cpp
     // [name, script code representation (if any), 0:polar/1:cartesian]
@@ -217,7 +216,7 @@ export default {
         '10': ['Bubbling Outward With Swirl', 't = sin(d * $PI),\r\nd = d - (8*t*t*t*t*t)/sqrt((sw*sw+sh*sh)/4),\r\nt=cos(d*$PI/2.0),\r\nr= r + 0.1*t*t*t,', 0],
         '11': ['5 Pointed Distro', 'd = d * (0.95 + (cos(((r-$PI*0.5) * 5.0) - ($PI / 2.50)) * 0.03)),', 0],
         '12': ['Tunneling', 'r = r + 0.04,\r\nd = d * (0.96 + cos(d * $PI) * 0.05),', 0],
-        '13': ['Bleedin\'', 't = cos(d * $PI),\r\nr = r + (0.07 * t),\r\nd = d * (0.98 + t * 0.10),', 0],
+        '13': ["Bleedin'", 't = cos(d * $PI),\r\nr = r + (0.07 * t),\r\nd = d * (0.98 + t * 0.10),', 0],
         '14': ['Shifted Big Swirl Out', 'd=sqrt(x*x+y*y), r=atan2(y,x),\r\nr=r+0.1-0.2*d, d=d*0.96,\r\nx=cos(r)*d + 8/128, y=sin(r)*d,', 1], // comment from AVS src: // this is a very bad approximation in script. fix\r\n
         '15': ['Psychotic Beaming Outward', 'd = 0.15', 0],
         '16': ['Cosine Radial 3-way', 'r = cos(r * 3)', 0],
@@ -227,6 +226,6 @@ export default {
         '20': ['Gridley', 'x = x + (cos(y * 18) * .02),\r\ny = y + (sin(x * 14) * .03),', 1],
         '21': ['Grapevine', 'x = x + (cos(abs(y-.5) * 8) * .02),\r\ny = y + (sin(abs(x-.5) * 8) * .05),\r\nx = x * .95,\r\ny = y * .95,', 1],
         '22': ['Quadrant', 'y = y * ( 1 + (sin(r + $PI/2) * .3) ),\r\nx = x * ( 1 + (cos(r + $PI/2) * .3) ),\r\nx = x * .995,\r\ny = y * .995,', 1],
-        '23': ['6-way Kaleida (use Wrap!)', 'y = (r*6)/($PI), x = d,', 1],
+        '23': ['6-way Kaleida (use Wrap!)', 'y = (r*6)/($PI), x = d,', 1]
     }
-}
+};

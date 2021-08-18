@@ -4,4 +4,4 @@ export default {
     hiddenStrings: false,
     presetHeaderLength: 25,
     sizeInt: 4
-}
+};

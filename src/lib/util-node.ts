@@ -11,7 +11,4 @@ async function readPreset(file: string): Promise<Buffer> {
     return await fs.readFile(file);
 }
 
-export {
-    getISOTime,
-    readPreset
-};
+export { getISOTime, readPreset };

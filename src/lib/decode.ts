@@ -22,13 +22,9 @@ export default {
             0x20, 0x41, 0x56, 0x53, 0x20, 0x50, 0x72, 0x65,
             0x73, 0x65, 0x74, 0x20, 0x30, 0x2E, 0x32, 0x1A,
         ];
-        if (!Util.cmpBytes(blob, /*offset*/ 0, presetHeader0_2) &&
-            !Util.cmpBytes(blob, /*offset*/ 0, presetHeader0_1)) { // 0.1 only if 0.2 failed because it's far rarer.
-            throw new Util.ConvertException(
-                'Invalid preset header.\n' +
-                '  This does not seem to be an AVS preset file.\n' +
-                '  If it does load with Winamp\'s AVS please send the file in so we can look at it.'
-            );
+        if (!Util.cmpBytes(blob, /*offset*/ 0, presetHeader0_2) && !Util.cmpBytes(blob, /*offset*/ 0, presetHeader0_1)) {
+            // 0.1 only if 0.2 failed because it's far rarer.
+            throw new Util.ConvertException('Invalid preset header.\n' + '  This does not seem to be an AVS preset file.\n' + "  If it does load with Winamp's AVS please send the file in so we can look at it.");
         }
 
         return blob[config.presetHeaderLength - 1] === 1; // 'Clear Every Frame'
@@ -39,15 +35,15 @@ export default {
     effectList(blob: Uint8Array, offset: number, _: unknown, name: string): unknown {
         const size: number = get.UInt32(blob, offset - config.sizeInt);
         const comp = {
-            'type': Util.removeSpaces(name),
-            'enabled': get.Bit(blob, offset, 1)[0] !== 1,
-            'clearFrame': get.Bit(blob, offset, 0)[0] === 1,
-            'input': Table['blendmodeIn'][blob[offset + 2]],
-            'output': Table['blendmodeOut'][blob[offset + 3]],
+            type: Util.removeSpaces(name),
+            enabled: get.Bit(blob, offset, 1)[0] !== 1,
+            clearFrame: get.Bit(blob, offset, 0)[0] === 1,
+            input: Table['blendmodeIn'][blob[offset + 2]],
+            output: Table['blendmodeOut'][blob[offset + 3]]
         };
         const modebit: boolean = get.Bit(blob, offset, 7)[0] === 1; // is true in all presets I know, probably only for truly ancient versions
         if (!modebit) {
-            Log.error('EL modebit is off!! If you\'re seeing this, send this .avs file in please!');
+            Log.error("EL modebit is off!! If you're seeing this, send this .avs file in please!");
         }
         const configSize: number = (modebit ? blob[offset + 4] : blob[offset]) + 1;
         if (configSize > 1) {
@@ -85,8 +81,8 @@ export default {
     // generic field decoding function that most components use.
     generic(blob: Uint8Array, offset: number, fields: unknown, name: string, group: string, end: number): unknown {
         const comp = {
-            'type': Util.removeSpaces(name),
-            'group': group,
+            type: Util.removeSpaces(name),
+            group: group
         };
         const keys = Object.keys(fields);
         let lastWasABitField = false;
@@ -144,7 +140,8 @@ export default {
                     size = result[1];
                     value = result[0];
                 }
-                if (f[2]) { // further processing if wanted
+                if (f[2]) {
+                    // further processing if wanted
                     // console.log('get' + f[2]);
                     tableName = Util.lowerInitial(f[2]);
                     if (tableName in Table) {
@@ -156,14 +153,17 @@ export default {
             }
 
             // save value or function result of value in field
-            if (k !== 'new_version') { // but don't save new_version marker, if present
+            if (k !== 'new_version') {
+                // but don't save new_version marker, if present
                 comp[k] = value;
                 if (verbosity >= 2) {
                     Log.log('- key: ' + k + '\n- val: ' + value);
-                    if (k === 'code')
-                        {Util.printTable('- code', value);}
-                    if (verbosity >= 3)
-                        {Log.log('- offset: ' + offset + '\n- size: ' + size);}
+                    if (k === 'code') {
+                        Util.printTable('- code', value);
+                    }
+                    if (verbosity >= 3) {
+                        Log.log('- offset: ' + offset + '\n- size: ' + size);
+                    }
                     // console.log();
                 }
             }
@@ -181,15 +181,18 @@ export default {
         } else {
             const oldFields = {};
             for (const key in fields) {
-                if (key === 'new_version')
-                    {continue;}
-                if (key === 'code')
-                    {oldFields[key] = fields['code'].replace(/Code([IFBP]+)/, '256Code$1');}
-                else
-                    {oldFields[key] = fields[key];}
+                if (key === 'new_version') {
+                    continue;
+                }
+                if (key === 'code') {
+                    oldFields[key] = fields['code'].replace(/Code([IFBP]+)/, '256Code$1');
+                } else {
+                    oldFields[key] = fields[key];
+                }
             }
-            if (verbosity >= 3)
-                {console.log('oldFields, code changed to:', oldFields['code']);}
+            if (verbosity >= 3) {
+                console.log('oldFields, code changed to:', oldFields['code']);
+            }
             return this.generic(blob, offset, oldFields, name, group, end);
         }
     },
@@ -197,8 +200,8 @@ export default {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     movement(blob: Uint8Array, offset: number, _: unknown, name: string, group: string, end: number): unknown {
         const comp = {
-            'type': name,
-            'group': group,
+            type: name,
+            group: group
         };
         // the special value 0 is because 'old versions of AVS barf' if the id is > 15, so
         // AVS writes out 0 in that case, and sets the actual id at the end of the save block.
@@ -209,7 +212,8 @@ export default {
         if (effectIdOld !== 0) {
             if (effectIdOld === 0x7fff) {
                 let strAndSize: [string, number] | [string, number, string[]] = ['', 0];
-                if (blob[offset + config.sizeInt] === 1) { // new-version marker
+                if (blob[offset + config.sizeInt] === 1) {
+                    // new-version marker
                     strAndSize = get.SizeString(blob, offset + config.sizeInt + 1);
                 } else {
                     strAndSize = get.SizeString(blob, offset + config.sizeInt, 256);
@@ -245,22 +249,24 @@ export default {
         comp['coordinates'] = Table.coordinates[get.UInt32(blob, offset + config.sizeInt * 3)];
         comp['bilinear'] = get.Bool(blob, offset + config.sizeInt * 4, config.sizeInt)[0];
         comp['wrap'] = get.Bool(blob, offset + config.sizeInt * 5, config.sizeInt)[0];
-        if (effect && effect.length && effectIdOld !== 1 && effectIdOld !== 7) { // 'slight fuzzify' and 'blocky partial out' have no script representation.
+        if (effect && effect.length && effectIdOld !== 1 && effectIdOld !== 7) {
+            // 'slight fuzzify' and 'blocky partial out' have no script representation.
             code = effect[1];
             comp['coordinates'] = effect[2]; // overwrite
         }
         comp['code'] = code;
-        if (hidden)
-            {comp['_hidden'] = hidden;}
+        if (hidden) {
+            comp['_hidden'] = hidden;
+        }
         return comp;
     },
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     avi(blob: Uint8Array, offset: number): unknown {
         const comp = {
-            'type': 'AVI',
-            'group': 'Render',
-            'enabled': get.Bool(blob, offset, config.sizeInt)[0],
+            type: 'AVI',
+            group: 'Render',
+            enabled: get.Bool(blob, offset, config.sizeInt)[0]
         };
         const strAndSize = get.NtString(blob, offset + config.sizeInt * 3);
         comp['file'] = strAndSize[0];
@@ -280,12 +286,12 @@ export default {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     simple(blob: Uint8Array, offset: number): unknown {
         const comp = {
-            'type': 'Simple',
-            'group': 'Render',
+            type: 'Simple',
+            group: 'Render'
         };
         const effect = get.UInt32(blob, offset);
         if (effect & (1 << 6)) {
-            comp['audioSource'] = (effect & 2) ? 'Waveform' : 'Spectrum';
+            comp['audioSource'] = effect & 2 ? 'Waveform' : 'Spectrum';
             comp['renderType'] = 'Dots';
         } else {
             switch (effect & 3) {
@@ -312,4 +318,4 @@ export default {
         comp['colors'] = get.ColorList(blob, offset + config.sizeInt)[0];
         return comp;
     }
-}
+};

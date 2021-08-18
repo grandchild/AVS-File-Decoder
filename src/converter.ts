@@ -29,7 +29,7 @@ function convertBlob(data: Buffer | ArrayBuffer, presetName: string, presetDate?
     Util.setHiddenStrings(args.hidden);
 
     const preset = {
-        'name': presetName,
+        name: presetName
     };
     if (presetDate) {
         preset['date'] = presetDate;
@@ -43,10 +43,11 @@ function convertBlob(data: Buffer | ArrayBuffer, presetName: string, presetDate?
     } catch (e) {
         // TODO
         // if (verbosity < 0) Log.error(`Error in '${file}'`);
-        if (verbosity >= 1)
-            {Log.error(e.stack);}
-        else
-            {Log.error(e);}
+        if (verbosity >= 1) {
+            Log.error(e.stack);
+        } else {
+            Log.error(e);
+        }
         // if(e instanceof Util.ConvertException) {
         //     Log.error('Error: '+e.message);
         //     return null;
@@ -69,22 +70,17 @@ function convertComponents(blob: Uint8Array): unknown {
     while (fp <= blob.length - config.sizeInt * 2) {
         const code = get.UInt32(blob, fp);
         const i = getComponentIndex(code, blob, fp);
-        const isDll: number = (code !== 0xfffffffe && code >= config.builtinMax) ? 1 : 0;
+        const isDll: number = code !== 0xfffffffe && code >= config.builtinMax ? 1 : 0;
         const size = getComponentSize(blob, fp + config.sizeInt + isDll * 32);
         // console.log("component size", size, "blob size", blob.length);
         if (i < 0) {
-            res = { 'type': 'Unknown: (' + (-i) + ')' };
+            res = { type: 'Unknown: (' + -i + ')' };
         } else {
             const offset = fp + config.sizeInt * 2 + isDll * 32;
-            res = decode[componentTable[i].func](
-                blob,
-                offset,
-                componentTable[i].fields,
-                componentTable[i].name,
-                componentTable[i].group,
-                offset + size);
+            res = decode[componentTable[i].func](blob, offset, componentTable[i].fields, componentTable[i].name, componentTable[i].group, offset + size);
         }
-        if (!res || typeof res !== 'object') { // should not happen, decode functions should throw their own.
+        if (!res || typeof res !== 'object') {
+            // should not happen, decode functions should throw their own.
             throw new Util.ConvertException('Unknown convert error');
         }
         components.push(res);
@@ -106,8 +102,7 @@ function getComponentIndex(code: number, blob: Uint8Array, offset: number): numb
         }
     } else {
         for (let i = Components.builtin.length; i < componentTable.length; i++) {
-            if (componentTable[i].code instanceof Array &&
-                Util.cmpBytes(blob, offset + config.sizeInt, <number[]>componentTable[i].code)) {
+            if (componentTable[i].code instanceof Array && Util.cmpBytes(blob, offset + config.sizeInt, <number[]>componentTable[i].code)) {
                 if (verbosity >= 1) {
                     Log.log(`Found component: ${componentTable[i].name}`);
                 }
@@ -116,8 +111,9 @@ function getComponentIndex(code: number, blob: Uint8Array, offset: number): numb
         }
     }
 
-    if (verbosity >= 1)
-        {Log.log(`Found unknown component (code: ${code})`);}
+    if (verbosity >= 1) {
+        Log.log(`Found unknown component (code: ${code})`);
+    }
 
     return -code;
 }
@@ -126,7 +122,4 @@ function getComponentSize(blob: Uint8Array, offset: number) {
     return get.UInt32(blob, offset);
 }
 
-export {
-    convertBlob,
-    convertComponents
-};
+export { convertBlob, convertComponents };
