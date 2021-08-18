@@ -174,7 +174,7 @@ export default {
     },
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    versioned_generic(blob: Uint8Array, offset: number, fields: any, name: string, group: string, end: number): unknown {
+    versioned_generic(blob: Uint8Array, offset: number, fields: JSONObject, name: string, group: string, end: number): unknown {
         const version: number = blob[offset];
         if (version === 1) {
             return this.generic(blob, offset, fields, name, group, end);
@@ -185,7 +185,7 @@ export default {
                     continue;
                 }
                 if (key === 'code') {
-                    oldFields[key] = fields['code'].replace(/Code([IFBP]+)/, '256Code$1');
+                    oldFields[key] = (fields['code'] as string).replace(/Code([IFBP]+)/, '256Code$1');
                 } else {
                     oldFields[key] = fields[key];
                 }
