@@ -4,6 +4,7 @@
   "description": "A library to convert Winamp AVS presets into Webvs JSON",
   "license": "MIT",
   "main": "./dist/node.cjs",
+  "module": "./dist/node.mjs",
   "exports": {
     "./browser": {
       "import": "./dist/browser.mjs",
