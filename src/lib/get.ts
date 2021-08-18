@@ -3,7 +3,7 @@ import config from '../config';
 import Log from './log';
 
 export default {
-    Bit(blob: Uint8Array, offset: number, pos: any): [number, number] {
+    Bit(blob: Uint8Array, offset: number, pos: number | number[]): [number, number] {
         if ((<number[]>pos).length) {
             if ((<number[]>pos).length !== 2) {
                 throw new this.ConvertException(`Invalid Bitfield range ${pos}.`);
@@ -182,7 +182,7 @@ export default {
         return [this.Mapping(map, this.UInt64(blob, offset)), config.sizeInt * 2];
     },
 
-    RadioButton(blob: Uint8Array, offset: number, map: any[]): [string, number] {
+    RadioButton(blob: Uint8Array, offset: number, map: unknown[]): [string, number] {
         let key = 0;
         for (let i = 0; i < map.length; i++) {
             const on: number = this.UInt32(blob, offset + config.sizeInt * i) !== 0 ? 1 : 0;

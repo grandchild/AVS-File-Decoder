@@ -43,7 +43,7 @@ function printTable(name: string, table: any): void {
     }
 }
 
-function callFunction(funcName: string, blobOrValue: JSONPrimitive | Uint8Array, offset?: void | number, extra?: any | void): any {
+function callFunction(funcName: string, blobOrValue: JSONPrimitive | Uint8Array, offset?: void | number, extra?: unknown | void): any {
     try {
         if (blobOrValue instanceof Uint8Array) {
             return get[funcName](blobOrValue, offset, extra);
