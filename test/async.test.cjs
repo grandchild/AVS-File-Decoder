@@ -19,6 +19,10 @@ const options = {
 
 (async () => {
     const avsFiles = await globby(['**/*.avs'], { cwd: fixturesDir });
+    const emptyFiles = [
+        '(empty - Clear every  frame).avs',
+        '(empty).avs'
+    ];
 
     avsFiles.map(avsFile => {
         const basename = path.basename(avsFile, '.avs');
@@ -29,11 +33,19 @@ const options = {
             fixture: path.join(fixturesDir, avsFile)
         };
 
-        test(avsFile, async t => {
+        test(`Converted: ${avsFile}`, async t => {
             const actual = await convertFile(absolutePath.fixture, options);
             const expected = (await fs.readFile(absolutePath.expected, 'utf-8')).toString();
 
             t.is(actual, expected);
         });
+
+        if (!emptyFiles.includes(avsFile)) {
+            test(`Not empty: ${avsFile}`, async t => {
+                const actual = JSON.parse(await convertFile(absolutePath.fixture, options));
+
+                t.not(actual.components.length, 0);
+            });
+        }
     });
 })();

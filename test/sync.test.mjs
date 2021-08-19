@@ -21,6 +21,10 @@ const options = {
 // TODO: Use top-level await when Node 16 becomes LTS
 (async () => {
     const avsFiles = await globby.sync(['**/*.avs'], { cwd: fixturesDir });
+    const emptyFiles = [
+        '(empty - Clear every  frame).avs',
+        '(empty).avs'
+    ];
 
     avsFiles.map(avsFile => {
         const basename = path.basename(avsFile, '.avs');
@@ -31,11 +35,19 @@ const options = {
             fixture: path.join(fixturesDir, avsFile)
         };
 
-        test(avsFile, t => {
+        test(`Converted: ${avsFile}`, t => {
             const actual = convertFileSync(absolutePath.fixture, options);
             const expected = fs.readFileSync(absolutePath.expected, 'utf-8').toString();
 
             t.is(actual, expected);
         });
+
+        if (!emptyFiles.includes(avsFile)) {
+            test(`Not empty: ${avsFile}`, t => {
+                const actual = JSON.parse(convertFileSync(absolutePath.fixture, options));
+
+                t.not(actual.components.length, 0);
+            });
+        }
     });
 })();
