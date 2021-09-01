@@ -261,7 +261,6 @@ export default {
         return comp;
     },
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     avi(blob: Uint8Array, offset: number): unknown {
         const comp = {
             type: 'AVI',
@@ -283,7 +282,6 @@ export default {
         return comp;
     },
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     simple(blob: Uint8Array, offset: number): unknown {
         const comp = {
             type: 'Simple',
