@@ -84,380 +84,380 @@ var config = {
 
 var builtin = [
     {
-        'name': 'Effect List',
-        'code': 0xfffffffe,
-        'group': '',
-        'func': 'effectList'
+        name: 'Effect List',
+        code: 0xfffffffe,
+        group: '',
+        func: 'effectList'
     },
     {
-        'name': 'Simple',
-        'code': 0x00,
-        'group': 'Render',
-        'func': 'simple'
+        name: 'Simple',
+        code: 0x00,
+        group: 'Render',
+        func: 'simple'
     },
     {
-        'name': 'Dot Plane',
-        'code': 0x01,
-        'group': 'Render',
-        'func': 'generic',
-        'fields': {
-            'rotationSpeed': 'Int32',
-            'colorTop': 'Color',
-            'colorHigh': 'Color',
-            'colorMid': 'Color',
-            'colorLow': 'Color',
-            'colorBottom': 'Color',
-            'angle': 'Int32',
-            null0: config.sizeInt
+        name: 'Dot Plane',
+        code: 0x01,
+        group: 'Render',
+        func: 'generic',
+        fields: {
+            rotationSpeed: 'Int32',
+            colorTop: 'Color',
+            colorHigh: 'Color',
+            colorMid: 'Color',
+            colorLow: 'Color',
+            colorBottom: 'Color',
+            angle: 'Int32',
+            null0: config.sizeInt // [see comment on dot fountan]
         }
     },
     {
-        'name': 'Oscilliscope Star',
-        'code': 0x02,
-        'group': 'Render',
-        'func': 'generic',
-        'fields': {
-            'audioChannel': ['Bit', [2, 3], 'AudioChannel'],
-            'positionX': ['Bit', [4, 5], 'PositionX'],
+        name: 'Oscilliscope Star',
+        code: 0x02,
+        group: 'Render',
+        func: 'generic',
+        fields: {
+            audioChannel: ['Bit', [2, 3], 'AudioChannel'],
+            positionX: ['Bit', [4, 5], 'PositionX'],
             null0: config.sizeInt - 1,
-            'colors': 'ColorList',
-            'size': config.sizeInt,
-            'rotation': config.sizeInt
+            colors: 'ColorList',
+            size: config.sizeInt,
+            rotation: config.sizeInt
         }
     },
     {
-        'name': 'FadeOut',
-        'code': 0x03,
-        'group': 'Trans',
-        'func': 'generic',
-        'fields': {
-            'speed': config.sizeInt,
-            'color': 'Color'
+        name: 'FadeOut',
+        code: 0x03,
+        group: 'Trans',
+        func: 'generic',
+        fields: {
+            speed: config.sizeInt,
+            color: 'Color'
         }
     },
     {
-        'name': 'Blitter Feedback',
-        'code': 0x04,
-        'group': 'Misc',
-        'func': 'generic',
-        'fields': {
-            'zoom': config.sizeInt,
-            'onBeatZoom': config.sizeInt,
-            'blendMode': ['Map4', { 0: 'REPLACE', 1: 'FIFTY_FIFTY' }],
-            'onBeat': ['Bool', config.sizeInt],
-            'bilinear': ['Bool', config.sizeInt]
+        name: 'Blitter Feedback',
+        code: 0x04,
+        group: 'Misc',
+        func: 'generic',
+        fields: {
+            zoom: config.sizeInt,
+            onBeatZoom: config.sizeInt,
+            blendMode: ['Map4', { 0: 'REPLACE', 1: 'FIFTY_FIFTY' }],
+            onBeat: ['Bool', config.sizeInt],
+            bilinear: ['Bool', config.sizeInt]
         }
     },
     {
-        'name': 'OnBeat Clear',
-        'code': 0x05,
-        'group': 'Render',
-        'func': 'generic',
-        'fields': {
-            'color': 'Color',
-            'blendMode': ['Map4', { 0: 'REPLACE', 1: 'FIFTY_FIFTY' }],
-            'clearBeats': config.sizeInt
+        name: 'OnBeat Clear',
+        code: 0x05,
+        group: 'Render',
+        func: 'generic',
+        fields: {
+            color: 'Color',
+            blendMode: ['Map4', { 0: 'REPLACE', 1: 'FIFTY_FIFTY' }],
+            clearBeats: config.sizeInt
         }
     },
     {
-        'name': 'Blur',
-        'code': 0x06,
-        'group': 'Trans',
-        'func': 'generic',
-        'fields': {
-            'blur': ['Map4', { 0: 'NONE', 1: 'MEDIUM', 2: 'LIGHT', 3: 'HEAVY' }],
-            'round': ['Map4', { 0: 'DOWN', 1: 'UP' }]
+        name: 'Blur',
+        code: 0x06,
+        group: 'Trans',
+        func: 'generic',
+        fields: {
+            blur: ['Map4', { 0: 'NONE', 1: 'MEDIUM', 2: 'LIGHT', 3: 'HEAVY' }],
+            round: ['Map4', { 0: 'DOWN', 1: 'UP' }]
         }
     },
     {
-        'name': 'Bass Spin',
-        'code': 0x07,
-        'group': 'Trans',
-        'func': 'generic',
-        'fields': {
-            'enabledLeft': ['Bit', 0, 'Boolified'],
-            'enabledRight': ['Bit', 1, 'Boolified'],
+        name: 'Bass Spin',
+        code: 0x07,
+        group: 'Trans',
+        func: 'generic',
+        fields: {
+            enabledLeft: ['Bit', 0, 'Boolified'],
+            enabledRight: ['Bit', 1, 'Boolified'],
             null0: config.sizeInt - 1,
-            'colorLeft': 'Color',
-            'colorRight': 'Color',
-            'mode': ['Map4', { 0: 'LINES', 1: 'TRIANGLES' }]
+            colorLeft: 'Color',
+            colorRight: 'Color',
+            mode: ['Map4', { 0: 'LINES', 1: 'TRIANGLES' }]
         }
     },
     {
-        'name': 'Moving Particle',
-        'code': 0x08,
-        'group': 'Render',
-        'func': 'generic',
-        'fields': {
-            'enabled': ['Bit', 0, 'Boolified'],
-            'onBeatSizeChange': ['Bit', 1, 'Boolified'],
+        name: 'Moving Particle',
+        code: 0x08,
+        group: 'Render',
+        func: 'generic',
+        fields: {
+            enabled: ['Bit', 0, 'Boolified'],
+            onBeatSizeChange: ['Bit', 1, 'Boolified'],
             null0: config.sizeInt - 1,
-            'color': 'Color',
-            'distance': config.sizeInt,
-            'particleSize': config.sizeInt,
-            'onBeatParticleSize': config.sizeInt,
-            'blendMode': ['Map4', { 0: 'REPLACE', 1: 'Additive', 2: 'FIFTY_FIFTY', 3: 'DEFAULT' }]
+            color: 'Color',
+            distance: config.sizeInt,
+            particleSize: config.sizeInt,
+            onBeatParticleSize: config.sizeInt,
+            blendMode: ['Map4', { 0: 'REPLACE', 1: 'Additive', 2: 'FIFTY_FIFTY', 3: 'DEFAULT' }]
         }
     },
     {
-        'name': 'Roto Blitter',
-        'code': 0x09,
-        'group': 'Trans',
-        'func': 'generic',
-        'fields': {
-            'zoom': config.sizeInt,
-            'rotate': config.sizeInt,
-            'blendMode': ['Map4', { '0': 'REPLACE', '1': 'FIFTY_FIFTY' }],
-            'onBeatReverse': ['Bool', config.sizeInt],
-            'reversalSpeed': config.sizeInt,
-            'onBeatZoom': config.sizeInt,
-            'onBeat': ['Bool', config.sizeInt],
-            'bilinear': ['Bool', config.sizeInt]
+        name: 'Roto Blitter',
+        code: 0x09,
+        group: 'Trans',
+        func: 'generic',
+        fields: {
+            zoom: config.sizeInt,
+            rotate: config.sizeInt,
+            blendMode: ['Map4', { '0': 'REPLACE', '1': 'FIFTY_FIFTY' }],
+            onBeatReverse: ['Bool', config.sizeInt],
+            reversalSpeed: config.sizeInt,
+            onBeatZoom: config.sizeInt,
+            onBeat: ['Bool', config.sizeInt],
+            bilinear: ['Bool', config.sizeInt]
         }
     },
     {
-        'name': 'SVP',
-        'code': 0x0A,
-        'group': 'Render',
-        'func': 'generic',
-        'fields': {
-            'library': ['SizeString', 260]
+        name: 'SVP',
+        code: 0x0a,
+        group: 'Render',
+        func: 'generic',
+        fields: {
+            library: ['SizeString', 260]
         }
     },
     {
-        'name': 'Colorfade',
-        'code': 0x0B,
-        'group': 'Trans',
-        'func': 'generic',
-        'fields': {
-            'enabled': ['Bit', 0, 'Boolified'],
-            'onBeat': ['Bit', 2, 'Boolified'],
-            'onBeatRandom': ['Bit', 1, 'Boolified'],
+        name: 'Colorfade',
+        code: 0x0b,
+        group: 'Trans',
+        func: 'generic',
+        fields: {
+            enabled: ['Bit', 0, 'Boolified'],
+            onBeat: ['Bit', 2, 'Boolified'],
+            onBeatRandom: ['Bit', 1, 'Boolified'],
             null0: config.sizeInt - 1,
-            'fader1': 'Int32',
-            'fader2': 'Int32',
-            'fader3': 'Int32',
-            'beatFader1': 'Int32',
-            'beatFader2': 'Int32',
-            'beatFader3': 'Int32'
+            fader1: 'Int32',
+            fader2: 'Int32',
+            fader3: 'Int32',
+            beatFader1: 'Int32',
+            beatFader2: 'Int32',
+            beatFader3: 'Int32'
         }
     },
     {
-        'name': 'Color Clip',
-        'code': 0x0C,
-        'group': 'Trans',
-        'func': 'generic',
-        'fields': {
-            'mode': ['Map4', { 0: 'OFF', 1: 'BELOW', 2: 'ABOVE', 3: 'NEAR' }],
-            'color': 'Color',
-            'outColor': 'Color',
-            'level': config.sizeInt
+        name: 'Color Clip',
+        code: 0x0c,
+        group: 'Trans',
+        func: 'generic',
+        fields: {
+            mode: ['Map4', { 0: 'OFF', 1: 'BELOW', 2: 'ABOVE', 3: 'NEAR' }],
+            color: 'Color',
+            outColor: 'Color',
+            level: config.sizeInt // 0-64: (d_r^2 + d_g^2 + d_b^2) <= (level*2)^2
         }
     },
     {
-        'name': 'Rotating Stars',
-        'code': 0x0D,
-        'group': 'Render',
-        'func': 'generic',
-        'fields': {
-            'colors': 'ColorList'
+        name: 'Rotating Stars',
+        code: 0x0d,
+        group: 'Render',
+        func: 'generic',
+        fields: {
+            colors: 'ColorList'
         }
     },
     {
-        'name': 'Ring',
-        'code': 0x0E,
-        'group': 'Render',
-        'func': 'generic',
-        'fields': {
-            'audioChannel': ['Bit', [2, 3], 'AudioChannel'],
-            'positionX': ['Bit', [4, 5], 'PositionX'],
+        name: 'Ring',
+        code: 0x0e,
+        group: 'Render',
+        func: 'generic',
+        fields: {
+            audioChannel: ['Bit', [2, 3], 'AudioChannel'],
+            positionX: ['Bit', [4, 5], 'PositionX'],
             null0: config.sizeInt - 1,
-            'colors': 'ColorList',
-            'size': config.sizeInt,
-            'audioSource': ['UInt32', config.sizeInt, 'AudioSource']
+            colors: 'ColorList',
+            size: config.sizeInt,
+            audioSource: ['UInt32', config.sizeInt, 'AudioSource']
         }
     },
     {
-        'name': 'Movement',
-        'code': 0x0F,
-        'group': 'Trans',
-        'func': 'movement'
+        name: 'Movement',
+        code: 0x0f,
+        group: 'Trans',
+        func: 'movement'
     },
     {
-        'name': 'Scatter',
-        'code': 0x10,
-        'group': 'Trans',
-        'func': 'generic',
-        'fields': {
-            'enabled': ['Bool', config.sizeInt]
+        name: 'Scatter',
+        code: 0x10,
+        group: 'Trans',
+        func: 'generic',
+        fields: {
+            enabled: ['Bool', config.sizeInt]
         }
     },
     {
-        'name': 'Dot Grid',
-        'code': 0x11,
-        'group': 'Render',
-        'func': 'generic',
-        'fields': {
-            'colors': 'ColorList',
-            'spacing': config.sizeInt,
-            'speedX': 'Int32',
-            'speedY': 'Int32',
-            'blendMode': ['Map4', { 0: 'REPLACE', 1: 'Additive', 2: 'FIFTY_FIFTY', 3: 'DEFAULT' }]
+        name: 'Dot Grid',
+        code: 0x11,
+        group: 'Render',
+        func: 'generic',
+        fields: {
+            colors: 'ColorList',
+            spacing: config.sizeInt,
+            speedX: 'Int32',
+            speedY: 'Int32',
+            blendMode: ['Map4', { 0: 'REPLACE', 1: 'Additive', 2: 'FIFTY_FIFTY', 3: 'DEFAULT' }]
         }
     },
     {
-        'name': 'Buffer Save',
-        'code': 0x12,
-        'group': 'Misc',
-        'func': 'generic',
-        'fields': {
-            'action': ['BufferMode', config.sizeInt],
-            'bufferId': ['BufferNum', config.sizeInt],
-            'blendMode': ['BlendmodeBuffer', config.sizeInt],
-            'adjustBlend': config.sizeInt
+        name: 'Buffer Save',
+        code: 0x12,
+        group: 'Misc',
+        func: 'generic',
+        fields: {
+            action: ['BufferMode', config.sizeInt],
+            bufferId: ['BufferNum', config.sizeInt],
+            blendMode: ['BlendmodeBuffer', config.sizeInt],
+            adjustBlend: config.sizeInt
         }
     },
     {
-        'name': 'Dot Fountain',
-        'code': 0x13,
-        'group': 'Render',
-        'func': 'generic',
-        'fields': {
-            'rotationSpeed': 'Int32',
-            'colorTop': 'Color',
-            'colorHigh': 'Color',
-            'colorMid': 'Color',
-            'colorLow': 'Color',
-            'colorBottom': 'Color',
-            'angle': 'Int32',
-            null0: config.sizeInt
+        name: 'Dot Fountain',
+        code: 0x13,
+        group: 'Render',
+        func: 'generic',
+        fields: {
+            rotationSpeed: 'Int32',
+            colorTop: 'Color',
+            colorHigh: 'Color',
+            colorMid: 'Color',
+            colorLow: 'Color',
+            colorBottom: 'Color',
+            angle: 'Int32',
+            null0: config.sizeInt // most likely current rotation, has some huge value, has no ui, is basically arbitrary depending on time of save, not converted
         }
     },
     {
-        'name': 'Water',
-        'code': 0x14,
-        'group': 'Trans',
-        'func': 'generic',
-        'fields': {
-            'enabled': ['Bool', config.sizeInt]
+        name: 'Water',
+        code: 0x14,
+        group: 'Trans',
+        func: 'generic',
+        fields: {
+            enabled: ['Bool', config.sizeInt]
         }
     },
     {
-        'name': 'Comment',
-        'code': 0x15,
-        'group': 'Misc',
-        'func': 'generic',
-        'fields': {
-            'text': 'SizeString'
+        name: 'Comment',
+        code: 0x15,
+        group: 'Misc',
+        func: 'generic',
+        fields: {
+            text: 'SizeString'
         }
     },
     {
-        'name': 'Brightness',
-        'code': 0x16,
-        'group': 'Trans',
-        'func': 'generic',
-        'fields': {
-            'enabled': ['Bool', config.sizeInt],
-            'blendMode': ['Map8', { 0: 'REPLACE', 1: 'ADDITIVE', 0x100000000: 'FIFTY_FIFTY' }],
-            'red': 'Int32',
-            'green': 'Int32',
-            'blue': 'Int32',
-            'separate': ['Bool', config.sizeInt],
-            'excludeColor': 'Color',
-            'exclude': ['Bool', config.sizeInt],
-            'distance': config.sizeInt
+        name: 'Brightness',
+        code: 0x16,
+        group: 'Trans',
+        func: 'generic',
+        fields: {
+            enabled: ['Bool', config.sizeInt],
+            blendMode: ['Map8', { 0: 'REPLACE', 1: 'ADDITIVE', 0x100000000: 'FIFTY_FIFTY' }],
+            red: 'Int32',
+            green: 'Int32',
+            blue: 'Int32',
+            separate: ['Bool', config.sizeInt],
+            excludeColor: 'Color',
+            exclude: ['Bool', config.sizeInt],
+            distance: config.sizeInt // 0 to 255
         }
     },
     {
-        'name': 'Interleave',
-        'code': 0x17,
-        'group': 'Trans',
-        'func': 'generic',
-        'fields': {
-            'enabled': ['Bool', config.sizeInt],
-            'x': config.sizeInt,
-            'y': config.sizeInt,
-            'color': 'Color',
-            'blendMode': ['Map8', { 0: 'REPLACE', 1: 'ADDITIVE', 0x100000000: 'FIFTY_FIFTY' }],
-            'onbeat': ['Bool', config.sizeInt],
-            'x2': config.sizeInt,
-            'y2': config.sizeInt,
-            'beatDuration': config.sizeInt
+        name: 'Interleave',
+        code: 0x17,
+        group: 'Trans',
+        func: 'generic',
+        fields: {
+            enabled: ['Bool', config.sizeInt],
+            x: config.sizeInt,
+            y: config.sizeInt,
+            color: 'Color',
+            blendMode: ['Map8', { 0: 'REPLACE', 1: 'ADDITIVE', 0x100000000: 'FIFTY_FIFTY' }],
+            onbeat: ['Bool', config.sizeInt],
+            x2: config.sizeInt,
+            y2: config.sizeInt,
+            beatDuration: config.sizeInt
         }
     },
     {
-        'name': 'Grain',
-        'code': 0x18,
-        'group': 'Trans',
-        'func': 'generic',
-        'fields': {
-            'enabled': ['Bool', config.sizeInt],
-            'blendMode': ['Map8', { 0: 'REPLACE', 1: 'ADDITIVE', 0x100000000: 'FIFTY_FIFTY' }],
-            'amount': config.sizeInt,
-            'static': ['Bool', config.sizeInt]
+        name: 'Grain',
+        code: 0x18,
+        group: 'Trans',
+        func: 'generic',
+        fields: {
+            enabled: ['Bool', config.sizeInt],
+            blendMode: ['Map8', { 0: 'REPLACE', 1: 'ADDITIVE', 0x100000000: 'FIFTY_FIFTY' }],
+            amount: config.sizeInt,
+            static: ['Bool', config.sizeInt]
         }
     },
     {
-        'name': 'Clear Screen',
-        'code': 0x19,
-        'group': 'Render',
-        'func': 'generic',
-        'fields': {
-            'enabled': ['Bool', config.sizeInt],
-            'color': 'Color',
-            'blendMode': ['Map8', { 0: 'REPLACE', 1: 'ADDITIVE', 0x100000000: 'FIFTY_FIFTY', 2: 'DEFAULT' }],
-            'onlyFirst': ['Bool', config.sizeInt]
+        name: 'Clear Screen',
+        code: 0x19,
+        group: 'Render',
+        func: 'generic',
+        fields: {
+            enabled: ['Bool', config.sizeInt],
+            color: 'Color',
+            blendMode: ['Map8', { 0: 'REPLACE', 1: 'ADDITIVE', 0x100000000: 'FIFTY_FIFTY', 2: 'DEFAULT' }],
+            onlyFirst: ['Bool', config.sizeInt]
         }
     },
     {
-        'name': 'Mirror',
-        'code': 0x1A,
-        'group': 'Trans',
-        'func': 'generic',
-        'fields': {
-            'enabled': ['Bool', config.sizeInt],
-            'topToBottom': ['Bit', 0, 'Boolified'],
-            'bottomToTop': ['Bit', 1, 'Boolified'],
-            'leftToRight': ['Bit', 2, 'Boolified'],
-            'rightToLeft': ['Bit', 3, 'Boolified'],
+        name: 'Mirror',
+        code: 0x1a,
+        group: 'Trans',
+        func: 'generic',
+        fields: {
+            enabled: ['Bool', config.sizeInt],
+            topToBottom: ['Bit', 0, 'Boolified'],
+            bottomToTop: ['Bit', 1, 'Boolified'],
+            leftToRight: ['Bit', 2, 'Boolified'],
+            rightToLeft: ['Bit', 3, 'Boolified'],
             null0: config.sizeInt - 1,
-            'onBeatRandom': ['Bool', config.sizeInt],
-            'smoothTransition': ['Bool', config.sizeInt],
-            'transitionDuration': config.sizeInt
+            onBeatRandom: ['Bool', config.sizeInt],
+            smoothTransition: ['Bool', config.sizeInt],
+            transitionDuration: config.sizeInt
         }
     },
     {
-        'name': 'Starfield',
-        'code': 0x1B,
-        'group': 'Render',
-        'func': 'generic',
-        'fields': {
-            'enabled': config.sizeInt,
-            'color': 'Color',
-            'blendMode': ['Map8', { 0: 'REPLACE', 1: 'ADDITIVE', 0x100000000: 'FIFTY_FIFTY' }],
-            'WarpSpeed': 'Float',
-            'MaxStars_set': config.sizeInt,
-            'onbeat': config.sizeInt,
-            'spdBeat': 'Float',
-            'durFrames': config.sizeInt
+        name: 'Starfield',
+        code: 0x1b,
+        group: 'Render',
+        func: 'generic',
+        fields: {
+            enabled: config.sizeInt,
+            color: 'Color',
+            blendMode: ['Map8', { 0: 'REPLACE', 1: 'ADDITIVE', 0x100000000: 'FIFTY_FIFTY' }],
+            WarpSpeed: 'Float',
+            MaxStars_set: config.sizeInt,
+            onbeat: config.sizeInt,
+            spdBeat: 'Float',
+            durFrames: config.sizeInt
         }
     },
     {
-        'name': 'Text',
-        'code': 0x1C,
-        'group': 'Render',
-        'func': 'generic',
-        'fields': {
-            'enabled': ['Bool', config.sizeInt],
-            'color': 'Color',
-            'blendMode': ['Map8', { 0: 'REPLACE', 1: 'ADDITIVE', 0x100000000: 'FIFTY_FIFTY' }],
-            'onBeat': ['Bool', config.sizeInt],
-            'insertBlanks': ['Bool', config.sizeInt],
-            'randomPosition': ['Bool', config.sizeInt],
-            'verticalAlign': ['Map4', { '0': 'TOP', '4': 'CENTER', '8': 'BOTTOM' }],
-            'horizontalAlign': ['Map4', { '0': 'LEFT', '1': 'CENTER', '2': 'RIGHT' }],
-            'onBeatSpeed': config.sizeInt,
-            'normSpeed': config.sizeInt,
+        name: 'Text',
+        code: 0x1c,
+        group: 'Render',
+        func: 'generic',
+        fields: {
+            enabled: ['Bool', config.sizeInt],
+            color: 'Color',
+            blendMode: ['Map8', { 0: 'REPLACE', 1: 'ADDITIVE', 0x100000000: 'FIFTY_FIFTY' }],
+            onBeat: ['Bool', config.sizeInt],
+            insertBlanks: ['Bool', config.sizeInt],
+            randomPosition: ['Bool', config.sizeInt],
+            verticalAlign: ['Map4', { '0': 'TOP', '4': 'CENTER', '8': 'BOTTOM' }],
+            horizontalAlign: ['Map4', { '0': 'LEFT', '1': 'CENTER', '2': 'RIGHT' }],
+            onBeatSpeed: config.sizeInt,
+            normSpeed: config.sizeInt,
             null0: 60,
             // Win LOGFONT structure, 60bytes, this is more interesting:
             null1: config.sizeInt * 4,
@@ -465,578 +465,740 @@ var builtin = [
             // LONG  lfEscapement;
             // LONG  lfOrientation;
             // LONG  lfWeight;
-            'weight': ['Map4', { '0': 'DONTCARE', '100': 'THIN', '200': 'EXTRALIGHT', '300': 'LIGHT', '400': 'REGULAR', '500': 'MEDIUM', '600': 'SEMIBOLD', '700': 'BOLD', '800': 'EXTRABOLD', '900': 'BLACK' }],
-            'italic': ['Bool', 1],
-            'underline': ['Bool', 1],
-            'strikeOut': ['Bool', 1],
-            'charSet': 1,
+            weight: ['Map4', { '0': 'DONTCARE', '100': 'THIN', '200': 'EXTRALIGHT', '300': 'LIGHT', '400': 'REGULAR', '500': 'MEDIUM', '600': 'SEMIBOLD', '700': 'BOLD', '800': 'EXTRABOLD', '900': 'BLACK' }],
+            italic: ['Bool', 1],
+            underline: ['Bool', 1],
+            strikeOut: ['Bool', 1],
+            charSet: 1,
             null2: 4,
             // BYTE  lfClipPrecision;
             // BYTE  lfQuality;
             // BYTE  lfPitchAndFamily;
-            'fontName': ['SizeString', 32],
-            'text': ['SizeString', 0 /*==var length*/, 'SemiColSplit'],
-            'outline': ['Bool', config.sizeInt],
-            'outlineColor': 'Color',
-            'shiftX': config.sizeInt,
-            'shiftY': config.sizeInt,
-            'outlineShadowSize': config.sizeInt,
-            'randomWord': ['Bool', config.sizeInt],
-            'shadow': ['Bool', config.sizeInt]
+            fontName: ['SizeString', 32],
+            text: ['SizeString', 0 /*==var length*/, 'SemiColSplit'],
+            outline: ['Bool', config.sizeInt],
+            outlineColor: 'Color',
+            shiftX: config.sizeInt,
+            shiftY: config.sizeInt,
+            outlineShadowSize: config.sizeInt,
+            randomWord: ['Bool', config.sizeInt],
+            shadow: ['Bool', config.sizeInt]
         }
     },
     {
-        'name': 'Bump',
-        'code': 0x1D,
-        'group': 'Trans',
-        'func': 'generic',
-        'fields': {
-            'enabled': ['Bool', config.sizeInt],
-            'onBeat': ['Bool', config.sizeInt],
-            'duration': config.sizeInt,
-            'depth': config.sizeInt,
-            'onBeatDepth': config.sizeInt,
-            'blendMode': ['Map8', { 0: 'REPLACE', 1: 'ADDITIVE', 0x100000000: 'FIFTY_FIFTY' }],
-            'code': 'CodeFBI',
-            'showDot': ['Bool', config.sizeInt],
-            'invertDepth': ['Bool', config.sizeInt],
+        name: 'Bump',
+        code: 0x1d,
+        group: 'Trans',
+        func: 'generic',
+        fields: {
+            enabled: ['Bool', config.sizeInt],
+            onBeat: ['Bool', config.sizeInt],
+            duration: config.sizeInt,
+            depth: config.sizeInt,
+            onBeatDepth: config.sizeInt,
+            blendMode: ['Map8', { 0: 'REPLACE', 1: 'ADDITIVE', 0x100000000: 'FIFTY_FIFTY' }],
+            code: 'CodeFBI',
+            showDot: ['Bool', config.sizeInt],
+            invertDepth: ['Bool', config.sizeInt],
             null0: config.sizeInt,
-            'depthBuffer': ['BufferNum', config.sizeInt]
+            depthBuffer: ['BufferNum', config.sizeInt]
         }
     },
     {
-        'name': 'Mosaic',
-        'code': 0x1E,
-        'group': 'Trans',
-        'func': 'generic',
-        'fields': {
-            'enabled': ['Bool', config.sizeInt],
-            'squareSize': config.sizeInt,
-            'onBeatSquareSize': config.sizeInt,
-            'blendMode': ['Map8', { 0: 'REPLACE', 1: 'ADDITIVE', 0x100000000: 'FIFTY_FIFTY' }],
-            'onBeatSizeChange': ['Bool', config.sizeInt],
-            'onBeatSizeDuration': config.sizeInt
+        name: 'Mosaic',
+        code: 0x1e,
+        group: 'Trans',
+        func: 'generic',
+        fields: {
+            enabled: ['Bool', config.sizeInt],
+            squareSize: config.sizeInt,
+            onBeatSquareSize: config.sizeInt,
+            blendMode: ['Map8', { 0: 'REPLACE', 1: 'ADDITIVE', 0x100000000: 'FIFTY_FIFTY' }],
+            onBeatSizeChange: ['Bool', config.sizeInt],
+            onBeatSizeDuration: config.sizeInt
         }
     },
     {
-        'name': 'Water Bump',
-        'code': 0x1F,
-        'group': 'Trans',
-        'func': 'generic',
-        'fields': {
-            'enabled': ['Bool', config.sizeInt],
-            'density': config.sizeInt,
-            'depth': config.sizeInt,
-            'random': ['Bool', config.sizeInt],
-            'dropPositionX': config.sizeInt,
-            'dropPositionY': config.sizeInt,
-            'dropRadius': config.sizeInt,
-            'method': config.sizeInt
+        name: 'Water Bump',
+        code: 0x1f,
+        group: 'Trans',
+        func: 'generic',
+        fields: {
+            enabled: ['Bool', config.sizeInt],
+            density: config.sizeInt,
+            depth: config.sizeInt,
+            random: ['Bool', config.sizeInt],
+            dropPositionX: config.sizeInt,
+            dropPositionY: config.sizeInt,
+            dropRadius: config.sizeInt,
+            method: config.sizeInt
         }
     },
     {
-        'name': 'AVI',
-        'code': 0x20,
-        'group': 'Trans',
-        'func': 'avi'
+        name: 'AVI',
+        code: 0x20,
+        group: 'Trans',
+        func: 'avi'
     },
     {
-        'name': 'Custom BPM',
-        'code': 0x21,
-        'group': 'Misc',
-        'func': 'generic',
-        'fields': {
-            'enabled': ['Bool', config.sizeInt],
-            'mode': ['RadioButton', { 0: 'ARBITRARY', 1: 'SKIP', 2: 'REVERSE' }],
-            'arbitraryValue': config.sizeInt,
-            'skipValue': config.sizeInt,
-            'skipFirstBeats': config.sizeInt
+        name: 'Custom BPM',
+        code: 0x21,
+        group: 'Misc',
+        func: 'generic',
+        fields: {
+            enabled: ['Bool', config.sizeInt],
+            mode: ['RadioButton', { 0: 'ARBITRARY', 1: 'SKIP', 2: 'REVERSE' }],
+            arbitraryValue: config.sizeInt,
+            skipValue: config.sizeInt,
+            skipFirstBeats: config.sizeInt // setting this to n>0 also prevents arbitrary mode from running on load of preset until n beats have passed.
         }
     },
     {
-        'name': 'Picture',
-        'code': 0x22,
-        'group': 'Render',
-        'func': 'generic',
-        'fields': {
-            'enabled': ['Bool', config.sizeInt],
-            'blendMode': ['Map8', { 0: 'REPLACE', 1: 'ADDITIVE', 0x100000000: 'FIFTY_FIFTY' }],
-            'adapt': config.sizeInt,
-            'onBeatPersist': config.sizeInt,
-            'file': 'NtString',
-            'ratio': config.sizeInt,
-            'aspectRatioAxis': ['Map4', { 0: 'X', 1: 'Y' }]
+        name: 'Picture',
+        code: 0x22,
+        group: 'Render',
+        func: 'generic',
+        fields: {
+            enabled: ['Bool', config.sizeInt],
+            blendMode: ['Map8', { 0: 'REPLACE', 1: 'ADDITIVE', 0x100000000: 'FIFTY_FIFTY' }],
+            adapt: config.sizeInt,
+            onBeatPersist: config.sizeInt,
+            file: 'NtString',
+            ratio: config.sizeInt,
+            aspectRatioAxis: ['Map4', { 0: 'X', 1: 'Y' }]
         }
     },
     {
-        'name': 'Dynamic Distance Modifier',
-        'code': 0x23,
-        'group': 'Trans',
-        'func': 'versioned_generic',
-        'fields': {
-            'new_version': ['Bool', 1],
-            'code': 'CodePFBI',
-            'blendMode': ['Map4', { 0: 'REPLACE', 1: 'FIFTY_FIFTY' }],
-            'bilinear': ['Bool', config.sizeInt]
+        name: 'Dynamic Distance Modifier',
+        code: 0x23,
+        group: 'Trans',
+        func: 'versioned_generic',
+        fields: {
+            new_version: ['Bool', 1],
+            code: 'CodePFBI',
+            blendMode: ['Map4', { 0: 'REPLACE', 1: 'FIFTY_FIFTY' }],
+            bilinear: ['Bool', config.sizeInt]
         }
     },
     {
-        'name': 'Super Scope',
-        'code': 0x24,
-        'group': 'Render',
-        'func': 'versioned_generic',
-        'fields': {
-            'new_version': ['Bool', 1],
-            'code': 'CodePFBI',
-            'audioChannel': ['Bit', [0, 1], 'AudioChannel'],
-            'audioSource': ['Bit', 2, 'AudioSource'],
+        name: 'Super Scope',
+        code: 0x24,
+        group: 'Render',
+        func: 'versioned_generic',
+        fields: {
+            new_version: ['Bool', 1],
+            code: 'CodePFBI',
+            audioChannel: ['Bit', [0, 1], 'AudioChannel'],
+            audioSource: ['Bit', 2, 'AudioSource'],
             null0: 3,
-            'colors': 'ColorList',
-            'drawMode': ['DrawMode', config.sizeInt]
+            colors: 'ColorList',
+            drawMode: ['DrawMode', config.sizeInt]
         }
     },
     {
-        'name': 'Invert',
-        'code': 0x25,
-        'group': 'Trans',
-        'func': 'generic',
-        'fields': {
-            'enabled': ['Bool', config.sizeInt]
+        name: 'Invert',
+        code: 0x25,
+        group: 'Trans',
+        func: 'generic',
+        fields: {
+            enabled: ['Bool', config.sizeInt]
         }
     },
     {
-        'name': 'Unique Tone',
-        'code': 0x26,
-        'group': 'Trans',
-        'func': 'generic',
-        'fields': {
-            'enabled': ['Bool', config.sizeInt],
-            'color': 'Color',
-            'blendMode': ['Map8', { 0: 'REPLACE', 1: 'ADDITIVE', 0x100000000: 'FIFTY_FIFTY' }],
-            'invert': ['Bool', config.sizeInt]
+        name: 'Unique Tone',
+        code: 0x26,
+        group: 'Trans',
+        func: 'generic',
+        fields: {
+            enabled: ['Bool', config.sizeInt],
+            color: 'Color',
+            blendMode: ['Map8', { 0: 'REPLACE', 1: 'ADDITIVE', 0x100000000: 'FIFTY_FIFTY' }],
+            invert: ['Bool', config.sizeInt]
         }
     },
     {
-        'name': 'Timescope',
-        'code': 0x27,
-        'group': 'Render',
-        'func': 'generic',
-        'fields': {
-            'enabled': ['Bool', config.sizeInt],
-            'color': 'Color',
-            'blendMode': ['Map8', { 0: 'REPLACE', 1: 'ADDITIVE', 0x100000000: 'FIFTY_FIFTY', 2: 'DEFAULT' }],
-            'audioChannel': ['UInt32', config.sizeInt, 'AudioChannel'],
-            'bands': config.sizeInt
+        name: 'Timescope',
+        code: 0x27,
+        group: 'Render',
+        func: 'generic',
+        fields: {
+            enabled: ['Bool', config.sizeInt],
+            color: 'Color',
+            blendMode: ['Map8', { 0: 'REPLACE', 1: 'ADDITIVE', 0x100000000: 'FIFTY_FIFTY', 2: 'DEFAULT' }],
+            audioChannel: ['UInt32', config.sizeInt, 'AudioChannel'],
+            bands: config.sizeInt
         }
     },
     {
-        'name': 'Set Render Mode',
-        'code': 0x28,
-        'group': 'Misc',
-        'func': 'generic',
-        'fields': {
-            'blend': ['BlendmodeRender', 1],
-            'adjustBlend': 1,
-            'lineSize': 1,
-            'enabled': ['Bit', 7, 'Boolified']
+        name: 'Set Render Mode',
+        code: 0x28,
+        group: 'Misc',
+        func: 'generic',
+        fields: {
+            blend: ['BlendmodeRender', 1],
+            adjustBlend: 1,
+            lineSize: 1,
+            enabled: ['Bit', 7, 'Boolified']
         }
     },
     {
-        'name': 'Interferences',
-        'code': 0x29,
-        'group': 'Trans',
-        'func': 'generic',
-        'fields': {
-            'enabled': ['Bool', config.sizeInt],
-            'numberOfLayers': config.sizeInt,
+        name: 'Interferences',
+        code: 0x29,
+        group: 'Trans',
+        func: 'generic',
+        fields: {
+            enabled: ['Bool', config.sizeInt],
+            numberOfLayers: config.sizeInt,
             null0: config.sizeInt,
-            'distance': config.sizeInt,
-            'alpha': config.sizeInt,
-            'rotation': 'Int32',
-            'blendMode': ['Map8', { 0: 'REPLACE', 1: 'ADDITIVE', 0x100000000: 'FIFTY_FIFTY' }],
-            'onBeatDistance': config.sizeInt,
-            'onBeatAlpha': config.sizeInt,
-            'onBeatRotation': config.sizeInt,
-            'separateRGB': ['Bool', config.sizeInt],
-            'onBeat': ['Bool', config.sizeInt],
-            'speed': 'Float'
+            distance: config.sizeInt,
+            alpha: config.sizeInt,
+            rotation: 'Int32',
+            blendMode: ['Map8', { 0: 'REPLACE', 1: 'ADDITIVE', 0x100000000: 'FIFTY_FIFTY' }],
+            onBeatDistance: config.sizeInt,
+            onBeatAlpha: config.sizeInt,
+            onBeatRotation: config.sizeInt,
+            separateRGB: ['Bool', config.sizeInt],
+            onBeat: ['Bool', config.sizeInt],
+            speed: 'Float' // 0.01 to 1.28
         }
     },
     {
-        'name': 'Dynamic Shift',
-        'code': 0x2A,
-        'group': 'Trans',
-        'func': 'versioned_generic',
-        'fields': {
-            'new_version': ['Bool', 1],
-            'code': 'CodeIFB',
-            'blendMode': ['Map4', { 0: 'Replace', 1: 'FIFTY_FIFTY' }],
-            'bilinear': ['Bool', config.sizeInt]
+        name: 'Dynamic Shift',
+        code: 0x2a,
+        group: 'Trans',
+        func: 'versioned_generic',
+        fields: {
+            new_version: ['Bool', 1],
+            code: 'CodeIFB',
+            blendMode: ['Map4', { 0: 'Replace', 1: 'FIFTY_FIFTY' }],
+            bilinear: ['Bool', config.sizeInt]
         }
     },
     {
-        'name': 'Dynamic Movement',
-        'code': 0x2B,
-        'group': 'Trans',
-        'func': 'versioned_generic',
-        'fields': {
-            'new_version': ['Bool', 1],
-            'code': 'CodePFBI',
-            'bFilter': ['Bool', config.sizeInt],
-            'coord': ['Coordinates', config.sizeInt],
-            'gridW': config.sizeInt,
-            'gridH': config.sizeInt,
-            'blend': ['Bool', config.sizeInt],
-            'wrap': ['Bool', config.sizeInt],
-            'buffer': ['BufferNum', config.sizeInt],
-            'alphaOnly': ['Bool', config.sizeInt]
+        name: 'Dynamic Movement',
+        code: 0x2b,
+        group: 'Trans',
+        func: 'versioned_generic',
+        fields: {
+            new_version: ['Bool', 1],
+            code: 'CodePFBI',
+            bFilter: ['Bool', config.sizeInt],
+            coord: ['Coordinates', config.sizeInt],
+            gridW: config.sizeInt,
+            gridH: config.sizeInt,
+            blend: ['Bool', config.sizeInt],
+            wrap: ['Bool', config.sizeInt],
+            buffer: ['BufferNum', config.sizeInt],
+            alphaOnly: ['Bool', config.sizeInt]
         }
     },
     {
-        'name': 'Fast Brightness',
-        'code': 0x2C,
-        'group': 'Trans',
-        'func': 'generic',
-        'fields': {
-            'factor': ['Map4', { 0: 2, 1: 0.5, 2: 1 }]
+        name: 'Fast Brightness',
+        code: 0x2c,
+        group: 'Trans',
+        func: 'generic',
+        fields: {
+            factor: ['Map4', { 0: 2, 1: 0.5, 2: 1 }]
         }
     },
     {
-        'name': 'Color Modifier',
-        'code': 0x2D,
-        'group': 'Trans',
-        'func': 'generic',
-        'fields': {
-            'recomputeEveryFrame': ['Bool', 1],
-            'code': 'CodePFBI'
+        name: 'Color Modifier',
+        code: 0x2d,
+        group: 'Trans',
+        func: 'generic',
+        fields: {
+            recomputeEveryFrame: ['Bool', 1],
+            code: 'CodePFBI'
         }
-    },
+    }
 ];
 //// APEs
 var dll = [
     {
-        'name': 'AVS Trans Automation',
-        'code': // Misc: AVSTrans Automation.......
-        [0x4D, 0x69, 0x73, 0x63, 0x3A, 0x20, 0x41, 0x56, 0x53, 0x54, 0x72, 0x61, 0x6E, 0x73, 0x20, 0x41, 0x75, 0x74, 0x6F, 0x6D, 0x61, 0x74, 0x69, 0x6F, 0x6E, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00],
-        'group': 'Misc',
-        'func': 'generic',
-        'fields': {
-            'enabled': ['Bool', config.sizeInt],
-            'logging': ['Bool', config.sizeInt],
-            'translateFirstLevel': ['Bool', config.sizeInt],
-            'readCommentCodes': ['Bool', config.sizeInt],
-            'code': 'NtString'
+        name: 'AVS Trans Automation',
+        // Misc: AVSTrans Automation.......
+        code: 
+        // prettier-ignore
+        [
+            0x4D, 0x69, 0x73, 0x63, 0x3A, 0x20, 0x41, 0x56,
+            0x53, 0x54, 0x72, 0x61, 0x6E, 0x73, 0x20, 0x41,
+            0x75, 0x74, 0x6F, 0x6D, 0x61, 0x74, 0x69, 0x6F,
+            0x6E, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
+        ],
+        group: 'Misc',
+        func: 'generic',
+        fields: {
+            enabled: ['Bool', config.sizeInt],
+            logging: ['Bool', config.sizeInt],
+            translateFirstLevel: ['Bool', config.sizeInt],
+            readCommentCodes: ['Bool', config.sizeInt],
+            code: 'NtString'
         }
     },
     {
-        'name': 'Texer',
-        'code': // Texer...........................
-        [0x54, 0x65, 0x78, 0x65, 0x72, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00],
-        'group': 'Misc',
-        'func': 'generic',
-        'fields': {
+        name: 'Texer',
+        // Texer...........................
+        code: 
+        // prettier-ignore
+        [
+            0x54, 0x65, 0x78, 0x65, 0x72, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
+        ],
+        group: 'Misc',
+        func: 'generic',
+        fields: {
             null0: config.sizeInt * 4,
-            'image': ['SizeString', 260],
-            'input': ['Bit', 0, 'BlendmodeIn'],
-            'blendMode': ['Bit', 2, 'BlendmodeTexer'],
+            image: ['SizeString', 260],
+            input: ['Bit', 0, 'BlendmodeIn'],
+            blendMode: ['Bit', 2, 'BlendmodeTexer'],
             null1: 3,
-            'particles': config.sizeInt,
+            particles: config.sizeInt,
             null2: 4
         }
     },
     {
-        'name': 'Texer II',
-        'code': // Acko.net: Texer II..............
-        [0x41, 0x63, 0x6B, 0x6F, 0x2E, 0x6E, 0x65, 0x74, 0x3A, 0x20, 0x54, 0x65, 0x78, 0x65, 0x72, 0x20, 0x49, 0x49, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00],
-        'group': 'Render',
-        'func': 'generic',
-        'fields': {
+        name: 'Texer II',
+        // Acko.net: Texer II..............
+        code: 
+        // prettier-ignore
+        [
+            0x41, 0x63, 0x6B, 0x6F, 0x2E, 0x6E, 0x65, 0x74,
+            0x3A, 0x20, 0x54, 0x65, 0x78, 0x65, 0x72, 0x20,
+            0x49, 0x49, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
+        ],
+        group: 'Render',
+        func: 'generic',
+        fields: {
             null0: config.sizeInt,
-            'imageSrc': ['SizeString', 260],
-            'resizing': ['Bool', config.sizeInt],
-            'wrapAround': ['Bool', config.sizeInt],
-            'colorFiltering': ['Bool', config.sizeInt],
+            imageSrc: ['SizeString', 260],
+            resizing: ['Bool', config.sizeInt],
+            wrapAround: ['Bool', config.sizeInt],
+            colorFiltering: ['Bool', config.sizeInt],
             null1: config.sizeInt,
-            'code': 'CodeIFBP'
+            code: 'CodeIFBP'
         }
     },
     {
-        'name': 'Color Map',
-        'code': // Color Map.......................
-        [0x43, 0x6F, 0x6C, 0x6F, 0x72, 0x20, 0x4D, 0x61, 0x70, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00],
-        'group': 'Trans',
-        'func': 'generic',
-        'fields': {
-            'key': ['ColorMapKey', config.sizeInt],
-            'blendMode': ['BlendmodeColorMap', config.sizeInt],
-            'mapCycleMode': ['ColorMapCycleMode', config.sizeInt],
-            'adjustBlend': 1,
+        name: 'Color Map',
+        // Color Map.......................
+        code: 
+        // prettier-ignore
+        [
+            0x43, 0x6F, 0x6C, 0x6F, 0x72, 0x20, 0x4D, 0x61,
+            0x70, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
+        ],
+        group: 'Trans',
+        func: 'generic',
+        fields: {
+            key: ['ColorMapKey', config.sizeInt],
+            blendMode: ['BlendmodeColorMap', config.sizeInt],
+            mapCycleMode: ['ColorMapCycleMode', config.sizeInt],
+            adjustBlend: 1,
             null0: 1,
-            'dontSkipFastBeats': ['Bool', 1],
-            'cycleSpeed': 1,
-            'maps': 'ColorMaps'
+            dontSkipFastBeats: ['Bool', 1],
+            cycleSpeed: 1,
+            maps: 'ColorMaps'
         }
     },
     {
-        'name': 'Framerate Limiter',
-        'code': // VFX FRAMERATE LIMITER...........
-        [0x56, 0x46, 0x58, 0x20, 0x46, 0x52, 0x41, 0x4D, 0x45, 0x52, 0x41, 0x54, 0x45, 0x20, 0x4C, 0x49, 0x4D, 0x49, 0x54, 0x45, 0x52, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00],
-        'group': 'Misc',
-        'func': 'generic',
-        'fields': {
-            'enabled': ['Bool', config.sizeInt],
-            'limit': config.sizeInt
+        name: 'Framerate Limiter',
+        // VFX FRAMERATE LIMITER...........
+        code: 
+        // prettier-ignore
+        [
+            0x56, 0x46, 0x58, 0x20, 0x46, 0x52, 0x41, 0x4D,
+            0x45, 0x52, 0x41, 0x54, 0x45, 0x20, 0x4C, 0x49,
+            0x4D, 0x49, 0x54, 0x45, 0x52, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
+        ],
+        group: 'Misc',
+        func: 'generic',
+        fields: {
+            enabled: ['Bool', config.sizeInt],
+            limit: config.sizeInt
         }
     },
     {
-        'name': 'Convolution Filter',
-        'code': // Holden03: Convolution Filter....
-        [0x48, 0x6F, 0x6C, 0x64, 0x65, 0x6E, 0x30, 0x33, 0x3A, 0x20, 0x43, 0x6F, 0x6E, 0x76, 0x6F, 0x6C, 0x75, 0x74, 0x69, 0x6F, 0x6E, 0x20, 0x46, 0x69, 0x6C, 0x74, 0x65, 0x72, 0x00, 0x00, 0x00, 0x00],
-        'group': 'Trans',
-        'func': 'generic',
-        'fields': {
-            'enabled': ['Bool', config.sizeInt],
-            'edgeMode': ['ConvolutionEdgeMode', config.sizeInt],
-            'absolute': ['Bool', config.sizeInt],
-            'twoPass': ['Bool', config.sizeInt],
-            'kernel': ['ConvoFilter', [7, 7]],
-            'bias': 'Int32',
-            'scale': 'Int32'
+        name: 'Convolution Filter',
+        // Holden03: Convolution Filter....
+        code: 
+        // prettier-ignore
+        [
+            0x48, 0x6F, 0x6C, 0x64, 0x65, 0x6E, 0x30, 0x33,
+            0x3A, 0x20, 0x43, 0x6F, 0x6E, 0x76, 0x6F, 0x6C,
+            0x75, 0x74, 0x69, 0x6F, 0x6E, 0x20, 0x46, 0x69,
+            0x6C, 0x74, 0x65, 0x72, 0x00, 0x00, 0x00, 0x00
+        ],
+        group: 'Trans',
+        func: 'generic',
+        fields: {
+            enabled: ['Bool', config.sizeInt],
+            edgeMode: ['ConvolutionEdgeMode', config.sizeInt],
+            absolute: ['Bool', config.sizeInt],
+            twoPass: ['Bool', config.sizeInt],
+            kernel: ['ConvoFilter', [7, 7]],
+            bias: 'Int32',
+            scale: 'Int32'
         }
     },
     {
-        'name': 'Triangle',
-        'code': // Render: Triangle................
-        [0x52, 0x65, 0x6E, 0x64, 0x65, 0x72, 0x3A, 0x20, 0x54, 0x72, 0x69, 0x61, 0x6E, 0x67, 0x6C, 0x65, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00],
-        'group': 'Misc',
-        'func': 'generic',
-        'fields': {
-            'code': 'NtCodeIFBP'
+        name: 'Triangle',
+        // Render: Triangle................
+        code: 
+        // prettier-ignore
+        [
+            0x52, 0x65, 0x6E, 0x64, 0x65, 0x72, 0x3A, 0x20,
+            0x54, 0x72, 0x69, 0x61, 0x6E, 0x67, 0x6C, 0x65,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
+        ],
+        group: 'Misc',
+        func: 'generic',
+        fields: {
+            code: 'NtCodeIFBP'
         }
     },
     {
-        'name': 'Channel Shift',
-        'code': // Channel Shift...................
-        [0x43, 0x68, 0x61, 0x6E, 0x6E, 0x65, 0x6C, 0x20, 0x53, 0x68, 0x69, 0x66, 0x74, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00],
-        'group': 'Misc',
-        'func': 'generic',
-        'fields': {
+        name: 'Channel Shift',
+        // Channel Shift...................
+        code: 
+        // prettier-ignore
+        [
+            0x43, 0x68, 0x61, 0x6E, 0x6E, 0x65, 0x6C, 0x20,
+            0x53, 0x68, 0x69, 0x66, 0x74, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
+        ],
+        group: 'Misc',
+        func: 'generic',
+        fields: {
             // some keys seeem to have changed between versions.
-            'mode': ['Map4', { 0: 'RGB', 1023: 'RGB', 1144: 'RGB', 1020: 'RBG', 1019: 'BRG', 1021: 'BGR', 1018: 'GBR', 1022: 'GRB', 1183: 'RGB' /*1183 (probably from an old APE version?) presents as if nothing is selected, so set to RGB*/ }],
-            'onBeatRandom': ['Bool', config.sizeInt]
+            mode: ['Map4', { 0: 'RGB', 1023: 'RGB', 1144: 'RGB', 1020: 'RBG', 1019: 'BRG', 1021: 'BGR', 1018: 'GBR', 1022: 'GRB', 1183: 'RGB' /*1183 (probably from an old APE version?) presents as if nothing is selected, so set to RGB*/ }],
+            onBeatRandom: ['Bool', config.sizeInt]
         }
     },
     {
-        'name': 'Normalize',
-        'code': // Trans: Normalise................
-        [0x54, 0x72, 0x61, 0x6E, 0x73, 0x3A, 0x20, 0x4E, 0x6F, 0x72, 0x6D, 0x61, 0x6C, 0x69, 0x73, 0x65, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00],
-        'group': 'Trans',
-        'func': 'generic',
-        'fields': {
-            'enabled': ['Bool', config.sizeInt]
+        name: 'Normalize',
+        // Trans: Normalise................
+        code: 
+        // prettier-ignore
+        [
+            0x54, 0x72, 0x61, 0x6E, 0x73, 0x3A, 0x20, 0x4E,
+            0x6F, 0x72, 0x6D, 0x61, 0x6C, 0x69, 0x73, 0x65,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
+        ],
+        group: 'Trans',
+        func: 'generic',
+        fields: {
+            enabled: ['Bool', config.sizeInt]
         }
     },
     {
-        'name': 'Video Delay',
-        'code': // Holden04: Video Delay...........
-        [0x48, 0x6F, 0x6C, 0x64, 0x65, 0x6E, 0x30, 0x34, 0x3A, 0x20, 0x56, 0x69, 0x64, 0x65, 0x6F, 0x20, 0x44, 0x65, 0x6C, 0x61, 0x79, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00],
-        'group': 'Trans',
-        'func': 'generic',
-        'fields': {
-            'enabled': ['Bool', config.sizeInt],
-            'useBeats': ['Bool', config.sizeInt],
-            'delay': config.sizeInt
+        name: 'Video Delay',
+        // Holden04: Video Delay...........
+        code: 
+        // prettier-ignore
+        [
+            0x48, 0x6F, 0x6C, 0x64, 0x65, 0x6E, 0x30, 0x34,
+            0x3A, 0x20, 0x56, 0x69, 0x64, 0x65, 0x6F, 0x20,
+            0x44, 0x65, 0x6C, 0x61, 0x79, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
+        ],
+        group: 'Trans',
+        func: 'generic',
+        fields: {
+            enabled: ['Bool', config.sizeInt],
+            useBeats: ['Bool', config.sizeInt],
+            delay: config.sizeInt
         }
     },
     {
-        'name': 'Multiplier',
-        'code': // Multiplier......................
-        [0x4D, 0x75, 0x6C, 0x74, 0x69, 0x70, 0x6C, 0x69, 0x65, 0x72, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00],
-        'group': 'Trans',
-        'func': 'generic',
-        'fields': {
-            'multiply': ['Map4', { 0: 'INFINITE_ROOT', 1: 8, 2: 4, 3: 2, 4: 0.5, 5: 0.25, 6: 0.125, 7: 'INFINITE_SQUARE' }]
+        name: 'Multiplier',
+        // Multiplier......................
+        code: 
+        // prettier-ignore
+        [
+            0x4D, 0x75, 0x6C, 0x74, 0x69, 0x70, 0x6C, 0x69,
+            0x65, 0x72, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
+        ],
+        group: 'Trans',
+        func: 'generic',
+        fields: {
+            multiply: ['Map4', { 0: 'INFINITE_ROOT', 1: 8, 2: 4, 3: 2, 4: 0.5, 5: 0.25, 6: 0.125, 7: 'INFINITE_SQUARE' }]
         }
     },
     {
-        'name': 'Color Reduction',
-        'code': // Color Reduction.................
-        [0x43, 0x6F, 0x6C, 0x6F, 0x72, 0x20, 0x52, 0x65, 0x64, 0x75, 0x63, 0x74, 0x69, 0x6F, 0x6E, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00],
-        'group': 'Trans',
-        'func': 'generic',
-        'fields': {
+        name: 'Color Reduction',
+        // Color Reduction.................
+        code: 
+        // prettier-ignore
+        [
+            0x43, 0x6F, 0x6C, 0x6F, 0x72, 0x20, 0x52, 0x65,
+            0x64, 0x75, 0x63, 0x74, 0x69, 0x6F, 0x6E, 0x00,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
+        ],
+        group: 'Trans',
+        func: 'generic',
+        fields: {
             null0: 260,
-            'colors': ['Map4', { 1: 2, 2: 4, 3: 8, 4: 16, 5: 32, 6: 64, 7: 128, 8: 256 }]
+            colors: ['Map4', { 1: 2, 2: 4, 3: 8, 4: 16, 5: 32, 6: 64, 7: 128, 8: 256 }]
         }
     },
     {
-        'name': 'Multi Delay',
-        'code': // Holden05: Multi Delay...........
-        [0x48, 0x6F, 0x6C, 0x64, 0x65, 0x6E, 0x30, 0x35, 0x3A, 0x20, 0x4D, 0x75, 0x6C, 0x74, 0x69, 0x20, 0x44, 0x65, 0x6C, 0x61, 0x79, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00],
-        'group': 'Trans',
-        'func': 'generic',
-        'fields': {
-            'mode': ['Map4', { 0: 'DISABLED', 1: 'INPUT', 2: 'OUTPUT' }],
-            'activeBuffer': config.sizeInt,
-            'useBeats0': ['Bool', config.sizeInt],
-            'delay0': config.sizeInt,
-            'useBeats1': ['Bool', config.sizeInt],
-            'delay1': config.sizeInt,
-            'useBeats2': ['Bool', config.sizeInt],
-            'delay2': config.sizeInt,
-            'useBeats3': ['Bool', config.sizeInt],
-            'delay3': config.sizeInt,
-            'useBeats4': ['Bool', config.sizeInt],
-            'delay4': config.sizeInt,
-            'useBeats5': ['Bool', config.sizeInt],
-            'delay5': config.sizeInt
+        name: 'Multi Delay',
+        // Holden05: Multi Delay...........
+        code: 
+        // prettier-ignore
+        [
+            0x48, 0x6F, 0x6C, 0x64, 0x65, 0x6E, 0x30, 0x35,
+            0x3A, 0x20, 0x4D, 0x75, 0x6C, 0x74, 0x69, 0x20,
+            0x44, 0x65, 0x6C, 0x61, 0x79, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
+        ],
+        group: 'Trans',
+        func: 'generic',
+        fields: {
+            mode: ['Map4', { 0: 'DISABLED', 1: 'INPUT', 2: 'OUTPUT' }],
+            activeBuffer: config.sizeInt,
+            useBeats0: ['Bool', config.sizeInt],
+            delay0: config.sizeInt,
+            useBeats1: ['Bool', config.sizeInt],
+            delay1: config.sizeInt,
+            useBeats2: ['Bool', config.sizeInt],
+            delay2: config.sizeInt,
+            useBeats3: ['Bool', config.sizeInt],
+            delay3: config.sizeInt,
+            useBeats4: ['Bool', config.sizeInt],
+            delay4: config.sizeInt,
+            useBeats5: ['Bool', config.sizeInt],
+            delay5: config.sizeInt
         }
     },
     {
-        'name': 'Buffer Blend',
-        'code': // Misc: Buffer blend..............
-        [0x4D, 0x69, 0x73, 0x63, 0x3A, 0x20, 0x42, 0x75, 0x66, 0x66, 0x65, 0x72, 0x20, 0x62, 0x6C, 0x65, 0x6E, 0x64, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00],
-        'group': 'Misc',
-        'func': 'generic',
-        'fields': {
-            'enabled': ['Bool', config.sizeInt],
-            'bufferB': ['BufferBlendBuffer', config.sizeInt],
-            'bufferA': ['BufferBlendBuffer', config.sizeInt],
-            'mode': ['BufferBlendMode', config.sizeInt]
+        name: 'Buffer Blend',
+        // Misc: Buffer blend..............
+        code: 
+        // prettier-ignore
+        [
+            0x4D, 0x69, 0x73, 0x63, 0x3A, 0x20, 0x42, 0x75,
+            0x66, 0x66, 0x65, 0x72, 0x20, 0x62, 0x6C, 0x65,
+            0x6E, 0x64, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
+        ],
+        group: 'Misc',
+        func: 'generic',
+        fields: {
+            enabled: ['Bool', config.sizeInt],
+            bufferB: ['BufferBlendBuffer', config.sizeInt],
+            bufferA: ['BufferBlendBuffer', config.sizeInt],
+            mode: ['BufferBlendMode', config.sizeInt]
         }
     },
     {
-        'name': 'MIDI Trace',
-        'code': // Nullsoft Pixelcorps: MIDItrace .
-        [0x4E, 0x75, 0x6C, 0x6C, 0x73, 0x6F, 0x66, 0x74, 0x20, 0x50, 0x69, 0x78, 0x65, 0x6C, 0x63, 0x6F, 0x72, 0x70, 0x73, 0x3A, 0x20, 0x4D, 0x49, 0x44, 0x49, 0x74, 0x72, 0x61, 0x63, 0x65, 0x20, 0x00],
-        'group': 'Misc',
-        'func': 'generic',
-        'fields': {
-            'enabled': ['Bool', config.sizeInt],
-            'channel': config.sizeInt,
-            'mode': ['Map4', { 1: 'CURRENT', 2: 'TRIGGER' }],
-            'allChannels': ['Bool', config.sizeInt],
-            'printEvents': ['Bool', config.sizeInt]
+        name: 'MIDI Trace',
+        // Nullsoft Pixelcorps: MIDItrace .
+        code: 
+        // prettier-ignore
+        [
+            0x4E, 0x75, 0x6C, 0x6C, 0x73, 0x6F, 0x66, 0x74,
+            0x20, 0x50, 0x69, 0x78, 0x65, 0x6C, 0x63, 0x6F,
+            0x72, 0x70, 0x73, 0x3A, 0x20, 0x4D, 0x49, 0x44,
+            0x49, 0x74, 0x72, 0x61, 0x63, 0x65, 0x20, 0x00
+        ],
+        group: 'Misc',
+        func: 'generic',
+        fields: {
+            enabled: ['Bool', config.sizeInt],
+            channel: config.sizeInt,
+            mode: ['Map4', { 1: 'CURRENT', 2: 'TRIGGER' }],
+            allChannels: ['Bool', config.sizeInt],
+            printEvents: ['Bool', config.sizeInt]
         }
     },
     {
-        'name': 'Add Borders',
-        'code': // Virtual Effect: Addborders......
-        [0x56, 0x69, 0x72, 0x74, 0x75, 0x61, 0x6C, 0x20, 0x45, 0x66, 0x66, 0x65, 0x63, 0x74, 0x3A, 0x20, 0x41, 0x64, 0x64, 0x62, 0x6F, 0x72, 0x64, 0x65, 0x72, 0x73, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00],
-        'group': 'Misc',
-        'func': 'generic',
-        'fields': {
-            'enabled': ['Bool', config.sizeInt],
-            'color': 'Color',
-            'size': config.sizeInt
+        name: 'Add Borders',
+        // Virtual Effect: Addborders......
+        code: 
+        // prettier-ignore
+        [
+            0x56, 0x69, 0x72, 0x74, 0x75, 0x61, 0x6C, 0x20,
+            0x45, 0x66, 0x66, 0x65, 0x63, 0x74, 0x3A, 0x20,
+            0x41, 0x64, 0x64, 0x62, 0x6F, 0x72, 0x64, 0x65,
+            0x72, 0x73, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
+        ],
+        group: 'Misc',
+        func: 'generic',
+        fields: {
+            enabled: ['Bool', config.sizeInt],
+            color: 'Color',
+            size: config.sizeInt
         }
     },
     {
-        'name': 'AVI Player',
-        'code': // VFX AVI PLAYER..................
-        [0x56, 0x46, 0x58, 0x20, 0x41, 0x56, 0x49, 0x20, 0x50, 0x4C, 0x41, 0x59, 0x45, 0x52, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00],
-        'group': 'Misc',
-        'func': 'generic',
-        'fields': {
-            'filePath': ['SizeString', 256],
-            'enabled': ['Bool', config.sizeInt]
+        name: 'AVI Player',
+        // VFX AVI PLAYER..................
+        code: 
+        // prettier-ignore
+        [
+            0x56, 0x46, 0x58, 0x20, 0x41, 0x56, 0x49, 0x20,
+            0x50, 0x4C, 0x41, 0x59, 0x45, 0x52, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
+        ],
+        group: 'Misc',
+        func: 'generic',
+        fields: {
+            filePath: ['SizeString', 256],
+            enabled: ['Bool', config.sizeInt]
+            // more...
         }
     },
     {
-        'name': 'FyrewurX',
-        'code': // FunkyFX FyrewurX v1.............
-        [0x46, 0x75, 0x6E, 0x6B, 0x79, 0x46, 0x58, 0x20, 0x46, 0x79, 0x72, 0x65, 0x77, 0x75, 0x72, 0x58, 0x20, 0x76, 0x31, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00],
-        'group': 'Misc',
-        'func': 'generic',
-        'fields': {
-            'enabled': ['Bool', config.sizeInt]
+        name: 'FyrewurX',
+        // FunkyFX FyrewurX v1.............
+        code: 
+        // prettier-ignore
+        [
+            0x46, 0x75, 0x6E, 0x6B, 0x79, 0x46, 0x58, 0x20,
+            0x46, 0x79, 0x72, 0x65, 0x77, 0x75, 0x72, 0x58,
+            0x20, 0x76, 0x31, 0x00, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
+        ],
+        group: 'Misc',
+        func: 'generic',
+        fields: {
+            enabled: ['Bool', config.sizeInt]
         }
     },
     {
-        'name': 'Global Variables',
-        'code': // Jheriko: Global.................
-        [0x4A, 0x68, 0x65, 0x72, 0x69, 0x6B, 0x6F, 0x3A, 0x20, 0x47, 0x6C, 0x6F, 0x62, 0x61, 0x6C, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00],
-        'group': 'Misc',
-        'func': 'generic',
-        'fields': {
-            'load': ['Map4', { 0: 'NONE', 1: 'ONCE', 2: 'CODE_CONTROL', 3: 'EVERY_FRAME' }],
+        name: 'Global Variables',
+        // Jheriko: Global.................
+        code: 
+        // prettier-ignore
+        [
+            0x4A, 0x68, 0x65, 0x72, 0x69, 0x6B, 0x6F, 0x3A,
+            0x20, 0x47, 0x6C, 0x6F, 0x62, 0x61, 0x6C, 0x00,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
+        ],
+        group: 'Misc',
+        func: 'generic',
+        fields: {
+            load: ['Map4', { 0: 'NONE', 1: 'ONCE', 2: 'CODE_CONTROL', 3: 'EVERY_FRAME' }],
             null0: config.sizeInt * 6,
-            'code': 'NtCodeIFB',
-            'file': 'NtString',
-            'saveRegRange': 'NtString',
-            'saveBufRange': 'NtString'
+            code: 'NtCodeIFB',
+            file: 'NtString',
+            saveRegRange: 'NtString',
+            saveBufRange: 'NtString'
         }
     },
     {
-        'name': 'Fluid',
-        'code': // GeissFluid......................
-        [0x47, 0x65, 0x69, 0x73, 0x73, 0x46, 0x6C, 0x75, 0x69, 0x64, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00],
-        'group': 'Misc',
-        'func': 'generic',
-        'fields': {
-            null0: config.sizeInt
+        name: 'Fluid',
+        // GeissFluid......................
+        code: 
+        // prettier-ignore
+        [
+            0x47, 0x65, 0x69, 0x73, 0x73, 0x46, 0x6C, 0x75,
+            0x69, 0x64, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
+        ],
+        group: 'Misc',
+        func: 'generic',
+        fields: {
+            null0: config.sizeInt // Fluid saves its parameter globally somewhere, not in the preset file - great... :/
         }
     },
     {
-        'name': 'Picture II',
-        'code': // Picture II......................
-        [0x50, 0x69, 0x63, 0x74, 0x75, 0x72, 0x65, 0x20, 0x49, 0x49, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00],
-        'group': 'Misc',
-        'func': 'generic',
-        'fields': {
-            'image': ['NtString', 260],
-            'blendMode': ['BlendmodePicture2', config.sizeInt],
-            'onBeatOutput': ['BlendmodePicture2', config.sizeInt],
-            'bilinear': ['Bool', config.sizeInt],
-            'onBeatBilinear': ['Bool', config.sizeInt],
-            'adjustBlend': config.sizeInt,
-            'onBeatAdjustBlend': config.sizeInt
+        name: 'Picture II',
+        // Picture II......................
+        code: 
+        // prettier-ignore
+        [
+            0x50, 0x69, 0x63, 0x74, 0x75, 0x72, 0x65, 0x20,
+            0x49, 0x49, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
+        ],
+        group: 'Misc',
+        func: 'generic',
+        fields: {
+            image: ['NtString', 260],
+            blendMode: ['BlendmodePicture2', config.sizeInt],
+            onBeatOutput: ['BlendmodePicture2', config.sizeInt],
+            bilinear: ['Bool', config.sizeInt],
+            onBeatBilinear: ['Bool', config.sizeInt],
+            adjustBlend: config.sizeInt,
+            onBeatAdjustBlend: config.sizeInt // 0 to 255
         }
     },
     {
-        'name': 'MultiFilter',
-        'code': // Jheriko : MULTIFILTER...........
-        [0x4A, 0x68, 0x65, 0x72, 0x69, 0x6B, 0x6F, 0x20, 0x3A, 0x20, 0x4D, 0x55, 0x4C, 0x54, 0x49, 0x46, 0x49, 0x4C, 0x54, 0x45, 0x52, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00],
-        'group': 'Misc',
-        'func': 'generic',
-        'fields': {
-            'enabled': ['Bool', config.sizeInt],
-            'effect': ['MultiFilterEffect', config.sizeInt],
-            'onBeat': ['Bool', config.sizeInt],
+        name: 'MultiFilter',
+        // Jheriko : MULTIFILTER...........
+        code: 
+        // prettier-ignore
+        [
+            0x4A, 0x68, 0x65, 0x72, 0x69, 0x6B, 0x6F, 0x20,
+            0x3A, 0x20, 0x4D, 0x55, 0x4C, 0x54, 0x49, 0x46,
+            0x49, 0x4C, 0x54, 0x45, 0x52, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
+        ],
+        group: 'Misc',
+        func: 'generic',
+        fields: {
+            enabled: ['Bool', config.sizeInt],
+            effect: ['MultiFilterEffect', config.sizeInt],
+            onBeat: ['Bool', config.sizeInt],
             null0: ['Bool', config.sizeInt]
         }
     },
     {
-        'name': 'Particle System',
-        'code': // ParticleSystem..................
-        [0x50, 0x61, 0x72, 0x74, 0x69, 0x63, 0x6C, 0x65, 0x53, 0x79, 0x73, 0x74, 0x65, 0x6D, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00],
-        'group': 'Render',
-        'func': 'generic',
-        'fields': {
-            'enabled': ['Bool', 1],
-            'bigParticles': ['Bool', 1],
+        name: 'Particle System',
+        // ParticleSystem..................
+        code: 
+        // prettier-ignore
+        [
+            0x50, 0x61, 0x72, 0x74, 0x69, 0x63, 0x6C, 0x65,
+            0x53, 0x79, 0x73, 0x74, 0x65, 0x6D, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
+        ],
+        group: 'Render',
+        func: 'generic',
+        fields: {
+            enabled: ['Bool', 1],
+            bigParticles: ['Bool', 1],
             null0: 2,
-            'particles': config.sizeInt,
+            particles: config.sizeInt,
             'particles+/-': config.sizeInt,
-            'lifetime': config.sizeInt,
+            lifetime: config.sizeInt,
             'lifetime+/-': config.sizeInt,
             null1: 32,
-            'spread': 'Float',
-            'initialSpeed': 'Float',
+            spread: 'Float',
+            initialSpeed: 'Float',
             'initialSpeed+/-': 'Float',
-            'acceleration': 'Float',
-            'accelerationType': ['ParticleSystemAccelerationType', config.sizeInt],
-            'color': 'Color',
+            acceleration: 'Float',
+            accelerationType: ['ParticleSystemAccelerationType', config.sizeInt],
+            color: 'Color',
             'color+/-': 'Color',
-            'colorChange3': 1,
-            'colorChange2': 1,
-            'colorChange1': 1,
+            colorChange3: 1,
+            colorChange2: 1,
+            colorChange1: 1,
             null2: 1,
             'colorChange+/-3': 1,
             'colorChange+/-2': 1,
             'colorChange+/-1': 1,
             null3: 1,
-            'colorBounce': ['ParticleSystemColorBounce', config.sizeInt]
+            colorBounce: ['ParticleSystemColorBounce', config.sizeInt]
         }
     }
     /*
@@ -1059,16 +1221,16 @@ var Log = {
         console.log(message);
     },
     info: function (message) {
-        console.info((isNode) ? (logSymbols__default['default'].info, message) : message);
+        console.info(isNode ? (logSymbols__default['default'].info, message) : message);
     },
     error: function (message) {
-        console.error((isNode) ? (logSymbols__default['default'].error, message) : message);
+        console.error(isNode ? (logSymbols__default['default'].error, message) : message);
     },
     success: function (message) {
-        console.log((isNode) ? (logSymbols__default['default'].success, message) : message);
+        console.log(isNode ? (logSymbols__default['default'].success, message) : message);
     },
     warn: function (message) {
-        console.warn((isNode) ? (logSymbols__default['default'].warning, message) : message);
+        console.warn(isNode ? (logSymbols__default['default'].warning, message) : message);
     }
 };
 
@@ -1082,7 +1244,7 @@ var get = {
             return [(blob[offset] >> pos[0]) & mask, 1];
         }
         else {
-            return [((blob[offset] >> pos) & 1), 1];
+            return [(blob[offset] >> pos) & 1, 1];
         }
     },
     UInt: function (blob, offset, size) {
@@ -1215,11 +1377,7 @@ var get = {
         }
     },
     HiddenStrings: function (blob, i, end) {
-        var nonPrintables = [
-            0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16,
-            17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31,
-            127, 129, 141, 143, 144, 157, 173
-        ];
+        var nonPrintables = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 127, 129, 141, 143, 144, 157, 173];
         var hidden = [];
         while (i < end) {
             var c = blob[i];
@@ -1261,7 +1419,8 @@ var get = {
         var key = 0;
         for (var i = 0; i < map.length; i++) {
             var on = this.UInt32(blob, offset + config.sizeInt * i) !== 0 ? 1 : 0;
-            if (on) { // in case of (erroneous) multiple selections, the last one selected wins
+            if (on) {
+                // in case of (erroneous) multiple selections, the last one selected wins
                 key = on * (i + 1);
             }
         }
@@ -1282,7 +1441,7 @@ var get = {
             ['init', 3],
             ['perFrame', 1],
             ['onBeat', 2],
-            ['perPoint', 0],
+            ['perPoint', 0]
         ];
         return this.CodeSection(blob, offset, map);
     },
@@ -1291,7 +1450,7 @@ var get = {
         var map = [
             ['init', 2],
             ['perFrame', 1],
-            ['onBeat', 0],
+            ['onBeat', 0]
         ];
         return this.CodeSection(blob, offset, map);
     },
@@ -1300,7 +1459,7 @@ var get = {
             ['init', 0],
             ['perFrame', 1],
             ['onBeat', 2],
-            ['perPoint', 3],
+            ['perPoint', 3]
         ];
         return this.CodeSection(blob, offset, map);
     },
@@ -1308,7 +1467,7 @@ var get = {
         var map = [
             ['init', 0],
             ['perFrame', 1],
-            ['onBeat', 2],
+            ['onBeat', 2]
         ];
         return this.CodeSection(blob, offset, map);
     },
@@ -1316,21 +1475,24 @@ var get = {
     CodeEIF: function (blob, offset) {
         var map = [
             ['init', 0],
-            ['perFrame', 1],
+            ['perFrame', 1]
         ];
         var code = this.CodeSection(blob, offset, map);
-        return [{
-                'enabled': this.Bool(blob, offset, config.sizeInt)[0],
-                'init': code[0]['init'],
-                'perFrame': code[0]['perFrame']
-            }, code[1]];
+        return [
+            {
+                enabled: this.Bool(blob, offset, config.sizeInt)[0],
+                init: code[0]['init'],
+                perFrame: code[0]['perFrame']
+            },
+            code[1]
+        ];
     },
     // used only by 'Global Variables'
     NtCodeIFB: function (blob, offset) {
         var map = [
             ['init', 0],
             ['perFrame', 1],
-            ['onBeat', 2],
+            ['onBeat', 2]
         ];
         return this.CodeSection(blob, offset, map, /*nullterminated*/ true);
     },
@@ -1340,17 +1502,17 @@ var get = {
             ['init', 0],
             ['perFrame', 1],
             ['onBeat', 2],
-            ['perPoint', 3],
+            ['perPoint', 3]
         ];
         return this.CodeSection(blob, offset, map, /*nullterminated*/ true);
     },
-    // the 256*-functions are used by ancient versions of 'Super Scope', 'Dynamic Movement', 'Dynamic Distance Modifier', 'Dynamic Shift'
+    // the Legacy*-functions are used by ancient versions of 'Super Scope', 'Dynamic Movement', 'Dynamic Distance Modifier', 'Dynamic Shift'
     LegacyCodePFBI: function (blob, offset) {
         var map = [
             ['init', 3],
             ['perFrame', 1],
             ['onBeat', 2],
-            ['perPoint', 0],
+            ['perPoint', 0]
         ];
         return this.CodeSection(blob, offset, map, /*nullterminated*/ false, /*string max length*/ 256);
     },
@@ -1359,7 +1521,7 @@ var get = {
         var map = [
             ['init', 0],
             ['perFrame', 1],
-            ['onBeat', 2],
+            ['onBeat', 2]
         ];
         return this.CodeSection(blob, offset, map, /*nullterminated*/ false, /*string max length*/ 256);
     },
@@ -1410,9 +1572,9 @@ var get = {
             if (!enabled && map.length === 2 && map[0].color === '#000000' && map[0].position === 0 && map[1].color === '#ffffff' && map[1].position === 255) ;
             else {
                 maps[mi] = {
-                    'index': i,
-                    'enabled': enabled,
-                    'colors': map
+                    index: i,
+                    enabled: enabled,
+                    colors: map
                 };
                 {
                     var id = this.UInt32(blob, offset + headerSize * i + config.sizeInt * 2); // id of the map - not really needed.
@@ -1432,7 +1594,7 @@ var get = {
             var pos = this.UInt32(blob, offset);
             var color = this.Color(blob, offset + config.sizeInt)[0];
             offset += config.sizeInt * 3; // there's a 4byte id (presumably) following each color.
-            colorMap[i] = { 'color': color, 'position': pos };
+            colorMap[i] = { color: color, position: pos };
         }
         return colorMap;
     },
@@ -1453,7 +1615,7 @@ var get = {
         for (var i = 0; i < size; i++, offset += config.sizeInt) {
             data[i] = this.Int32(blob, offset)[0];
         }
-        var matrix = { 'width': dimensions[0], 'height': dimensions[1], 'data': data };
+        var matrix = { width: dimensions[0], height: dimensions[1], data: data };
         return [matrix, size * config.sizeInt];
     },
     // 'Text' needs this
@@ -1475,7 +1637,9 @@ var get = {
 };
 
 // Modules
-var setHiddenStrings = function (value) { config.hiddenStrings = value; };
+var setHiddenStrings = function (value) {
+    config.hiddenStrings = value;
+};
 var ConvertException = /** @class */ (function () {
     function ConvertException(message) {
         this.message = message;
@@ -1719,7 +1883,7 @@ var Table = {
         '10': ['Bubbling Outward With Swirl', 't = sin(d * $PI),\r\nd = d - (8*t*t*t*t*t)/sqrt((sw*sw+sh*sh)/4),\r\nt=cos(d*$PI/2.0),\r\nr= r + 0.1*t*t*t,', 0],
         '11': ['5 Pointed Distro', 'd = d * (0.95 + (cos(((r-$PI*0.5) * 5.0) - ($PI / 2.50)) * 0.03)),', 0],
         '12': ['Tunneling', 'r = r + 0.04,\r\nd = d * (0.96 + cos(d * $PI) * 0.05),', 0],
-        '13': ['Bleedin\'', 't = cos(d * $PI),\r\nr = r + (0.07 * t),\r\nd = d * (0.98 + t * 0.10),', 0],
+        '13': ["Bleedin'", 't = cos(d * $PI),\r\nr = r + (0.07 * t),\r\nd = d * (0.98 + t * 0.10),', 0],
         '14': ['Shifted Big Swirl Out', 'd=sqrt(x*x+y*y), r=atan2(y,x),\r\nr=r+0.1-0.2*d, d=d*0.96,\r\nx=cos(r)*d + 8/128, y=sin(r)*d,', 1],
         '15': ['Psychotic Beaming Outward', 'd = 0.15', 0],
         '16': ['Cosine Radial 3-way', 'r = cos(r * 3)', 0],
@@ -1735,21 +1899,21 @@ var Table = {
 
 var decode = {
     presetHeader: function (blob) {
+        // prettier-ignore
         var presetHeader0_1 = [
             0x4E, 0x75, 0x6C, 0x6C, 0x73, 0x6F, 0x66, 0x74,
             0x20, 0x41, 0x56, 0x53, 0x20, 0x50, 0x72, 0x65,
             0x73, 0x65, 0x74, 0x20, 0x30, 0x2E, 0x31, 0x1A
         ];
+        // prettier-ignore
         var presetHeader0_2 = [
             0x4E, 0x75, 0x6C, 0x6C, 0x73, 0x6F, 0x66, 0x74,
             0x20, 0x41, 0x56, 0x53, 0x20, 0x50, 0x72, 0x65,
             0x73, 0x65, 0x74, 0x20, 0x30, 0x2E, 0x32, 0x1A,
         ];
-        if (!cmpBytes(blob, /*offset*/ 0, presetHeader0_2) &&
-            !cmpBytes(blob, /*offset*/ 0, presetHeader0_1)) { // 0.1 only if 0.2 failed because it's far rarer.
-            throw new ConvertException('Invalid preset header.\n' +
-                '  This does not seem to be an AVS preset file.\n' +
-                '  If it does load with Winamp\'s AVS please send the file in so we can look at it.');
+        if (!cmpBytes(blob, /*offset*/ 0, presetHeader0_2) && !cmpBytes(blob, /*offset*/ 0, presetHeader0_1)) {
+            // 0.1 only if 0.2 failed because it's far rarer.
+            throw new ConvertException('Invalid preset header.\n' + '  This does not seem to be an AVS preset file.\n' + "  If it does load with Winamp's AVS please send the file in so we can look at it.");
         }
         return blob[config.presetHeaderLength - 1] === 1; // 'Clear Every Frame'
     },
@@ -1758,15 +1922,15 @@ var decode = {
     effectList: function (blob, offset, _, name) {
         var size = get.UInt32(blob, offset - config.sizeInt);
         var comp = {
-            'type': removeSpaces(name),
-            'enabled': get.Bit(blob, offset, 1)[0] !== 1,
-            'clearFrame': get.Bit(blob, offset, 0)[0] === 1,
-            'input': Table['blendmodeIn'][blob[offset + 2]],
-            'output': Table['blendmodeOut'][blob[offset + 3]]
+            type: removeSpaces(name),
+            enabled: get.Bit(blob, offset, 1)[0] !== 1,
+            clearFrame: get.Bit(blob, offset, 0)[0] === 1,
+            input: Table['blendmodeIn'][blob[offset + 2]],
+            output: Table['blendmodeOut'][blob[offset + 3]]
         };
         var modebit = get.Bit(blob, offset, 7)[0] === 1; // is true in all presets I know, probably only for truly ancient versions
         if (!modebit) {
-            Log.error('EL modebit is off!! If you\'re seeing this, send this .avs file in please!');
+            Log.error("EL modebit is off!! If you're seeing this, send this .avs file in please!");
         }
         var configSize = (modebit ? blob[offset + 4] : blob[offset]) + 1;
         if (configSize > 1) {
@@ -1779,6 +1943,7 @@ var decode = {
             comp['enableOnBeat'] = get.UInt32(blob, offset + 29) === 1;
             comp['enableOnBeatFor'] = get.UInt32(blob, offset + 33);
         }
+        // prettier-ignore
         var effectList28plusHeader = [
             0x00, 0x40, 0x00, 0x00, 0x41, 0x56, 0x53, 0x20,
             0x32, 0x2E, 0x38, 0x2B, 0x20, 0x45, 0x66, 0x66,
@@ -1800,8 +1965,8 @@ var decode = {
     // generic field decoding function that most components use.
     generic: function (blob, offset, fields, name, group, end) {
         var comp = {
-            'type': removeSpaces(name),
-            'group': group
+            type: removeSpaces(name),
+            group: group
         };
         var keys = Object.keys(fields);
         var lastWasABitField = false;
@@ -1864,7 +2029,8 @@ var decode = {
                     size = result[1];
                     value = result[0];
                 }
-                if (f[2]) { // further processing if wanted
+                if (f[2]) {
+                    // further processing if wanted
                     // console.log('get' + f[2]);
                     tableName = lowerInitial(f[2]);
                     if (tableName in Table) {
@@ -1876,7 +2042,8 @@ var decode = {
                 }
             }
             // save value or function result of value in field
-            if (k !== 'new_version') { // but don't save new_version marker, if present
+            if (k !== 'new_version') {
+                // but don't save new_version marker, if present
                 comp[k] = value;
             }
             offset += size;
@@ -1908,8 +2075,8 @@ var decode = {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     movement: function (blob, offset, _, name, group, end) {
         var comp = {
-            'type': name,
-            'group': group
+            type: name,
+            group: group
         };
         // the special value 0 is because 'old versions of AVS barf' if the id is > 15, so
         // AVS writes out 0 in that case, and sets the actual id at the end of the save block.
@@ -1920,7 +2087,8 @@ var decode = {
         if (effectIdOld !== 0) {
             if (effectIdOld === 0x7fff) {
                 var strAndSize = ['', 0];
-                if (blob[offset + config.sizeInt] === 1) { // new-version marker
+                if (blob[offset + config.sizeInt] === 1) {
+                    // new-version marker
                     strAndSize = get.SizeString(blob, offset + config.sizeInt + 1);
                 }
                 else {
@@ -1960,7 +2128,8 @@ var decode = {
         comp['coordinates'] = Table.coordinates[get.UInt32(blob, offset + config.sizeInt * 3)];
         comp['bilinear'] = get.Bool(blob, offset + config.sizeInt * 4, config.sizeInt)[0];
         comp['wrap'] = get.Bool(blob, offset + config.sizeInt * 5, config.sizeInt)[0];
-        if (effect && effect.length && effectIdOld !== 1 && effectIdOld !== 7) { // 'slight fuzzify' and 'blocky partial out' have no script representation.
+        if (effect && effect.length && effectIdOld !== 1 && effectIdOld !== 7) {
+            // 'slight fuzzify' and 'blocky partial out' have no script representation.
             code = effect[1];
             comp['coordinates'] = effect[2]; // overwrite
         }
@@ -1970,12 +2139,11 @@ var decode = {
         }
         return comp;
     },
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     avi: function (blob, offset) {
         var comp = {
-            'type': 'AVI',
-            'group': 'Render',
-            'enabled': get.Bool(blob, offset, config.sizeInt)[0]
+            type: 'AVI',
+            group: 'Render',
+            enabled: get.Bool(blob, offset, config.sizeInt)[0]
         };
         var strAndSize = get.NtString(blob, offset + config.sizeInt * 3);
         comp['file'] = strAndSize[0];
@@ -1991,15 +2159,14 @@ var decode = {
         comp['persist'] = get.UInt32(blob, offset + config.sizeInt * 4 + strAndSize[1]); // 0-32
         return comp;
     },
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     simple: function (blob, offset) {
         var comp = {
-            'type': 'Simple',
-            'group': 'Render'
+            type: 'Simple',
+            group: 'Render'
         };
         var effect = get.UInt32(blob, offset);
         if (effect & (1 << 6)) {
-            comp['audioSource'] = (effect & 2) ? 'Waveform' : 'Spectrum';
+            comp['audioSource'] = effect & 2 ? 'Waveform' : 'Spectrum';
             comp['renderType'] = 'Dots';
         }
         else {
@@ -2043,7 +2210,7 @@ function convertBlob(data, presetName, presetDate, customArgs) {
     verbosity = args.quiet ? -1 : args.verbose;
     setHiddenStrings(args.hidden);
     var preset = {
-        'name': presetName
+        name: presetName
     };
     if (presetDate) {
         preset['date'] = presetDate;
@@ -2084,17 +2251,18 @@ function convertComponents(blob) {
     while (fp <= blob.length - config.sizeInt * 2) {
         var code = get.UInt32(blob, fp);
         var i = getComponentIndex(code, blob, fp);
-        var isDll = (code !== 0xfffffffe && code >= config.builtinMax) ? 1 : 0;
+        var isDll = code !== 0xfffffffe && code >= config.builtinMax ? 1 : 0;
         var size = getComponentSize(blob, fp + config.sizeInt + isDll * 32);
         // console.log("component size", size, "blob size", blob.length);
         if (i < 0) {
-            res = { 'type': 'Unknown: (' + (-i) + ')' };
+            res = { type: 'Unknown: (' + -i + ')' };
         }
         else {
             var offset = fp + config.sizeInt * 2 + isDll * 32;
             res = decode[componentTable[i].func](blob, offset, componentTable[i].fields, componentTable[i].name, componentTable[i].group, offset + size);
         }
-        if (!res || typeof res !== 'object') { // should not happen, decode functions should throw their own.
+        if (!res || typeof res !== 'object') {
+            // should not happen, decode functions should throw their own.
             throw new ConvertException('Unknown convert error');
         }
         components.push(res);
@@ -2115,8 +2283,7 @@ function getComponentIndex(code, blob, offset) {
     }
     else {
         for (var i = builtin.length; i < componentTable.length; i++) {
-            if (componentTable[i].code instanceof Array &&
-                cmpBytes(blob, offset + config.sizeInt, componentTable[i].code)) {
+            if (componentTable[i].code instanceof Array && cmpBytes(blob, offset + config.sizeInt, componentTable[i].code)) {
                 if (verbosity >= 1) {
                     Log.log("Found component: " + componentTable[i].name);
                 }
@@ -2172,7 +2339,7 @@ function convertFile(file, customArgs) {
         return __generator(this, function (_b) {
             switch (_b.label) {
                 case 0:
-                    presetName = (typeof args.name !== 'undefined' && args.name.trim().length > 0) ? args.name : path.basename(file, path.extname(file));
+                    presetName = typeof args.name !== 'undefined' && args.name.trim().length > 0 ? args.name : path.basename(file, path.extname(file));
                     if (!args.noDate) return [3 /*break*/, 1];
                     _a = undefined;
                     return [3 /*break*/, 3];
@@ -2183,7 +2350,7 @@ function convertFile(file, customArgs) {
                 case 3:
                     presetDate = _a;
                     presetObj = convertBlob(presetBlob, presetName, presetDate, args);
-                    whitespace = (args.minify === true) ? 0 : 4;
+                    whitespace = args.minify === true ? 0 : 4;
                     return [2 /*return*/, JSON.stringify(presetObj, null, whitespace)];
             }
         });
@@ -2196,14 +2363,14 @@ function convertFileSync(file, customArgs) {
     var presetBlob, presetDate, presetName, presetObj;
     try {
         presetBlob = fs.readFileSync(file);
-        presetName = (typeof args.name !== 'undefined' && args.name.trim().length > 0) ? args.name : path.basename(file, path.extname(file));
+        presetName = typeof args.name !== 'undefined' && args.name.trim().length > 0 ? args.name : path.basename(file, path.extname(file));
         presetDate = args.noDate ? undefined : fs.statSync(file).mtime.toISOString();
         presetObj = convertBlob(presetBlob, presetName, presetDate, args);
     }
     catch (error) {
         Log.error(error);
     }
-    var whitespace = (args.minify === true) ? 0 : 4;
+    var whitespace = args.minify === true ? 0 : 4;
     return JSON.stringify(presetObj, null, whitespace);
 }
 
