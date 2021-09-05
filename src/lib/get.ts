@@ -282,7 +282,7 @@ export default {
         return this.CodeSection(blob, offset, map, /*nullterminated*/ true);
     },
 
-    // the 256*-functions are used by ancient versions of 'Super Scope', 'Dynamic Movement', 'Dynamic Distance Modifier', 'Dynamic Shift'
+    // the Legacy*-functions are used by ancient versions of 'Super Scope', 'Dynamic Movement', 'Dynamic Distance Modifier', 'Dynamic Shift'
     LegacyCodePFBI(blob: Uint8Array, offset: number): [CodeSection, number] {
         const map: [string, number][] = [
             ['init', 3],
