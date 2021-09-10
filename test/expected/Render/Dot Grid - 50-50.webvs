@@ -1,0 +1,1 @@
+{"name":"Dot Grid - 50-50","clearFrame":true,"components":[{"type":"DotGrid","group":"Render","colors":["#ffffff"],"spacing":8,"speedX":128,"speedY":128,"blendMode":"FIFTY_FIFTY"}]}

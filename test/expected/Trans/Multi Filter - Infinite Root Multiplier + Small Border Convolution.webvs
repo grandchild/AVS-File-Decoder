@@ -1,0 +1,1 @@
+{"name":"Multi Filter - Infinite Root Multiplier + Small Border Convolution","clearFrame":true,"components":[{"type":"MultiFilter","group":"Misc","enabled":true,"effect":"INFINITE_ROOT_MULTIPLIER_AND_SMALL_BORDER_CONVOLUTION","onBeat":false}]}

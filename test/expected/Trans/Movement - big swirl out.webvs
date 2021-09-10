@@ -1,0 +1,1 @@
+{"name":"Movement - big swirl out","clearFrame":true,"components":[{"type":"Movement","group":"Trans","builtinEffect":"Big Swirl Out","output":"Replace","sourceMapped":false,"coordinates":0,"bilinear":true,"wrap":false,"code":"r = r + (0.1 - (0.2 * d)),\r\nd = d * 0.96,"}]}

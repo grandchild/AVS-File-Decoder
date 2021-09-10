@@ -1,0 +1,1 @@
+{"name":"Color Modifier - 4x Red Brightness, 2x Green, 1x Blue","clearFrame":true,"components":[{"type":"ColorModifier","group":"Trans","recomputeEveryFrame":true,"code":{"init":"","perFrame":"","onBeat":"","perPoint":"red=4*red; green=2*green;"}}]}

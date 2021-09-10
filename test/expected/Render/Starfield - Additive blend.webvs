@@ -1,0 +1,1 @@
+{"name":"Starfield - Additive blend","clearFrame":true,"components":[{"type":"Starfield","group":"Render","enabled":1,"color":"#ffffff","blendMode":"ADDITIVE","WarpSpeed":6,"MaxStars_set":350,"onbeat":0,"spdBeat":4,"durFrames":15}]}

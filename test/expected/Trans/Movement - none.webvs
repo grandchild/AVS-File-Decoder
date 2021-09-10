@@ -1,0 +1,1 @@
+{"name":"Movement - none","clearFrame":true,"components":[{"type":"Movement","group":"Trans","builtinEffect":"None","output":"Replace","sourceMapped":false,"coordinates":0,"bilinear":true,"wrap":false,"code":""}]}

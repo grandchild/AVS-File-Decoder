@@ -1,0 +1,1 @@
+{"name":"Interleave","clearFrame":true,"components":[{"type":"Interleave","group":"Trans","enabled":true,"x":1,"y":1,"color":"#000000","blendMode":"REPLACE","onbeat":false,"x2":1,"y2":1,"beatDuration":4}]}

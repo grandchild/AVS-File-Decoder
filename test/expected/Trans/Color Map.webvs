@@ -1,0 +1,1 @@
+{"name":"Color Map","clearFrame":true,"components":[{"type":"ColorMap","group":"Trans","key":"RED","blendMode":"REPLACE","mapCycleMode":"SINGLE","adjustBlend":0,"dontSkipFastBeats":false,"cycleSpeed":8,"maps":[{"index":0,"enabled":true,"colors":[{"color":"#000000","position":0},{"color":"#ffffff","position":255}],"id":94483456,"fileName":""}]}]}

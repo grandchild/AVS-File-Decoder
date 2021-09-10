@@ -1,0 +1,1 @@
+{"name":"Movement - shift rotate left","clearFrame":true,"components":[{"type":"Movement","group":"Trans","builtinEffect":"Shift Rotate Left","output":"Replace","sourceMapped":false,"coordinates":1,"bilinear":true,"wrap":false,"code":"x=x+1/32, // use wrap for this one"}]}

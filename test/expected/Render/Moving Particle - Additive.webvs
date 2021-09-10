@@ -1,0 +1,1 @@
+{"name":"Moving Particle - Additive","clearFrame":true,"components":[{"type":"MovingParticle","group":"Render","enabled":true,"onBeatSizeChange":false,"color":"#ffffff","distance":16,"particleSize":8,"onBeatParticleSize":8,"blendMode":"Additive"}]}

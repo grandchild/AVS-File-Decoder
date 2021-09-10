@@ -1,0 +1,1 @@
+{"name":"Movement - swill","clearFrame":true,"components":[{"type":"Movement","group":"Trans","builtinEffect":"Swill","output":"Replace","sourceMapped":false,"coordinates":0,"bilinear":true,"wrap":false,"code":"d = d * (1 - (sin((r - $PI*0.5) * 12) * .05)),\r\nr = r + (cos(d * 18) * .05),\r\nd = d * (1-((d - .4) * .03)),\r\nr = r + ((d - .4) * .13)"}]}

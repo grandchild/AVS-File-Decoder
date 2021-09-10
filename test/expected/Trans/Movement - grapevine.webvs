@@ -1,0 +1,1 @@
+{"name":"Movement - grapevine","clearFrame":true,"components":[{"type":"Movement","group":"Trans","builtinEffect":"Grapevine","output":"Replace","sourceMapped":false,"coordinates":1,"bilinear":true,"wrap":false,"code":"x = x + (cos(abs(y-.5) * 8) * .02),\r\ny = y + (sin(abs(x-.5) * 8) * .05),\r\nx = x * .95,\r\ny = y * .95,"}]}

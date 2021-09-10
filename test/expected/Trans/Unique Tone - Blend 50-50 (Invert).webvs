@@ -1,0 +1,1 @@
+{"name":"Unique Tone - Blend 50-50 (Invert)","clearFrame":true,"components":[{"type":"UniqueTone","group":"Trans","enabled":true,"color":"#ffffff","blendMode":"FIFTY_FIFTY","invert":true}]}

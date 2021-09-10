@@ -1,0 +1,1 @@
+{"name":"Ring - Oscilloscope","clearFrame":true,"components":[{"type":"Ring","group":"Render","audioChannel":"CENTER","positionX":"CENTER","colors":["#ffffff"],"size":8}]}

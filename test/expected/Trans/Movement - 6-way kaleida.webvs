@@ -1,0 +1,1 @@
+{"name":"Movement - 6-way kaleida","clearFrame":true,"components":[{"type":"Movement","group":"Trans","builtinEffect":"6-way Kaleida (use Wrap!)","output":"Replace","sourceMapped":false,"coordinates":1,"bilinear":true,"wrap":true,"code":"y = (r*6)/($PI), x = d,"}]}

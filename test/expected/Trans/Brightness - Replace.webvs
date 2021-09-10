@@ -1,0 +1,1 @@
+{"name":"Brightness - Replace","clearFrame":true,"components":[{"type":"Brightness","group":"Trans","enabled":true,"blendMode":"REPLACE","red":0,"green":0,"blue":0,"separate":false,"excludeColor":"#000000","exclude":false,"distance":16}]}

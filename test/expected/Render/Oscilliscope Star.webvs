@@ -1,0 +1,1 @@
+{"name":"Oscilliscope Star","clearFrame":true,"components":[{"type":"OscilliscopeStar","group":"Render","audioChannel":"CENTER","positionX":"CENTER","colors":["#ffffff"],"size":8,"rotation":3}]}

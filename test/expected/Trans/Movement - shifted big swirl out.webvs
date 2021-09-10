@@ -1,0 +1,1 @@
+{"name":"Movement - shifted big swirl out","clearFrame":true,"components":[{"type":"Movement","group":"Trans","builtinEffect":"Shifted Big Swirl Out","output":"Replace","sourceMapped":false,"coordinates":1,"bilinear":true,"wrap":false,"code":"d=sqrt(x*x+y*y), r=atan2(y,x),\r\nr=r+0.1-0.2*d, d=d*0.96,\r\nx=cos(r)*d + 8/128, y=sin(r)*d,"}]}

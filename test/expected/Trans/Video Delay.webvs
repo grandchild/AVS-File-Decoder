@@ -1,0 +1,1 @@
+{"name":"Video Delay","clearFrame":true,"components":[{"type":"VideoDelay","group":"Trans","enabled":true,"useBeats":false,"delay":10}]}

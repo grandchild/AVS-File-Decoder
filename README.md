@@ -1,10 +1,9 @@
 # webvsc
 
-[![npm](https://img.shields.io/npm/l/@visbot/webvsc.svg?style=flat-square)](https://www.npmjs.com/package/@visbot/webvsc)
-[![npm](https://img.shields.io/npm/v/@visbot/webvsc.svg?style=flat-square)](https://www.npmjs.com/package/@visbot/webvsc)
-[![CircleCI](https://img.shields.io/circleci/project/grandchild/AVS-File-Decoder.svg?style=flat-square)](https://circleci.com/gh/grandchild/AVS-File-Decoder)
-[![David](https://img.shields.io/david/grandchild/AVS-File-Decoder.svg?style=flat-square)](https://david-dm.org/grandchild/AVS-File-Decoder)
-[![David](https://img.shields.io/david/dev/grandchild/AVS-File-Decoder.svg?style=flat-square)](https://david-dm.org/grandchild/AVS-File-Decoder?type=dev)
+[![npm](https://flat.badgen.net/npm/license/@visbot/webvsc)](https://www.npmjs.org/package/@visbot/webvsc)
+[![npm](https://flat.badgen.net/npm/v/@visbot/webvsc)](https://www.npmjs.org/package/@visbot/webvsc)
+[![CI](https://img.shields.io/github/workflow/status/grandchild/AVS-File-Decoder/CI?style=flat-square)](https://github.com/grandchild/AVS-File-Decoder/actions)
+[![David](https://flat.badgen.net/david/dep/grandchild/AVS-File-Decoder)](https://david-dm.org/grandchild/AVS-File-Decoder)
 
 ## Description
 
@@ -56,10 +55,10 @@ try {
 `convertBlob(fileBuffer, fileName, fileDate, [options])`
 
 ```js
-import { convertFile, convertFileSync } from '@visbot/webvsc/browser';
+import { convertBlob } from '@visbot/webvsc/browser';
 
 const baseName = 'my preset';
-const modifiedDate = new Date(Date.now()).toISOString();
+const modifiedDate = new Date().toISOString();
 
 const webvs = convertBlob(avsBuffer, baseName, modifiedDate);
 ```

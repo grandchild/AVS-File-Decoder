@@ -1,0 +1,1 @@
+{"name":"Convolution Filter","clearFrame":true,"components":[{"type":"ConvolutionFilter","group":"Trans","enabled":true,"edgeMode":"EXTEND","absolute":false,"twoPass":false,"kernel":{"width":7,"height":7,"data":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]},"bias":0,"scale":1}]}

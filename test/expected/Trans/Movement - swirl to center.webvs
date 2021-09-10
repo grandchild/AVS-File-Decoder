@@ -1,0 +1,1 @@
+{"name":"Movement - swirl to center","clearFrame":true,"components":[{"type":"Movement","group":"Trans","builtinEffect":"Swirl To Center","output":"Replace","sourceMapped":false,"coordinates":0,"bilinear":true,"wrap":false,"code":"d = d * (1.01 + (cos((r-$PI*0.5) * 4) * 0.04)),\r\nr = r + (0.03 * sin(d * $PI * 4)),"}]}

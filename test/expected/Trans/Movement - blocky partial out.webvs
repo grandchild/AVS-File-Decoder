@@ -1,0 +1,1 @@
+{"name":"Movement - blocky partial out","clearFrame":true,"components":[{"type":"Movement","group":"Trans","builtinEffect":"Blocky Partial Out","output":"Replace","sourceMapped":false,"coordinates":"POLAR","bilinear":true,"wrap":false}]}

@@ -1,0 +1,1 @@
+{"name":"Dot Plane","clearFrame":true,"components":[{"type":"DotPlane","group":"Render","rotationSpeed":16,"colorTop":"#1c6b18","colorHigh":"#ff0a23","colorMid":"#2a1d74","colorLow":"#9036d9","colorBottom":"#6b88ff","angle":-20}]}

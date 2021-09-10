@@ -1,0 +1,1 @@
+{"name":"Timescope - Default render blend","clearFrame":true,"components":[{"type":"Timescope","group":"Render","enabled":true,"color":"#ffffff","blendMode":"DEFAULT","bands":39}]}
