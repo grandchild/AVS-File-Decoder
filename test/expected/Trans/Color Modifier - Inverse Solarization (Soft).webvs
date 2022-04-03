@@ -1,1 +1,1 @@
-{"name":"Color Modifier - Inverse Solarization (Soft)","clearFrame":true,"components":[{"type":"ColorModifier","group":"Trans","recomputeEveryFrame":true,"code":{"init":"","perFrame":"","onBeat":"","perPoint":"red=abs(red - .5) * 1.5;\r\ngreen=red; blue=red;"}}]}
+{"name":"Color Modifier - Inverse Solarization (Soft)","clearFrame":true,"components":[{"type":"ColorModifier","group":"Trans","code":{"init":"","perFrame":"","onBeat":"","perPoint":"red=abs(red - .5) * 1.5;\r\ngreen=red; blue=red;"},"recomputeEveryFrame":false}]}
