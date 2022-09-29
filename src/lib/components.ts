@@ -382,8 +382,7 @@ const builtin: ComponentDefinition[] = [
             // LONG  lfWidth;
             // LONG  lfEscapement;
             // LONG  lfOrientation;
-            // LONG  lfWeight;
-            weight: ['Map4', { '0': 'DONTCARE', '100': 'THIN', '200': 'EXTRALIGHT', '300': 'LIGHT', '400': 'REGULAR', '500': 'MEDIUM', '600': 'SEMIBOLD', '700': 'BOLD', '800': 'EXTRABOLD', '900': 'BLACK' }],
+            weight: config.sizeInt, // LONG  lfWeight;
             italic: ['Bool', 1], // BYTE  lfItalic;
             underline: ['Bool', 1], // BYTE  lfUnderline;
             strikeOut: ['Bool', 1], // BYTE  lfStrikeOut;
