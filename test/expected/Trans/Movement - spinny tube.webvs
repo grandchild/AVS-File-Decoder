@@ -1,0 +1,1 @@
+{"name":"Movement - spinny tube","clearFrame":true,"components":[{"type":"Movement","group":"Trans","builtinEffect":"Spinny Tube","output":"Replace","sourceMapped":false,"coordinates":0,"bilinear":true,"wrap":false,"code":"d = d * (1 - ((d - .35) * .5)),\r\nr = r + .1,"}]}

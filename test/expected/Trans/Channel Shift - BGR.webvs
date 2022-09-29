@@ -1,0 +1,1 @@
+{"name":"Channel Shift - BGR","clearFrame":true,"components":[{"type":"ChannelShift","group":"Misc","mode":"BGR","onBeatRandom":true}]}

@@ -1,21 +1,25 @@
-import chalk from 'chalk';
-
-const dim = (message: string): void => {
-    console.log((isNode) ? chalk.dim(message) : message);
-};
-
-const error = (message: string): void => {
-    console.error((isNode) ? chalk.red(message) : message);
-};
-
-const warn = (message: string): void => {
-    console.warn((isNode) ? chalk.yellow(message) : message);
-};
+import logSymbols from 'log-symbols';
 
 const isNode = new Function('try {return this===global;}catch(e){return false;}');
 
-export {
-    dim,
-    error,
-    warn
+export default {
+    log(message: string): void {
+        console.log(message);
+    },
+
+    info(message: string): void {
+        console.info(isNode ? (logSymbols.info, message) : message);
+    },
+
+    error(message: string): void {
+        console.error(isNode ? (logSymbols.error, message) : message);
+    },
+
+    success(message: string): void {
+        console.log(isNode ? (logSymbols.success, message) : message);
+    },
+
+    warn(message: string): void {
+        console.warn(isNode ? (logSymbols.warning, message) : message);
+    }
 };

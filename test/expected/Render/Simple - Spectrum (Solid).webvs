@@ -1,0 +1,1 @@
+{"name":"Simple - Spectrum (Solid)","clearFrame":true,"components":[{"type":"Simple","group":"Render","audioSource":"Spectrum","renderType":"Solid","audioChannel":"CENTER","positionY":"CENTER","colors":["#ffffff"]}]}

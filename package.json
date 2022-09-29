@@ -3,24 +3,27 @@
   "version": "2.3.0",
   "description": "A library to convert Winamp AVS presets into Webvs JSON",
   "license": "MIT",
-  "contributors": [
-    "grandchild",
-    "idleberg"
-  ],
-  "scripts": {
-    "build": "npm run clean && tsc --pretty --project ./",
-    "clean": "rimraf ./dist",
-    "dev": "tsc --watch --pretty --project ./",
-    "lint": "tslint --project ./",
-    "lint:fix": "tslint --fix --project ./",
-    "test": "ava ./test/*.js --verbose"
+  "main": "./dist/node.cjs",
+  "module": "./dist/node.mjs",
+  "exports": {
+    "./browser": {
+      "import": "./dist/browser.mjs",
+      "require": "./dist/browser.cjs"
+    },
+    "./node": {
+      "import": "./dist/node.mjs",
+      "require": "./dist/node.cjs"
+    }
   },
-  "homepage": "https://github.com/grandchild/AVS-File-Decoder#readme",
-  "main": "node.js",
   "directories": {
     "doc": "doc",
     "test": "test"
   },
+  "contributors": [
+    "grandchild",
+    "idleberg"
+  ],
+  "homepage": "https://github.com/grandchild/AVS-File-Decoder#readme",
   "repository": {
     "type": "git",
     "url": "https://github.com/grandchild/AVS-File-Decoder.git"
@@ -36,21 +39,46 @@
     "converter",
     "winamp"
   ],
+  "engines": {
+    "node": "^12.20.0 || ^14.13.1 || >=16.0.0"
+  },
+  "scripts": {
+    "build": "rollup -c",
+    "clean": "rimraf ./dist",
+    "dev": "npm run start",
+    "lint:code": "eslint ./src --ignore-path .gitignore",
+    "lint": "npm-run-all --parallel lint:*",
+    "start": "rollup -c -w",
+    "test": "ava ./test/*.test.*js --verbose",
+    "prepare": "husky install"
+  },
   "dependencies": {
-    "chalk": "^3.0.0"
+    "log-symbols": "^4.1.0"
   },
   "devDependencies": {
-    "@types/node": "^12.12.14",
-    "ava": "^2.4.0",
-    "husky": "^3.1.0",
+    "@rollup/plugin-commonjs": "^20.0.0",
+    "@rollup/plugin-json": "^4.1.0",
+    "@rollup/plugin-typescript": "^8.5.0",
+    "@types/node": "^18.7.23",
+    "@typescript-eslint/eslint-plugin": "^5.38.1",
+    "@typescript-eslint/parser": "^5.38.1",
+    "ava": "^3.15.0",
+    "eslint": "^8.24.0",
+    "globby": "^11.1.0",
+    "husky": "^8.0.1",
+    "lint-staged": "^13.0.3",
+    "npm-run-all2": "^6.0.2",
+    "prettier": "^2.7.1",
     "rimraf": "^3.0.0",
-    "tslint": "^5.20.1",
-    "typescript": "^3.7.3",
-    "util": "^0.12.1"
+    "rollup": "^2.79.1",
+    "typescript": "^4.8.4"
   },
-  "husky": {
-    "hooks": {
-      "pre-commit": "npm run lint && npm run test"
-    }
+  "lint-staged": {
+    "*.ts": "eslint --cache --fix"
+  },
+  "volta": {
+    "node": "18.10.0",
+    "npm": "8.19.2",
+    "yarn": "1.22.11"
   }
 }

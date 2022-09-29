@@ -1,0 +1,1 @@
+{"name":"Color Modifier - Pulsing Brightness (Beat Interpolative)","clearFrame":true,"components":[{"type":"ColorModifier","group":"Trans","code":{"init":"c = 200; f = 0;","perFrame":"f = f + 1;\r\nt = (f * 2 * $PI) / c;\r\nst = sin(t) + 1;","onBeat":"c = f;f = 0;","perPoint":"red = red * st;\r\ngreen=red;blue=red;"},"recomputeEveryFrame":true}]}

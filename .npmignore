@@ -1,12 +1,15 @@
-*.avs
-*.webvs
 .circleci
 .editorconfig
+.eslintcache
 .gitignore
 .travis.yml
+*.avs
+*.webvs
 doc/
 src/
 test/
 tsconfig.json
 tslint.json
 types/
+yarn-error.log
+yarn.lock

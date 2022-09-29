@@ -1,0 +1,1 @@
+{"name":"Custom BPM","clearFrame":true,"components":[{"type":"CustomBPM","group":"Misc","enabled":true,"mode":"ARBITRARY","arbitraryValue":33,"skipValue":33,"skipFirstBeats":33}]}

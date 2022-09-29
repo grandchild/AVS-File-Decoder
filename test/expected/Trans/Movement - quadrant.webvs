@@ -1,0 +1,1 @@
+{"name":"Movement - quadrant","clearFrame":true,"components":[{"type":"Movement","group":"Trans","builtinEffect":"Quadrant","output":"Replace","sourceMapped":false,"coordinates":1,"bilinear":true,"wrap":false,"code":"y = y * ( 1 + (sin(r + $PI/2) * .3) ),\r\nx = x * ( 1 + (cos(r + $PI/2) * .3) ),\r\nx = x * .995,\r\ny = y * .995,"}]}

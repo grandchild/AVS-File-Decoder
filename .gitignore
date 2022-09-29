@@ -8,6 +8,8 @@ assets/
 error.log
 node_modules/
 npm-debug.log
+yarn.lock
+yarn-error.log
 
 # AVS specific
 *.ape
@@ -24,6 +26,12 @@ avs/
 etc/
 ui/
 
+# Development
+.eslintcache
+
 # Test
 !test/**/*avs
 !test/**/*webvs
+
+# Temporary
+presets.d.ts

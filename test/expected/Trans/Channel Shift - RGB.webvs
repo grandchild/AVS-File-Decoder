@@ -1,0 +1,1 @@
+{"name":"Channel Shift - RGB","clearFrame":true,"components":[{"type":"ChannelShift","group":"Misc","mode":"RBG","onBeatRandom":true}]}

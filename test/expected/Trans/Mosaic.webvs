@@ -1,0 +1,1 @@
+{"name":"Mosaic","clearFrame":true,"components":[{"type":"Mosaic","group":"Trans","enabled":true,"squareSize":50,"onBeatSquareSize":1,"blendMode":"REPLACE","onBeatSizeChange":false,"onBeatSizeDuration":15}]}

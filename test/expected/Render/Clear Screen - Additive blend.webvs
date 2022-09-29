@@ -1,0 +1,1 @@
+{"name":"Clear Screen - Additive blend","clearFrame":true,"components":[{"type":"ClearScreen","group":"Render","enabled":true,"color":"#000000","blendMode":"ADDITIVE","onlyFirst":false}]}

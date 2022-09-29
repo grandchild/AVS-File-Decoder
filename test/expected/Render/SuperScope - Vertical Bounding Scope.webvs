@@ -1,0 +1,1 @@
+{"name":"SuperScope - Vertical Bounding Scope","clearFrame":true,"components":[{"type":"SuperScope","group":"Render","code":{"init":"n=100; t=0; tv=0.1;dt=1;","perFrame":"t=t*0.9+tv*0.1","onBeat":"tv=((rand(50.0)/50.0))*dt; dt=-dt;","perPoint":"x=t+v*pow(sin(i*$PI),2); y=i*2-1.0;"},"audioChannel":"CENTER","audioSource":"WAVEFORM","colors":["#ffffff"],"drawMode":"DOTS"}]}

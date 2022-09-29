@@ -1,0 +1,1 @@
+{"name":"Scatter","clearFrame":true,"components":[{"type":"Scatter","group":"Trans","enabled":true},{"type":"RotoBlitter","group":"Trans","zoom":31,"rotate":31,"blendMode":"REPLACE","onBeatReverse":false,"reversalSpeed":0,"onBeatZoom":31,"onBeat":false,"bilinear":true}]}

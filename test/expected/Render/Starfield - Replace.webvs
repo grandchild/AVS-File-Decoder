@@ -1,0 +1,1 @@
+{"name":"Starfield - Replace","clearFrame":true,"components":[{"type":"Starfield","group":"Render","enabled":1,"color":"#ffffff","blendMode":"REPLACE","WarpSpeed":6,"MaxStars_set":350,"onbeat":0,"spdBeat":4,"durFrames":15}]}

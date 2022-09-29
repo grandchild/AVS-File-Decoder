@@ -1,23 +1,14 @@
 // Modules
-import { readFile, stat } from 'fs';
+import { promises as fs } from 'fs';
 
-const getISOTime = (file: string): any => {
-    return new Promise( (resolve, reject) => {
-        stat(file, (err, time) => {
-           err ? reject(err) : resolve(time.mtime.toISOString());
-        });
-    });
-};
+async function getISOTime(file: string): Promise<string> {
+    const time = await fs.stat(file);
 
-const readPreset = (file: string): any => {
-    return new Promise( (resolve, reject) => {
-        readFile(file, (err, data) => {
-            err ? reject(err) : resolve(data);
-        });
-    });
-};
+    return time.mtime.toISOString();
+}
 
-export {
-    getISOTime,
-    readPreset
-};
+async function readPreset(file: string): Promise<Buffer> {
+    return await fs.readFile(file);
+}
+
+export { getISOTime, readPreset };

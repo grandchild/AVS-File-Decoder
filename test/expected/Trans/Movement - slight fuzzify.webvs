@@ -1,0 +1,1 @@
+{"name":"Movement - slight fuzzify","clearFrame":true,"components":[{"type":"Movement","group":"Trans","builtinEffect":"Slight Fuzzify","output":"Replace","sourceMapped":false,"coordinates":"POLAR","bilinear":true,"wrap":false}]}

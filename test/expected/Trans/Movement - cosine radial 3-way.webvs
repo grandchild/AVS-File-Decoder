@@ -1,0 +1,1 @@
+{"name":"Movement - cosine radial 3-way","clearFrame":true,"components":[{"type":"Movement","group":"Trans","builtinEffect":"Cosine Radial 3-way","output":"Replace","sourceMapped":false,"coordinates":0,"bilinear":true,"wrap":false,"code":"r = cos(r * 3)"}]}

@@ -1,0 +1,1 @@
+{"name":"Movement - gridley","clearFrame":true,"components":[{"type":"Movement","group":"Trans","builtinEffect":"Gridley","output":"Replace","sourceMapped":false,"coordinates":1,"bilinear":true,"wrap":false,"code":"x = x + (cos(y * 18) * .02),\r\ny = y + (sin(x * 14) * .03),"}]}
