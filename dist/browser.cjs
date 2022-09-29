@@ -665,10 +665,11 @@ var builtin = [
         name: 'Color Modifier',
         code: 0x2d,
         group: 'Trans',
-        func: 'generic',
+        func: 'versioned_generic',
         fields: {
-            recomputeEveryFrame: ['Bool', 1],
-            code: 'CodePFBI'
+            new_version: ['Bool', 1],
+            code: 'CodePFBI',
+            recomputeEveryFrame: ['Bool', 4]
         }
     }
 ];
