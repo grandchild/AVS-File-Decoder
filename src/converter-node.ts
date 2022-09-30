@@ -1,8 +1,7 @@
 // Modules
 import { basename, extname } from 'path';
 import { convertBlob } from './converter';
-import { readFileSync, statSync } from 'fs';
-import * as Util from './lib/util-node';
+import { promises as fs, readFileSync, statSync } from 'fs';
 import Log from './lib/log';
 
 const defaultArgs: Arguments = {
@@ -18,10 +17,10 @@ function convertFile(file: string, customArgs?: Arguments): Promise<string | voi
         ...customArgs
     };
 
-    return Util.readPreset(file)
+    return fs.readFile(file)
         .then(async (presetBlob: Buffer) => {
             const presetName = typeof args.name !== 'undefined' && args.name.trim().length > 0 ? args.name : basename(file, extname(file));
-            const presetDate = args.noDate ? undefined : await Util.getISOTime(file);
+            const presetDate = args.noDate ? undefined : await getISOTime(file);
             const presetObj = convertBlob(presetBlob, presetName, presetDate, args);
             const whitespace: number = args.minify === true ? 0 : 4;
 
@@ -52,6 +51,12 @@ function convertFileSync(file: string, customArgs?: Arguments): unknown {
     const whitespace: number = args.minify === true ? 0 : 4;
 
     return JSON.stringify(presetObj, null, whitespace);
+}
+
+async function getISOTime(file: string): Promise<string> {
+    const time = await fs.stat(file);
+
+    return time.mtime.toISOString();
 }
 
 export { convertFile, convertFileSync };
