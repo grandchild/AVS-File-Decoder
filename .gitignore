@@ -29,6 +29,9 @@ ui/
 # Development
 .eslintcache
 
+# Build
+dist/
+
 # Test
 !test/**/*avs
 !test/**/*webvs
