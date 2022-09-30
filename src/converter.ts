@@ -23,10 +23,10 @@ function convertBlob(data: Buffer | ArrayBuffer, presetName: string, presetDate?
         ...customArgs
     };
 
-    verbosity = args.quiet ? -1 : args.verbose;
+    verbosity = args.quiet ? -1 : Number(args.verbose);
 
     Util.setVerbosity(verbosity);
-    Util.setHiddenStrings(args.hidden);
+    Util.setHiddenStrings(Boolean(args.hidden));
 
     const preset = {
         name: presetName
