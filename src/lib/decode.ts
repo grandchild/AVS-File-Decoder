@@ -1,4 +1,3 @@
-import { convertComponents } from '../converter';
 import * as Util from './util';
 import config from '../config';
 import get from './get';
@@ -73,7 +72,7 @@ export default {
             comp['code'] = get.CodeEIF(blob, codeOffset + config.sizeInt)[0];
             contentOffset = codeOffset + config.sizeInt + codeSize;
         }
-        const content = convertComponents(blob.subarray(contentOffset, offset + size));
+        const content = Util.convertComponents(blob.subarray(contentOffset, offset + size));
         comp['components'] = content;
         return comp;
     },

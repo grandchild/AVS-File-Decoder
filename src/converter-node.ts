@@ -11,7 +11,7 @@ const defaultArgs: Arguments = {
     verbose: 0
 };
 
-function convertFile(file: string, customArgs?: Arguments): Promise<string | void> {
+export function convertFile(file: string, customArgs?: Arguments): Promise<string | void> {
     const args = {
         ...defaultArgs,
         ...customArgs
@@ -31,7 +31,7 @@ function convertFile(file: string, customArgs?: Arguments): Promise<string | voi
         });
 }
 
-function convertFileSync(file: string, customArgs?: Arguments): unknown {
+export function convertFileSync(file: string, customArgs?: Arguments): unknown {
     const args = {
         ...defaultArgs,
         ...customArgs
@@ -58,5 +58,3 @@ async function getISOTime(file: string): Promise<string> {
 
     return time.mtime.toISOString();
 }
-
-export { convertFile, convertFileSync };
