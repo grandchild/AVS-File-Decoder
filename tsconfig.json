@@ -1,0 +1,21 @@
+{
+    "compileOnSave": true,
+    "compilerOptions": {
+        "module": "commonjs",
+        "target": "es6",
+        "lib": [
+            "es2020",
+            "dom"
+        ],
+        "outDir": "./",
+        "noImplicitAny": false,
+        "removeComments": false,
+        "rootDir": "src",
+        "esModuleInterop": true,
+        "sourceMap": true
+    },
+    "exclude": [
+        ".vscode-test",
+        "node_modules"
+    ]
+}
