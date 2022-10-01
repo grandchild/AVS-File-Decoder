@@ -15,7 +15,7 @@ export default [
     // CommonJS
     {
         external,
-        input: 'src/converter.ts',
+        input: 'src/browser.ts',
         output: {
             file: 'dist/browser.cjs',
             format: 'cjs',
@@ -25,7 +25,7 @@ export default [
     },
     {
         external,
-        input: 'src/converter-node.ts',
+        input: 'src/node.ts',
         output: {
             file: 'dist/node.cjs',
             format: 'cjs',
@@ -37,7 +37,7 @@ export default [
     // ESM
     {
         external,
-        input: 'src/converter.ts',
+        input: 'src/browser.ts',
         output: {
             file: 'dist/browser.mjs',
             format: 'esm',
@@ -54,7 +54,7 @@ export default [
     },
     {
         external,
-        input: 'src/converter-node.ts',
+        input: 'src/node.ts',
         output: {
             file: 'dist/node.mjs',
             format: 'esm',

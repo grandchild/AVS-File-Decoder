@@ -1,6 +1,6 @@
 // Modules
 import { basename, extname } from 'path';
-import { convertBlob } from './converter';
+import { convertBlob } from './browser';
 import { promises as fs, readFileSync, statSync } from 'fs';
 import Log from './lib/log';
 
