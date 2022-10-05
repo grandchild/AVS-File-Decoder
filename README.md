@@ -20,38 +20,7 @@ yarn add @visbot/webvsc || npm install  @visbot/webvsc
 
 ## Usage
 
-## Node
-
-`convertFile(file, [options])`
-
-**Example:**
-
-```js
-import { convertFile, convertFileSync } from '@visbot/webvsc/node';
-
-let file = 'path/to/preset.avs';
-let jsonString;
-
-// Asynchronous
-(async () => {
-    try {
-        jsonString = await convertFile(file);
-    } catch (err) {
-        console.error(err);
-    }
-})();
-
-// Synchronous
-try {
-    jsonString = convertFileSync(file);
-} catch (err) {
-    console.error(err);
-}
-```
-
-## Browser
-
-`convertBlob(fileBuffer, fileName, fileDate, [options])`
+`convertPreset(arrayBuffer, fileName, fileDate, [options])`
 
 ```js
 import { convertBlob } from '@visbot/webvsc/browser';

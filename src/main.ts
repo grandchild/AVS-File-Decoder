@@ -7,7 +7,6 @@ import Log from './lib/log';
 // Constants
 let verbosity = 0; // log individual key:value fields
 
-
 const defaultArgs: Arguments = {
     hidden: true,
     minify: false,
@@ -15,7 +14,7 @@ const defaultArgs: Arguments = {
     verbose: 0
 };
 
-export function convertBlob(data: Buffer | ArrayBuffer, presetName: string, presetDate?: string, customArgs?: Arguments): unknown {
+export function convertPreset(data: Buffer | ArrayBuffer, presetName: string, presetDate: string = undefined, customArgs: Arguments = {}): unknown {
     const args = {
         ...defaultArgs,
         ...customArgs
