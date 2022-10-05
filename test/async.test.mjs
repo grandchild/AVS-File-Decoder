@@ -1,5 +1,5 @@
 // Modules
-import { convertFile } from './helper.mjs';
+import { convertFile } from './_helper.mjs';
 
 // Dependencies
 import { globby } from 'globby';

@@ -1,5 +1,5 @@
 // Modules
-import { convertFileSync } from './helper.mjs';
+import { convertFileSync } from './_helper.mjs';
 
 // Dependencies
 import { globbySync } from 'globby';

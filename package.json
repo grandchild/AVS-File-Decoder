@@ -46,7 +46,7 @@
     "prepack": "npm run build",
     "prepare": "husky install",
     "start": "esbuild src/main.ts --bundle --outfile=dist/webvsc.mjs --format=esm --watch",
-    "test": "uvu test --ignore helper.mjs"
+    "test": "uvu test --ignore _helper.mjs"
   },
   "dependencies": {
     "log-symbols": "^5.1.0"
