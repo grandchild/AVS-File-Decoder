@@ -4,11 +4,9 @@
   "description": "A library to convert Winamp AVS presets into Webvs JSON",
   "license": "MIT",
   "type": "module",
-  "module": "./dist/webvsc.mjs",
-  "exports": {
-    ".": {
-      "import": "./dist/webvsc.mjs"
-    }
+  "exports": "./index.js",
+  "engines": {
+      "node": ">=14.16"
   },
   "directories": {
     "doc": "doc",
@@ -34,9 +32,6 @@
     "converter",
     "winamp"
   ],
-  "engines": {
-    "node": "^14.13.1 || >=16.0.0"
-  },
   "scripts": {
     "build": "esbuild src/main.ts --bundle --outfile=dist/webvsc.mjs --format=esm",
     "clean": "rimraf ./dist",
@@ -46,7 +41,7 @@
     "prepack": "npm run build",
     "prepare": "husky install",
     "start": "esbuild src/main.ts --bundle --outfile=dist/webvsc.mjs --format=esm --watch",
-    "test": "uvu test --ignore _helper.mjs"
+    "test": "uvu test --ignore _h.mjs"
   },
   "dependencies": {
     "log-symbols": "^5.1.0"
