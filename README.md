@@ -25,7 +25,7 @@ npm install  @visbot/webvsc
 ```js
 import { convertPreset } from '@visbot/webvsc';
 
-const presetName = 'my preset';
+const presetName = 'my preset'; // no file-extension!
 const modifiedDate = new Date().toISOString();
 
 const webvs = convertPreset(avsBuffer, presetName, modifiedDate);
