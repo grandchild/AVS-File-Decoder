@@ -15,7 +15,7 @@ Library to to batch-convert [Winamp AVS presets](https://www.wikiwand.com/en/Adv
 Use your preferred [Node](https://nodejs.org) package manager to install the package:
 
 ```sh
-yarn add @visbot/webvsc || npm install  @visbot/webvsc
+npm install  @visbot/webvsc
 ```
 
 ## Usage
