@@ -24,8 +24,10 @@ npm install  @visbot/webvsc
 
 ```js
 import { convertPreset } from '@visbot/webvsc';
+import fs from 'node:fs':
 
-const presetName = 'my preset'; // no file-extension!
+const avsBuffer = await fs.promises.readFile(file);
+const presetName = 'My Awesome Preset'; // no file-extension!
 const modifiedDate = new Date().toISOString();
 
 const webvs = convertPreset(avsBuffer, presetName, modifiedDate);
