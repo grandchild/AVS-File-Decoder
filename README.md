@@ -28,9 +28,9 @@ import fs from 'node:fs':
 
 const avsBuffer = await fs.promises.readFile(file);
 const presetName = 'My Awesome Preset'; // no file-extension!
-const modifiedDate = new Date().toISOString();
+const modifiedDate = (await fs.stat(file)).mtime || new Date();
 
-const webvs = convertPreset(avsBuffer, presetName, modifiedDate);
+const webvs = convertPreset(avsBuffer, presetName, modifiedDate.toISOString());
 ```
 
 ## Options
