@@ -23,12 +23,12 @@ yarn add @visbot/webvsc || npm install  @visbot/webvsc
 `convertPreset(arrayBuffer, fileName, fileDate, [options])`
 
 ```js
-import { convertBlob } from '@visbot/webvsc/browser';
+import { convertPreset } from '@visbot/webvsc';
 
-const baseName = 'my preset';
+const presetName = 'my preset';
 const modifiedDate = new Date().toISOString();
 
-const webvs = convertBlob(avsBuffer, baseName, modifiedDate);
+const webvs = convertPreset(avsBuffer, presetName, modifiedDate);
 ```
 
 ## Options
