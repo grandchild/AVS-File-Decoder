@@ -1,11 +1,12 @@
 // Modules
-import { convertFile } from '../dist/node.mjs';
+import { convertFile } from './_helper.mjs';
 
 // Dependencies
+import { globby } from 'globby';
 import { promises as fs } from 'node:fs';
-import globby from 'globby';
+import { test } from 'uvu';
+import * as assert from 'uvu/assert';
 import path from 'node:path';
-import test from 'ava';
 
 // Variables
 const __dirname = path.resolve(path.dirname(''));
@@ -18,36 +19,36 @@ const options = {
   noDate: true
 };
 
-// TODO: Use top-level await when Node 16 becomes LTS
-(async () => {
-    const avsFiles = await globby(['**/*.avs'], { cwd: fixturesDir });
-    const emptyFiles = [
-        '(empty - Clear every  frame).avs',
-        '(empty).avs'
-    ];
 
-    avsFiles.map(avsFile => {
-        const basename = path.basename(avsFile, '.avs');
-        const dirname = path.dirname(avsFile);
+const avsFiles = await globby(['**/*.avs'], { cwd: fixturesDir });
+const emptyFiles = [
+    '(empty - Clear every  frame).avs',
+    '(empty).avs'
+];
 
-        const absolutePath = {
-            expected: path.join(expectedDir, dirname, `${basename}.webvs`),
-            fixture: path.join(fixturesDir, avsFile)
-        };
+avsFiles.map(avsFile => {
+    const basename = path.basename(avsFile, '.avs');
+    const dirname = path.dirname(avsFile);
 
-        test(`Converted: ${avsFile}`, async t => {
-            const actual = await convertFile(absolutePath.fixture, options);
-            const expected = (await fs.readFile(absolutePath.expected, 'utf-8')).toString();
+    const absolutePath = {
+        expected: path.join(expectedDir, dirname, `${basename}.webvs`),
+        fixture: path.join(fixturesDir, avsFile)
+    };
 
-            t.is(actual, expected);
-        });
+    test(`Converted: ${avsFile}`, async () => {
+        const actual = await convertFile(absolutePath.fixture, options);
+        const expected = (await fs.readFile(absolutePath.expected, 'utf-8')).toString();
 
-        if (!emptyFiles.includes(avsFile)) {
-            test(`Not empty: ${avsFile}`, async t => {
-                const actual = JSON.parse(await convertFile(absolutePath.fixture, options));
-
-                t.not(actual.components.length, 0);
-            });
-        }
+        assert.is(actual, expected);
     });
-})();
+
+    if (!emptyFiles.includes(avsFile)) {
+        test(`Not empty: ${avsFile}`, async () => {
+            const actual = JSON.parse(await convertFile(absolutePath.fixture, options));
+
+            assert.is.not(actual.components.length, 0);
+        });
+    }
+});
+
+test.run();

@@ -15,51 +15,22 @@ Library to to batch-convert [Winamp AVS presets](https://www.wikiwand.com/en/Adv
 Use your preferred [Node](https://nodejs.org) package manager to install the package:
 
 ```sh
-yarn add @visbot/webvsc || npm install  @visbot/webvsc
+npm install @visbot/webvsc
 ```
 
 ## Usage
 
-## Node
-
-`convertFile(file, [options])`
-
-**Example:**
+`convertPreset(arrayBuffer, fileName, fileDate, [options])`
 
 ```js
-import { convertFile, convertFileSync } from '@visbot/webvsc/node';
+import { convertPreset } from '@visbot/webvsc';
+import fs from 'node:fs':
 
-let file = 'path/to/preset.avs';
-let jsonString;
+const avsBuffer = await fs.promises.readFile(file);
+const presetName = 'My Awesome Preset'; // no file-extension!
+const modifiedDate = (await fs.stat(file)).mtime || new Date();
 
-// Asynchronous
-(async () => {
-    try {
-        jsonString = await convertFile(file);
-    } catch (err) {
-        console.error(err);
-    }
-})();
-
-// Synchronous
-try {
-    jsonString = convertFileSync(file);
-} catch (err) {
-    console.error(err);
-}
-```
-
-## Browser
-
-`convertBlob(fileBuffer, fileName, fileDate, [options])`
-
-```js
-import { convertBlob } from '@visbot/webvsc/browser';
-
-const baseName = 'my preset';
-const modifiedDate = new Date().toISOString();
-
-const webvs = convertBlob(avsBuffer, baseName, modifiedDate);
+const webvs = convertPreset(avsBuffer, presetName, modifiedDate.toISOString());
 ```
 
 ## Options

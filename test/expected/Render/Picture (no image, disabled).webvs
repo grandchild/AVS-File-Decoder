@@ -1,0 +1,1 @@
+{"name":"Picture (no image, disabled)","clearFrame":true,"components":[{"type":"Picture","group":"Render","enabled":false,"blendMode":"FIFTY_FIFTY","adapt":0,"onBeatPersist":6,"file":"","ratio":0,"aspectRatioAxis":"X"}]}

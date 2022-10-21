@@ -1,0 +1,1 @@
+{"name":"Picture - Blend 50-50 + onBeat Additive","clearFrame":true,"components":[{"type":"Picture","group":"Render","enabled":true,"blendMode":"REPLACE","adapt":1,"onBeatPersist":6,"file":"avsres_texer_circle_edgeonly_15x15.bmp","ratio":0,"aspectRatioAxis":"X"}]}
