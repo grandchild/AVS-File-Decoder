@@ -8,6 +8,12 @@
   "engines": {
       "node": ">=14.16"
   },
+  "files": [
+    "dist/",
+    "types/",
+    "LICENSE",
+    "README.md"
+  ],
   "directories": {
     "doc": "doc",
     "test": "test"
