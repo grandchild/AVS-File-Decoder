@@ -4,7 +4,7 @@
   "description": "A library to convert Winamp AVS presets into Webvs JSON",
   "license": "MIT",
   "type": "module",
-  "exports": "./index.js",
+  "exports": "./dist/webvsc.mjs",
   "engines": {
       "node": ">=14.16"
   },
