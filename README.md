@@ -2,7 +2,7 @@
 
 [![npm](https://flat.badgen.net/npm/license/@visbot/webvsc)](https://www.npmjs.org/package/@visbot/webvsc)
 [![npm](https://flat.badgen.net/npm/v/@visbot/webvsc)](https://www.npmjs.org/package/@visbot/webvsc)
-[![CI](https://img.shields.io/github/workflow/status/grandchild/AVS-File-Decoder/CI?style=flat-square)](https://github.com/grandchild/AVS-File-Decoder/actions)
+[![CI](https://img.shields.io/github/actions/workflow/status/grandchild/AVS-File-Decoder/default.yml?style=flat-square)](https://github.com/grandchild/AVS-File-Decoder/actions)
 
 ## Description
 
