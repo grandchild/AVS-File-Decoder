@@ -9,7 +9,6 @@ let verbosity = 0; // log individual key:value fields
 
 const defaultArgs: Arguments = {
     hidden: true,
-    minify: false,
     quiet: false,
     verbose: 0
 };

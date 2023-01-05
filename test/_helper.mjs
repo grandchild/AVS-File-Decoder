@@ -4,7 +4,6 @@ import { promises as fs, readFileSync, statSync } from 'node:fs';
 
 const defaultArgs = {
     hidden: true,
-    minify: false,
     quiet: false,
     verbose: 0
 };
@@ -20,9 +19,8 @@ export function convertFile(file, customArgs) {
             const presetName = typeof args.name !== 'undefined' && args.name.trim().length > 0 ? args.name : basename(file, extname(file));
             const presetDate = args.noDate ? undefined : await getISOTime(file);
             const presetObj = convertPreset(presetBlob, presetName, presetDate, args);
-            const whitespace = args.minify === true ? 0 : 4;
 
-            return JSON.stringify(presetObj, null, whitespace);
+            return JSON.stringify(presetObj, null, 0);
         })
         .catch((err) => {
             throw new Error(err.message);
@@ -35,8 +33,6 @@ export function convertFileSync(file, customArgs) {
         ...customArgs
     };
 
-    const whitespace = args.minify === true ? 0 : 4;
-
     try {
         const presetBlob = readFileSync(file);
         const presetName = typeof args.name !== 'undefined' && args.name.trim().length > 0 ? args.name : basename(file, extname(file));
@@ -44,7 +40,7 @@ export function convertFileSync(file, customArgs) {
 
         const presetObj = convertPreset(presetBlob, presetName, presetDate, args);
 
-        return JSON.stringify(presetObj, null, whitespace);
+        return JSON.stringify(presetObj, null, 0);
     } catch (err) {
         throw new Error(err.message);
     }

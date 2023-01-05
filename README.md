@@ -42,13 +42,6 @@ Default: `false`
 
 Don't extract hidden strings from fixed-size strings
 
-### minify
-
-Type: `boolean`  
-Default: `false`  
-
-Minify generated JSON
-
 ### quiet
 
 Type: `boolean`  
