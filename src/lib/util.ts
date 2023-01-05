@@ -17,10 +17,11 @@ const setVerbosity = (value: number): void => {
     verbosity = value;
 };
 
-class ConvertException implements Error {
+class ConvertException extends Error {
     name = 'ConvertException';
 
     constructor(public message: string) {
+        super(message);
         this.message = message;
     }
 
