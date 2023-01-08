@@ -8,14 +8,12 @@
 
 Library to to batch-convert [Winamp AVS presets](https://www.wikiwand.com/en/Advanced_Visualization_Studio) into native [Webvs](https://github.com/azeem/webvs) JSON format. Take a look at the [supported components](doc/components.md).
 
-[*Live Demo*](https://idleberg.github.io/webvsc-ui/)
-
 ## Installation
 
 Use your preferred [Node](https://nodejs.org) package manager to install the package:
 
 ```sh
-npm install @visbot/webvsc
+npm install @visbot/webvsc@next
 ```
 
 ## Usage
