@@ -14,39 +14,39 @@ const expectedDir = path.join(process.cwd(), 'tests/expected');
 
 // Converter Settings
 const options = {
-  minify: true,
-  noDate: true
+	minify: true,
+	noDate: true
 };
 
 const avsFiles = globbySync(['**/*.avs'], { cwd: fixturesDir });
 const emptyFiles = [
-    '(empty - Clear every  frame).avs',
-    '(empty).avs'
+		'(empty - Clear every  frame).avs',
+		'(empty).avs'
 ];
 
 avsFiles.map(avsFile => {
-    const basename = path.basename(avsFile, '.avs');
-    const dirname = path.dirname(avsFile);
+		const basename = path.basename(avsFile, '.avs');
+		const dirname = path.dirname(avsFile);
 
-    const absolutePath = {
-        expected: path.join(expectedDir, dirname, `${basename}.webvs`),
-        fixture: path.join(fixturesDir, avsFile)
-    };
+		const absolutePath = {
+				expected: path.join(expectedDir, dirname, `${basename}.webvs`),
+				fixture: path.join(fixturesDir, avsFile)
+		};
 
-    test(`Converted: ${avsFile}`, () => {
-        const actual = convertFileSync(absolutePath.fixture, options);
-        const expected = fs.readFileSync(absolutePath.expected, 'utf-8').toString();
+		test(`Converted: ${avsFile}`, () => {
+				const actual = convertFileSync(absolutePath.fixture, options);
+				const expected = fs.readFileSync(absolutePath.expected, 'utf-8').toString();
 
-        assert.is(actual, expected);
-    });
+				assert.is(actual, expected);
+		});
 
-    if (!emptyFiles.includes(avsFile)) {
-        test(`Not empty: ${avsFile}`, () => {
-            const actual = JSON.parse(convertFileSync(absolutePath.fixture, options));
+		if (!emptyFiles.includes(avsFile)) {
+				test(`Not empty: ${avsFile}`, () => {
+						const actual = JSON.parse(convertFileSync(absolutePath.fixture, options));
 
-            assert.is.not(actual.components.length, 0);
-        });
-    }
+						assert.is.not(actual.components.length, 0);
+				});
+		}
 });
 
 test.run();

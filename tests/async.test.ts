@@ -14,41 +14,41 @@ const expectedDir = path.join(process.cwd(), 'tests/expected');
 
 // Converter Settings
 const options = {
-  minify: true,
-  noDate: true
+	minify: true,
+	noDate: true
 };
 
 (async () => {
-    const avsFiles = await globby(['**/*.avs'], { cwd: fixturesDir });
-    const emptyFiles = [
-        '(empty - Clear every  frame).avs',
-        '(empty).avs'
-    ];
+		const avsFiles = await globby(['**/*.avs'], { cwd: fixturesDir });
+		const emptyFiles = [
+				'(empty - Clear every  frame).avs',
+				'(empty).avs'
+		];
 
-    avsFiles.map(avsFile => {
-        const basename = path.basename(avsFile, '.avs');
-        const dirname = path.dirname(avsFile);
+		avsFiles.map(avsFile => {
+				const basename = path.basename(avsFile, '.avs');
+				const dirname = path.dirname(avsFile);
 
-        const absolutePath = {
-            expected: path.join(expectedDir, dirname, `${basename}.webvs`),
-            fixture: path.join(fixturesDir, avsFile)
-        };
+				const absolutePath = {
+						expected: path.join(expectedDir, dirname, `${basename}.webvs`),
+						fixture: path.join(fixturesDir, avsFile)
+				};
 
-        test(`Converted: ${avsFile}`, async () => {
-            const actual = await convertFile(absolutePath.fixture, options);
-            const expected = (await fs.readFile(absolutePath.expected, 'utf-8')).toString();
+				test(`Converted: ${avsFile}`, async () => {
+						const actual = await convertFile(absolutePath.fixture, options);
+						const expected = (await fs.readFile(absolutePath.expected, 'utf-8')).toString();
 
-            assert.is(actual, expected);
-        });
+						assert.is(actual, expected);
+				});
 
-        if (!emptyFiles.includes(avsFile)) {
-            test(`Not empty: ${avsFile}`, async () => {
-                const actual = JSON.parse(await convertFile(absolutePath.fixture, options));
+				if (!emptyFiles.includes(avsFile)) {
+						test(`Not empty: ${avsFile}`, async () => {
+								const actual = JSON.parse(await convertFile(absolutePath.fixture, options));
 
-                assert.is.not(actual.components.length, 0);
-            });
-        }
-    });
+								assert.is.not(actual.components.length, 0);
+						});
+				}
+		});
 
-    test.run();
+		test.run();
 })();
