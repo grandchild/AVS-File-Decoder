@@ -1,19 +1,20 @@
 {
     "compileOnSave": true,
     "compilerOptions": {
-        "module": "esnext",
-        "moduleResolution": "node",
-        "target": "es6",
-        "lib": [
-            "es2020",
-            "dom"
-        ],
-        "outDir": "./",
-        "noImplicitAny": false,
-        "removeComments": false,
-        "rootDir": "src",
-        "esModuleInterop": true,
-        "sourceMap": true
+			"declaration": true,
+			"esModuleInterop": true,
+			"module": "esnext",
+			"moduleResolution": "node",
+			"noImplicitAny": false,
+			"lib": [
+				"es2020",
+				"dom"
+			],
+			"outDir": "./dist",
+			"removeComments": false,
+			"rootDir": "src",
+			"sourceMap": true,
+			"target": "es6"
     },
     "exclude": [
         ".vscode-test",
