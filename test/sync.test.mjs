@@ -1,5 +1,5 @@
 // Modules
-import { convertFileSync } from './_helper.mjs';
+import { convertFileSync } from './_helper';
 
 // Dependencies
 import { globbySync } from 'globby';
@@ -9,9 +9,8 @@ import fs from 'node:fs';
 import path from 'node:path';
 
 // Variables
-const __dirname = path.resolve(path.dirname(''));
-const fixturesDir = path.join(__dirname, 'test/fixtures');
-const expectedDir = path.join(__dirname, 'test/expected');
+const fixturesDir = path.join(process.cwd(), 'test/fixtures');
+const expectedDir = path.join(process.cwd(), 'test/expected');
 
 // Converter Settings
 const options = {

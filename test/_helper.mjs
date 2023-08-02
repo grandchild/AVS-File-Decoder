@@ -1,5 +1,5 @@
 import { basename, extname } from 'node:path';
-import { convertPreset } from '../dist/webvsc.mjs';
+import { convertPreset } from '../src/main';
 import { promises as fs, readFileSync, statSync } from 'node:fs';
 
 const defaultArgs = {
