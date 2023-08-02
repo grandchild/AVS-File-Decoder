@@ -47,7 +47,7 @@
     "prepack": "npm run build",
     "prepare": "husky install",
     "start": "npm run build -- --watch",
-    "test": "uvu test -r tsm"
+    "test": "uvu tests -r tsm"
   },
   "dependencies": {
     "log-symbols": "^5.1.0"

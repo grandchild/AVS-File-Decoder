@@ -9,8 +9,8 @@ import fs from 'node:fs';
 import path from 'node:path';
 
 // Variables
-const fixturesDir = path.join(process.cwd(), 'test/fixtures');
-const expectedDir = path.join(process.cwd(), 'test/expected');
+const fixturesDir = path.join(process.cwd(), 'tests/fixtures');
+const expectedDir = path.join(process.cwd(), 'tests/expected');
 
 // Converter Settings
 const options = {
