@@ -39,7 +39,7 @@
     "winamp"
   ],
   "scripts": {
-    "build": "rollup --config",
+    "build": "tsup src/main.ts --format esm --target esnext --dts --external json5",
     "clean": "rimraf ./dist",
     "dev": "npm run start",
     "lint:code": "eslint ./src --ignore-path .gitignore",
@@ -53,7 +53,6 @@
     "log-symbols": "^5.1.0"
   },
   "devDependencies": {
-    "@rollup/plugin-typescript": "^11.1.2",
     "@types/node": "^18.11.18",
     "@typescript-eslint/eslint-plugin": "^6.2.1",
     "@typescript-eslint/parser": "^6.2.1",
@@ -64,8 +63,8 @@
     "npm-run-all2": "^6.0.6",
     "prettier": "^2.8.1",
     "rimraf": "^5.0.1",
-    "rollup": "^3.27.0",
     "tsm": "^2.3.0",
+    "tsup": "^7.2.0",
     "typescript": "^5.1.6",
     "uvu": "^0.5.6"
   },

@@ -402,6 +402,7 @@ export default {
 				for (let i = 0; i < size; i++, offset += config.sizeInt) {
 						data[i] = this.Int32(blob, offset)[0];
 				}
+
 				const matrix = { width: dimensions[0], height: dimensions[1], data: data };
 
 				return [matrix, size * config.sizeInt];
