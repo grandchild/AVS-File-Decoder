@@ -43,7 +43,7 @@ function cmpBytes(arr: Uint8Array, offset: number, test: number[]): boolean {
 		return true;
 }
 
-function printTable(name: string, table: any): void {
+function printTable(name: string, table: Record<string, unknown>): void {
 		Log.log(`${name}:`);
 		for (const key in table) {
 				Log.log(`\t${key}: ${table[key] ? ('' + table[key]).replace(/\n/g, '\n\t\t') : 'undefined'}`);
