@@ -14,7 +14,7 @@
 			"removeComments": false,
 			"rootDir": ".",
 			"sourceMap": true,
-			"target": "es6"
+			"target": "ES2019"
     },
     "exclude": [
         ".vscode-test",
