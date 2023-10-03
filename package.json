@@ -5,6 +5,7 @@
   "license": "MIT",
   "type": "module",
   "exports": "./dist/webvsc.mjs",
+  "types": "./dist",
   "engines": {
     "node": ">=16"
   },
