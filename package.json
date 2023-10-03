@@ -6,7 +6,7 @@
   "type": "module",
   "exports": "./dist/webvsc.mjs",
   "engines": {
-    "node": ">=14.16"
+    "node": ">=16"
   },
   "files": [
     "dist/",
@@ -70,9 +70,5 @@
   },
   "lint-staged": {
     "*.ts": "eslint --cache --fix"
-  },
-  "volta": {
-    "node": "18.13.0",
-    "npm": "8.19.3 "
   }
 }
