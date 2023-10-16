@@ -51,7 +51,8 @@
     "test": "uvu tests -r tsm"
   },
   "dependencies": {
-    "log-symbols": "^5.1.0"
+    "log-symbols": "^5.1.0",
+    "zod": "^3.22.4"
   },
   "devDependencies": {
     "@types/node": "^18.11.18",
