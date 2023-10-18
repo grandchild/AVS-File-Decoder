@@ -9,7 +9,6 @@ const BLEND_MODES = z.union([
 	z.literal('ADDITIVE'),
 	z.literal('SUB_1'), // TODO verify
 	z.literal('SUB_2'), // TODO verify
-	z.literal('EVERY_OTHER_LINE'),
 	z.literal('EVERY_OTHER_PIXEL'),
 	z.literal('XOR'),
 	z.literal('ADJUSTABLE'),
@@ -37,7 +36,7 @@ export const effectList = z.object({
 		init: z.string(),
 		perFrame: z.string()
 	}),
-	// TODO components: []
+	// components: z.array([]) // TODO how to recurse?
 }).required();
 
 export type EffectList = z.infer<typeof effectList>;

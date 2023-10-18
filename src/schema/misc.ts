@@ -1,11 +1,11 @@
 import { z } from 'zod';
 
-const MISC = z.literal('Misc');
+const MISC_GROUP = z.literal('Misc');
 const RANGE_0_255 = z.number().int().min(0).max(255);
 
 export const bufferSave = z.object({
 	type: z.literal('BufferSave'),
-	group: MISC,
+	group: MISC_GROUP,
 	action: z.union([
 		z.literal('SAVE'),
 		z.literal('RESTORE'),
@@ -33,13 +33,13 @@ export const bufferSave = z.object({
 
 export const comment = z.object({
 	type: z.literal('Comment'),
-	group: MISC,
+	group: MISC_GROUP,
 	text: z.string()
 }).required();
 
 export const customBpm = z.object({
 	type: z.literal('CustomBPM'),
-	group: MISC,
+	group: MISC_GROUP,
 	enabled: z.boolean(),
 	mode: z.union([
 		z.literal('ARBITRARY'),
@@ -53,7 +53,7 @@ export const customBpm = z.object({
 
 export const setRenderMode = z.object({
 	type: z.literal('SetRenderMode'),
-	group: MISC,
+	group: MISC_GROUP,
 	blend: z.union([
 		z.literal('BLEND_REPLACE'),
 		z.literal('BLEND_ADDITIVE'),
@@ -75,3 +75,5 @@ export type BufferSave = z.infer<typeof bufferSave>;
 export type Comment = z.infer<typeof comment>;
 export type CustomBpm = z.infer<typeof customBpm>;
 export type SetRenderMode = z.infer<typeof setRenderMode>;
+
+export type MiscEffects = BufferSave | Comment | CustomBpm | SetRenderMode;
