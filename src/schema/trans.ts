@@ -2,6 +2,7 @@ import { z } from 'zod';
 
 const TRANS_GROUP = z.literal('Trans');
 const HEX_COLOR = z.string().regex(/^#[0-9A-F]{6}$/);
+// eslint-disable-next-line @typescript-eslint/no-loss-of-precision
 const INT64MAX = z.literal(9_223_372_036_854_775_807);
 const RANGE_0_255 = z.number().int().min(0).max(255);
 const RANGE_0_256 = z.number().int().min(0).max(256);
