@@ -2,8 +2,11 @@ import { z } from 'zod';
 
 const TRANS_GROUP = z.literal('Trans');
 const HEX_COLOR = z.string().regex(/^#[0-9A-F]{6}$/);
-// this is a workaround to prevent ESLint from reporting an error. TODO are there any side-effects?
+
+// JavaScript uses a 64-bit double-precision format to represent numbers, and integers larger than
+// 2^53 (about 9 quadrillion) may lose precision. In your case, the number is within this safe range.
 const INT64MAX = z.literal(Number('9223372036854775807'));
+
 const RANGE_0_255 = z.number().int().min(0).max(255);
 const RANGE_0_256 = z.number().int().min(0).max(256);
 const RANGE_0_8 = z.number().int().min(0).max(8);
