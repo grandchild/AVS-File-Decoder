@@ -30,7 +30,7 @@ export const effectList = z.object({
 	inBufferInvert: z.boolean(),
 	outBufferInvert: z.boolean(),
 	enableOnBeat: z.boolean(),
-	enableOnBeatFor: z.number().int().min(0).safe(), // TODO validate
+	enableOnBeatFor: z.number().int().min(0).safe(), // TODO verify
 	code: z.object({
 		enabled: z.boolean(),
 		init: z.string(),

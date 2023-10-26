@@ -4,6 +4,7 @@ const RENDER_GROUP = z.literal('Render');
 const HEX_COLOR = z.string().regex(/^#[0-9A-F]{6}$/);
 const HEX_COLORS_16 = HEX_COLOR.array().min(1).max(16);
 const RANGE_0_32 = z.number().int().min(0).max(32);
+const RANGE_0_5 = z.number().int().min(0).max(5);
 const RANGE_1_64 = z.number().int().min(1).max(64);
 const RANGE_1_100 = z.number().int().min(1).max(100);
 const RANGE_16_16 = z.number().int().min(-16).max(16);
@@ -68,7 +69,7 @@ export const dotGrid = z
 		type: z.literal('DotGrid'),
 		group: RENDER_GROUP,
 		colors: HEX_COLORS_16,
-		spacing: z.number().int().min(0).safe(), // TODO validate 0, UINT32_MAX
+		spacing: z.number().int().min(0).safe(), // TODO verify 0, UINT32_MAX
 		speedX: RANGE_16_16,
 		speedY: RANGE_16_16,
 		blendMode: z.union([
@@ -184,10 +185,10 @@ export const starfield = z
 			z.literal('ADDITIVE'),
 			z.literal('FIFTY_FIFTY'),
 		]),
-		// WarpSpeed: 6, TODO
+		WarpSpeed: z.number().min(0).max(500),
 		MaxStars_set: RANGE_100_4095,
 		onbeat: NUMBERIC_BOOLEAN,
-		// spdBeat: 4, // TODO
+		spdBeat: RANGE_0_5,
 		durFrames: RANGE_1_100
 	})
 	.required();
@@ -219,7 +220,7 @@ export const texer2 = z
 	.object({
 		type: z.literal('TexerII'),
 		group: RENDER_GROUP,
-		imageSrc: z.string().max(260), // Windows 10 allows 32,767
+		imageSrc: z.string().max(260), // PS: Windows 10 allows 32,767
 		resizing: z.boolean(),
 		wrapAround: z.boolean(),
 		colorFiltering: z.boolean(),
