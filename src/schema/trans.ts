@@ -83,11 +83,11 @@ export const bump = z.object({
 		z.literal('ADDITIVE'),
 		z.literal('FIFTY_FIFTY'),
 		z.literal('REPLACE')
-	]), // TODO verify
+	]),
 	code: z.object({
-		init: z.string(), // TODO maxlength?
-		perFrame: z.string(), // TODO maxlength?
-		onBeat: z.string() // TODO maxlength?
+		init: z.string(),
+		perFrame: z.string(),
+		onBeat: z.string()
 	}),
 	showDot: z.boolean(),
 	invertDepth: z.boolean(),
@@ -202,8 +202,8 @@ export const convolutionFilter = z.object({
 	absolute: z.boolean(),
 	twoPass: z.boolean(),
 	kernel: z.object({
-		width: z.literal(7), // TODO can this change?
-		height: z.literal(7), // TODO can this change?
+		width: z.literal(7),
+		height: z.literal(7),
 		data: RANGE_INT16MIN_INT16MAX.array().length(49)
 	}),
 	bias: RANGE_INT16MIN_INT16MAX,
@@ -236,12 +236,12 @@ export const dynamicMovement = z.object({
 	coord: z.union([
 		z.literal('CARTESIAN'),
 		z.literal('POLAR')
-	]), // TODO verify
+	]),
 	gridW: INT64MAX,
 	gridH: INT64MAX,
 	blend: z.boolean(),
 	wrap: z.boolean(),
-	buffer: RANGE_0_8, // TODO verify: 43?,
+	buffer: RANGE_0_8,
 	alphaOnly: z.boolean()
 }).required();
 
@@ -283,7 +283,7 @@ export const grain = z.object({
 		z.literal('ADDITIVE'),
 		z.literal('FIFTY_FIFTY'),
 		z.literal('REPLACE')
-	]), // TODO verify
+	]),
 	amount: RANGE_0_100,
 	static: z.boolean()
 }).required();
@@ -300,7 +300,7 @@ export const interferences = z.object({
 		z.literal('ADDITIVE'),
 		z.literal('FIFTY_FIFTY'),
 		z.literal('REPLACE')
-	]), // TODO verify
+	]),
 	onBeatDistance: RANGE_1_64,
 	onBeatAlpha: RANGE_0_255,
 	onBeatRotation: RANGE_32_32,
@@ -320,7 +320,7 @@ export const interleave = z.object({
 		z.literal('ADDITIVE'),
 		z.literal('FIFTY_FIFTY'),
 		z.literal('REPLACE')
-	]), // TODO verify
+	]),
 	onbeat: z.boolean(),
 	x2: RANGE_0_64,
 	y2: RANGE_0_64,
@@ -356,7 +356,7 @@ export const mosaic = z.object({
 		z.literal('ADDITIVE'),
 		z.literal('FIFTY_FIFTY'),
 		z.literal('REPLACE')
-	]), // TODO verify
+	]),
 	onBeatSizeChange: z.boolean(),
 	onBeatSizeDuration: RANGE_1_100
 }).required();
@@ -397,7 +397,7 @@ export const movement = z.object({
 	coordinates: z.union([
 		z.literal('CARTESIAN'),
 		z.literal('POLAR')
-	]), // TODO verify,
+	]),
 	bilinear: z.boolean(),
 	wrap: z.boolean(),
 	code: z.string()
@@ -413,17 +413,17 @@ export const multiDelay = z.object({
 	]),
 	activeBuffer: RANGE_1_5, // TODO verify
 	useBeats0: z.boolean(),
-	delay0: RANGE_1_6, //	TODO verify
+	delay0: RANGE_1_6,
 	useBeats1: z.boolean(),
-	delay1: RANGE_1_6, //	TODO verify,
+	delay1: RANGE_1_6,
 	useBeats2: z.boolean(),
-	delay2: RANGE_1_6, //	TODO verify,
+	delay2: RANGE_1_6,
 	useBeats3: z.boolean(),
-	delay3: RANGE_1_6, //	TODO verify,
+	delay3: RANGE_1_6,
 	useBeats4: z.boolean(),
-	delay4: RANGE_1_6, //	TODO verify,
+	delay4: RANGE_1_6,
 	useBeats5: z.boolean(),
-	delay5: RANGE_1_6 //	TODO verify
+	delay5: RANGE_1_6
 }).required();
 
 export const multiFilter = z.object({
@@ -479,7 +479,7 @@ export const uniqueTone = z.object({
 		z.literal('ADDITIVE'),
 		z.literal('FIFTY_FIFTY'),
 		z.literal('REPLACE')
-	]), // TODO verify,
+	]),
 	invert: z.boolean()
 }).required();
 
@@ -498,10 +498,18 @@ export const waterBump = z.object({
 	density: RANGE_2_10,
 	depth: RANGE_100_2000,
 	random: z.boolean(),
-	// dropPositionX: 1, // TODO
-	// dropPositionY: 1, // TODO
+	dropPositionX: z.union([
+		z.literal('LEFT'),
+		z.literal('RIGHT'),
+		z.literal('CENTER'),
+	]),
+	dropPositionY: z.union([
+		z.literal('TOP'),
+		z.literal('BOTTOM'),
+		z.literal('CENTER'),
+	]),
 	dropRadius: RANGE_10_100,
-	// method: 0 // TODO
+	method: z.literal(0)
 }).required();
 
 export const water = z.object({

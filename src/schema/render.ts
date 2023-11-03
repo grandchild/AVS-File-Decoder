@@ -69,7 +69,7 @@ export const dotGrid = z
 		type: z.literal('DotGrid'),
 		group: RENDER_GROUP,
 		colors: HEX_COLORS_16,
-		spacing: z.number().int().min(0).safe(), // TODO verify 0, UINT32_MAX
+		spacing: z.number().int().min(0).safe(),
 		speedX: RANGE_16_16,
 		speedY: RANGE_16_16,
 		blendMode: z.union([
@@ -198,10 +198,10 @@ export const superScope = z
 		type: z.literal('SuperScope'),
 		group: RENDER_GROUP,
 		code: z.object({
-			init: z.string(), // TODO maxlength?
-			perFrame: z.string(), // TODO maxlength?
-			onBeat: z.string(), // TODO maxlength?
-			perPoint: z.string(), // TODO maxlength?
+			init: z.string(),
+			perFrame: z.string(),
+			onBeat: z.string(),
+			perPoint: z.string(),
 		}), // TODO dry
 		audioChannel: POSITIONS_HORIZONTAL,
 		audioSource: z.union([
@@ -225,10 +225,10 @@ export const texer2 = z
 		wrapAround: z.boolean(),
 		colorFiltering: z.boolean(),
 		code: z.object({
-			init: z.string(), // TODO maxlength?
-			perFrame: z.string(), // TODO maxlength?
-			onBeat: z.string(), // TODO maxlength?
-			perPoint: z.string(), // TODO maxlength?
+			init: z.string(),
+			perFrame: z.string(),
+			onBeat: z.string(),
+			perPoint: z.string(),
 		}), // TODO dry
 	})
 	.required();
