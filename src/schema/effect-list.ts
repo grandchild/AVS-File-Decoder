@@ -4,7 +4,7 @@ const RANGE_0_255 = z.number().int().min(0).max(255);
 const BLEND_MODES = z.union([
 	z.literal('IGNORE'),
 	z.literal('REPLACE'),
-	z.literal('5050'),
+	z.literal('FIFTY_FIFTY'),
 	z.literal('MAXIMUM'),
 	z.literal('ADDITIVE'),
 	z.literal('SUB_1'), // TODO verify
