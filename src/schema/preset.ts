@@ -5,7 +5,6 @@ import { MiscEffects } from './misc';
 import { RenderEffects } from './render';
 import { TransEffects } from './trans';
 
-export type PresetComponents = EffectList | MiscEffects | RenderEffects | TransEffects;
 
 const presetBase = z.object({
 	name: z.string(),
@@ -14,6 +13,8 @@ const presetBase = z.object({
 }).required();
 
 type PresetBase = z.infer<typeof presetBase>;
+
+export type PresetComponents = EffectList | MiscEffects | RenderEffects | TransEffects;
 export type Preset = PresetBase & {
 	components: PresetComponents[]
 };
