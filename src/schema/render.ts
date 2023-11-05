@@ -12,20 +12,30 @@ const RANGE_50_50 = z.number().int().min(-50).max(50);
 const RANGE_100_4095 = z.number().int().min(100).max(4095);
 const RANGE_16_576 = z.number().int().min(16).max(576);
 const RANGE_ANGLE = z.number().int().min(-90).max(91);
+
 const POSITIONS_HORIZONTAL = z.union([
 	z.literal('LEFT'),
 	z.literal('RIGHT'),
 	z.literal('CENTER'),
 ]);
+
 const POSITIONS_VERTICAL = z.union([
 	z.literal('TOP'),
 	z.literal('BOTTOM'),
 	z.literal('CENTER'),
 ]);
+
 const NUMBERIC_BOOLEAN = z.union([
 	z.literal(0),
 	z.literal(1),
 ]);
+
+const CODE_FIELDS = z.object({
+	init: z.string(),
+	perFrame: z.string(),
+	onBeat: z.string(),
+	perPoint: z.string(),
+});
 
 export const bassSpin = z
 	.object({
@@ -197,12 +207,7 @@ export const superScope = z
 	.object({
 		type: z.literal('SuperScope'),
 		group: RENDER_GROUP,
-		code: z.object({
-			init: z.string(),
-			perFrame: z.string(),
-			onBeat: z.string(),
-			perPoint: z.string(),
-		}), // TODO dry
+		code: CODE_FIELDS,
 		audioChannel: POSITIONS_HORIZONTAL,
 		audioSource: z.union([
 			z.literal('WAVEFORM'),
@@ -224,12 +229,7 @@ export const texer2 = z
 		resizing: z.boolean(),
 		wrapAround: z.boolean(),
 		colorFiltering: z.boolean(),
-		code: z.object({
-			init: z.string(),
-			perFrame: z.string(),
-			onBeat: z.string(),
-			perPoint: z.string(),
-		}), // TODO dry
+		code: CODE_FIELDS,
 	})
 	.required();
 
@@ -280,6 +280,14 @@ export const timescope = z
 	})
 	.required();
 
+export const triangle = z
+	.object({
+		type: z.literal('Triangle'),
+		group: RENDER_GROUP,
+		code: CODE_FIELDS,
+	})
+	.required();
+
 export type BassSpin = z.infer<typeof bassSpin>;
 export type ClearScreen = z.infer<typeof clearScreen>;
 export type DotFountain = z.infer<typeof dotFountain>;
@@ -296,6 +304,7 @@ export type SuperScope = z.infer<typeof superScope>;
 export type Texer2 = z.infer<typeof texer2>;
 export type Text = z.infer<typeof text>;
 export type Timescope = z.infer<typeof timescope>;
+export type Triangle = z.infer<typeof triangle>;
 
 export type RenderEffects =
 	| BassSpin
@@ -314,4 +323,5 @@ export type RenderEffects =
 	| Texer2
 	| Text
 	| Timescope
+	| Triangle
 ;
