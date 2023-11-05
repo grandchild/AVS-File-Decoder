@@ -34,7 +34,10 @@ export const blitterFeedback = z.object({
 	group: z.literal('Misc'), // FIXME should be TRANS_GROUP,
 	zoom: RANGE_0_256,
 	onBeatZoom: RANGE_0_256,
-	// blendMode: REPLACE, // TODO
+	blendMode: z.union([
+		z.literal('FIFTY_FIFTY'),
+		z.literal('REPLACE')
+	]),
 	onBeat: z.boolean(),
 	bilinear: z.boolean()
 }).required();
@@ -219,7 +222,10 @@ export const dynamicDistanceModifier = z.object({
 		onBeat: z.string(),
 		perPoint: z.string()
 	}),
-	// blendMode: REPLACE, // TODO
+	blendMode: z.union([
+		z.literal('FIFTY_FIFTY'),
+		z.literal('REPLACE')
+	]),
 	bilinear: z.boolean()
 }).required();
 
@@ -254,7 +260,10 @@ export const dynamicShift = z.object({
 		onBeat: z.string(),
 		perPoint: z.string()
 	}),
-	// blendMode: REPLACE, // TODO
+	blendMode: z.union([
+		z.literal('FIFTY_FIFTY'),
+		z.literal('REPLACE')
+	]),
 	bilinear: z.boolean()
 }).required();
 
@@ -464,9 +473,12 @@ export const scatter = z.object({
 export const texer = z.object({
 	type: z.literal('Texer'),
 	group: TRANS_GROUP,
-	image: z.string().max(260), // PS: Windows 10 allows 32,767,
-	// input: REPLACE, // TODO
-	// blendMode: MASKED_TEXTURE, // TODO
+	image: z.string().max(260),
+	blendMode: z.union([
+		z.literal('REPLACE'),
+		z.literal('ADD')
+	]),
+	mask: z.boolean(),
 	particles: RANGE_1_1024
 }).required();
 
