@@ -536,6 +536,7 @@ export type Brightness = z.infer<typeof brightness>;
 export type Bump = z.infer<typeof bump>;
 export type ChannelShift = z.infer<typeof channelShift>;
 export type ColorClip = z.infer<typeof colorClip>;
+export type Colorfade = z.infer<typeof colorfade>;
 export type ColorMap = z.infer<typeof colorMap>;
 export type ColorModifier = z.infer<typeof colorModifier>;
 export type ColorReduction = z.infer<typeof colorReduction>;
