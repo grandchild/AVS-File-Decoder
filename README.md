@@ -1,8 +1,8 @@
 # webvsc
 
-[![npm](https://flat.badgen.net/npm/license/@visbot/webvsc)](https://www.npmjs.org/package/@visbot/webvsc)
-[![npm](https://flat.badgen.net/npm/v/@visbot/webvsc)](https://www.npmjs.org/package/@visbot/webvsc)
-[![CI](https://img.shields.io/github/actions/workflow/status/grandchild/AVS-File-Decoder/default.yml?style=flat-square)](https://github.com/grandchild/AVS-File-Decoder/actions)
+[![License](https://img.shields.io/github/license/grandchild/AVS-File-Decoder?color=blue&style=for-the-badge)](https://github.com/grandchild/AVS-File-Decoder/blob/main/LICENSE)
+[![Version](https://img.shields.io/npm/v/@visbot/webvsc?style=for-the-badge)](https://www.npmjs.org/package/@visbot/webvsc)
+[![Build](https://img.shields.io/github/actions/workflow/status/grandchild/AVS-File-Decoder/default.yml?style=for-the-badge)](https://github.com/grandchild/AVS-File-Decoder/actions)
 
 ## Description
 
