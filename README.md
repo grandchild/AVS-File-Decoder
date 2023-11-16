@@ -1,7 +1,7 @@
 # webvsc
 
 [![License](https://img.shields.io/github/license/grandchild/AVS-File-Decoder?color=blue&style=for-the-badge)](https://github.com/grandchild/AVS-File-Decoder/blob/main/LICENSE)
-[![Version](https://img.shields.io/npm/v/@visbot/webvsc?style=for-the-badge)](https://www.npmjs.org/package/@visbot/webvsc)
+[![Version (scoped with tag)](https://img.shields.io/npm/v/%40visbot/webvsc/next?style=for-the-badge)](https://www.npmjs.org/package/@visbot/webvsc)
 [![Build](https://img.shields.io/github/actions/workflow/status/grandchild/AVS-File-Decoder/default.yml?style=for-the-badge)](https://github.com/grandchild/AVS-File-Decoder/actions)
 
 ## Description
