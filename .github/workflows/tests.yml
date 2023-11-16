@@ -1,4 +1,4 @@
-name: CI
+name: Run Tests
 
 on:
   push:
@@ -15,7 +15,7 @@ on:
     - 'pnpm-lock.yaml'
 
 jobs:
-  default:
+  tests:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
