@@ -10,7 +10,6 @@
 	],
 	"ignoreDependencies": [
 		"globby",
-		"prettier",
-		"zod"
+		"prettier"
 	]
 }
