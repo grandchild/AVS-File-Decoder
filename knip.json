@@ -1,0 +1,16 @@
+{
+  "ignore": [
+		".husky/*",
+		"src/schema/*",
+		"tests/*",
+		"tsup.config.ts"
+	],
+  "ignoreBinaries": [
+		"lint-staged"
+	],
+	"ignoreDependencies": [
+		"globby",
+		"prettier",
+		"zod"
+	]
+}
