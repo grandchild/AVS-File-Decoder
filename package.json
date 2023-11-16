@@ -40,7 +40,7 @@
     "winamp"
   ],
   "scripts": {
-    "build": "tsup src/main.ts --format esm --target esnext --dts --external json5",
+    "build": "tsup",
     "clean": "rimraf ./dist",
     "dev": "npm run start",
     "lint:code": "eslint ./src --ignore-path .gitignore",
