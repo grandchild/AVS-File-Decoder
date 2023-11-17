@@ -5,7 +5,7 @@ export default defineConfig({
   clean: true,
   dts: true,
   entry: [
-		'src/main.ts'
+		'src/webvsc.ts'
 	],
 	external: [
 		'log-symbols',
