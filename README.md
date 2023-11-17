@@ -1,4 +1,6 @@
-# webvsc
+# @visbot/webvsc
+
+> A decoder for AVS files
 
 [![License](https://img.shields.io/github/license/grandchild/AVS-File-Decoder?color=blue&style=for-the-badge)](https://github.com/grandchild/AVS-File-Decoder/blob/main/LICENSE)
 [![Version (scoped with tag)](https://img.shields.io/npm/v/%40visbot/webvsc/next?style=for-the-badge)](https://www.npmjs.org/package/@visbot/webvsc)
