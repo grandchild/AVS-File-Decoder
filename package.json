@@ -46,7 +46,6 @@
     "clean": "rimraf ./dist",
     "dev": "npm run start",
     "lint:eslint": "eslint ./src --ignore-path .gitignore",
-    "lint:knip": "knip --production",
     "lint": "npm-run-all --parallel lint:*",
     "prepack": "npm run build",
     "prepare": "husky install",
