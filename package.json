@@ -3,9 +3,11 @@
   "version": "3.0.0-alpha.2",
   "description": "A library to convert Winamp AVS presets into Webvs JSON",
   "license": "MIT",
+  "exports": {
+    "import": "./dist/webvsc.js"
+  },
   "type": "module",
-  "exports": "./dist/webvsc.js",
-  "types": "./dist",
+  "typings": "./dist",
   "engines": {
     "node": ">=18"
   },
@@ -17,7 +19,7 @@
   ],
   "directories": {
     "doc": "doc",
-    "test": "test"
+    "tests": "tests"
   },
   "contributors": [
     "grandchild",
