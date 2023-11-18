@@ -8,7 +8,10 @@ import { TransEffects } from './trans';
 
 const presetBase = z.object({
 	name: z.string(),
-	date: z.string().datetime(),
+	date: z.union([
+		z.string().datetime(),
+		z.undefined()
+	]),
 	clearFrame: z.boolean(),
 }).required();
 
