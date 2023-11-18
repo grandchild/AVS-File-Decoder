@@ -4,6 +4,7 @@ import config from '../config';
 import decode from './decode';
 import get from './get';
 import Log from './log';
+import { PresetComponents } from 'src/schema/preset';
 
 const componentTable: Webvsc.ComponentDefinition[] = Components.builtin.concat(Components.dll);
 
@@ -76,9 +77,9 @@ function lowerInitial(str: string): string {
 
 
 
-function convertComponents(blob: Uint8Array): unknown {
+function convertComponents(blob: Uint8Array): PresetComponents[] {
 		let fp = 0;
-		const components: unknown[] = [];
+	const components: PresetComponents[] = [];
 		let res;
 		// read file as long as there are components left.
 		// a component takes at least two int32s of space, if there are less bytes than that left,

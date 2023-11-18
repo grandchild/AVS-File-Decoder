@@ -13,7 +13,7 @@ const defaultArgs: Webvsc.Arguments = {
 		verbose: 0
 };
 
-export function convertPreset(data: Buffer | ArrayBuffer, presetName: string, presetDate: string = undefined, customArgs: Webvsc.Arguments = {}): Preset {
+export function convertPreset(data: Buffer | ArrayBuffer, presetName: string, presetDate: Date = new Date(), customArgs: Webvsc.Arguments = {}): Preset {
 		const args = {
 				...defaultArgs,
 				...customArgs
@@ -28,8 +28,8 @@ export function convertPreset(data: Buffer | ArrayBuffer, presetName: string, pr
 
 		return {
 				name: presetName,
-				date: presetDate,
+				date: presetDate.toISOString(),
 				clearFrame: decode.presetHeader(blob8.subarray(0, config.presetHeaderLength)),
 				components: Util.convertComponents(blob8.subarray(config.presetHeaderLength))
-		} as Preset;
+		};
 }
