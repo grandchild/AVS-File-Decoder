@@ -7,7 +7,7 @@
     "import": "./dist/webvsc.js"
   },
   "type": "module",
-  "typings": "./dist",
+	"typings": "./dist/webvsc.d.ts",
   "engines": {
     "node": ">=18"
   },
