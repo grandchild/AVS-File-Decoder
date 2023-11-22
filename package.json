@@ -1,13 +1,13 @@
 {
   "name": "@visbot/webvsc",
-  "version": "3.0.0-alpha.3",
+  "version": "3.0.0-alpha.4",
   "description": "A library to convert Winamp AVS presets into Webvs JSON",
   "license": "MIT",
   "exports": {
     "import": "./dist/webvsc.js"
   },
   "type": "module",
-	"typings": "./dist/webvsc.d.ts",
+  "typings": "./dist/webvsc.d.ts",
   "engines": {
     "node": ">=18"
   },
