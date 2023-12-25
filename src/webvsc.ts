@@ -28,7 +28,7 @@ export function convertPreset(data: Buffer | ArrayBuffer, presetName: string, pr
 
 	return {
 		name: presetName,
-		date: presetDate ? presetDate.toISOString() : undefined,
+		date: args.noDate ? undefined : presetDate?.toISOString(),
 		clearFrame: decode.presetHeader(blob8.subarray(0, config.presetHeaderLength)),
 		components: Util.convertComponents(blob8.subarray(config.presetHeaderLength))
 	};
